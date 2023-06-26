@@ -1,0 +1,31 @@
+Home, login, signup - a
+Mypage - b
+Post1 -c
+Post 2-d
+Comments -e
+-폴더 구조
+
+1. Shared 폴더 - layout(header), router.js
+2. Styles폴더 - globalstyle.jsx, reset.css
+3. Pages 폴더 - home폴더, login폴더, signup폴더, mypage폴더, post(전체게시글)폴더, star(스타게시글)폴더, about.js, post_detail폴더, star_detail폴더
+Components - 각자 기능 폴더로 만들어서 그 안에서 작업
+4. Redux - config - configstore.js
+- modules - 각자 모듈 폴더로 만들어서 그 안에서 작업
+5. .prettierrc파일
+6. .env파일
+7.
+
+- 기능 분배
+Home, login, signup - a
+Mypage - b
+Post1 -c
+Post 2-d
+Comments -e
+
+-api
+{
+userId:
+userPw:
+userName:
+userPH:
+}
