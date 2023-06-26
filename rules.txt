@@ -18,9 +18,9 @@ Components - 각자 기능 폴더로 만들어서 그 안에서 작업
 - 기능 분배
 Home, login, signup - a
 Mypage - b
-Post1 -c
-Post 2-d
-Comments -e
+Post1() -c
+Post2(star)-d
+Comments(상세페이지) -e
 
 -api
 {
