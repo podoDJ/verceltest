@@ -8,8 +8,8 @@ import thunk from "redux-thunk";
 const rootReducer = combineReducers({
   tempReducer,
   logReducer,
-  profileReducer,
+  profile: profileReducer,
 });
-const store = createStore(rootReducer);
+const store = createStore(rootReducer, applyMiddleware(thunk));
 
 export default store;
