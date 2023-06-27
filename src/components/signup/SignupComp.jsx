@@ -27,8 +27,6 @@ const SignupComp = () => {
       const errorMessage = error.message;
       alert(ERR_CODE[errorCode]);
       console.log("error", errorCode, errorMessage);
-
-      return;
     }
   };
 
