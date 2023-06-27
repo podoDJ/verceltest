@@ -1,23 +1,32 @@
-import shortid from "shortid"
+import shortid from "shortid";
+import { db } from "../../firebase";
+import { collection, getDocs, query } from "firebase/firestore";
 
-const postInitialState = [
-  {
-    postId: shortid.generate(),
-    postTitle: "포스트타이틀1",
-    postBody: "포스트바디1",
-  },
-]
+let newArr = [];
 
+const fetchData = async () => {
+  const q = query(collection(db, "posts"));
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    newArr.push({ id: doc.id, ...doc.data() });
+  });
+  return newArr;
+};
+fetchData();
 
-const posts = (state = postInitialState, action) => {
-  switch(action.type) {
+//fetchData().then(() => {}).catch((error) => {console.log("데이터를 수신 오류", error)})
+
+const posts = (state = newArr, action) => {
+  switch (action.type) {
     case "ADD_POST":
-      return [...state, action.payload]
+      return [...state, action.payload];
     case "DELETE_POST":
-      return state.filter((post) => {return post.postId !== action.payload})
+      return state.filter((post) => {
+        return post.postId !== action.payload;
+      });
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default posts
+export default posts;

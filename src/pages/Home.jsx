@@ -1,8 +1,9 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const Home = () => {
   return (
-    <div>홈 화면입니다.</div>
+    <Link to={"/post"}>전체게시글로</Link>
   )
 }
 

@@ -1,20 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { styled } from "styled-components";
-import { collection, getDocs, query } from "firebase/firestore";
-import { db } from "../../firebase";
 
 const PostList = () => {
   const posts = useSelector((state) => {
     return state.posts;
   });
-  // useEffect(()=> {
-  //   const fetchData = asynce () => {
-  //     const q = query(collection(db, "posts"))
-  //     const querySnapshot = await getDocs
-  //   }
-  // })
+  useEffect(() => {
+    console.log(posts);
+  }, []);
 
   return (
     <>
@@ -42,5 +37,5 @@ const S = {
     border: 1px solid black;
     margin: 10px;
     padding: 10px;
-  `
-}
+  `,
+};
