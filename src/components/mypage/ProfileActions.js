@@ -1,6 +1,6 @@
 import { app, firestore } from "../../firebase";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { getFirestore, updateDoc, doc } from "firebase/firestore";
+import { getFirestore, getDocs, updateDoc, doc, collection, query, where } from "firebase/firestore";
 import shortid from "shortid";
 
 export const updatePhotoURL = (file, uid) => {
@@ -46,7 +46,7 @@ export const updateProfileCmt = (newProfileCmt, uid) => {
   return async (dispatch, getState) => {
     try {
       // 파이어베이스에 소개글 업데이트
-      const userRef = firestore.collection("users").doc(uid);
+      const userRef = firestore.collection("cmts").doc(uid);
       await userRef.update({ profileCmt: newProfileCmt });
 
       // 상태 업데이트
@@ -89,7 +89,9 @@ export const getGuestbook = (uid) => {
 
 const fetchPosts = async (uid) => {
   // uid로 파이어베이스에서 게시글 가져오기
-  const snapshot = await firestore.collection("posts").where("uid", "==", uid).get();
+  const firestoreInstance = getFirestore(app);
+  const q = query(collection(firestoreInstance, "posts"), where("uid", "==", uid));
+  const snapshot = await getDocs(q);
 
   const posts = [];
   snapshot.forEach((doc) => {

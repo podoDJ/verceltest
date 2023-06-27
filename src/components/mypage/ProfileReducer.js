@@ -11,12 +11,12 @@ const initialState = {
 
 const profileReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "UPDATE_PROFILE_IMAGE":
+    case "UPDATE_PHOTO_URL":
       return {
         ...state,
         photoURL: action.payload, // 프로필 이미지 업데이트
       };
-    case "UPDATE_USERNAME":
+    case "UPDATE_DISPLAYNAME":
       return {
         ...state,
         displayname: action.payload, // 유저네임 업데이트
