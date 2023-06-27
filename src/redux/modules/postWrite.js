@@ -22,7 +22,7 @@ const posts = (state = newArr, action) => {
       return [action.payload, ...state];
     case "DELETE_POST":
       return state.filter((post) => {
-        return post.postId !== action.payload;
+        return post.id !== action.payload;
       });
     default:
       return state;
