@@ -1,22 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { styled } from "styled-components";
+import { HeaderComp, UserHeaderComp } from "../components/common/header/HeaderComp";
+import { auth } from "../firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 export default function Layout({ children }) {
+  const user = auth.currentUser;
+  //console.log(user);
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      console.log("user", user);
+    });
+  }, []);
+
   return (
     <StLayout>
-      <Header />
+      {user ? <UserHeaderComp /> : <HeaderComp />}
       <div>{children}</div>
     </StLayout>
-  );
-}
-
-function Header() {
-  return (
-    <>
-      <span>React Rookies</span>
-    </>
-      
-  
   );
 }
 
@@ -25,4 +27,3 @@ const StLayout = styled.div`
   min-width: 800px;
   margin: 2px auto;
 `;
-
