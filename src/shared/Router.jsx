@@ -11,6 +11,8 @@ import StarDetail from '../pages/StarDetail'
 import Star from '../pages/Star'
 import About from '../pages/About'
 import Mypage from '../pages/Mypage'
+import PostCreate from '../pages/PostCreate'
+
 
 
 const Router = () => {
@@ -23,8 +25,9 @@ const Router = () => {
             <Route path="/" element={<Home/>}/>
             <Route path="/login" element={<Login/>}/>
             <Route path="/signup" element={<Signup/>}/>
-            <Route path="/:id" element={<PostDetail/>}/>
+            <Route path="/post/:id" element={<PostDetail/>}/>
             <Route path="/post" element={<Post/>}/>
+            <Route path="/postcreate" element={<PostCreate/>}/>
             <Route path="/:id" element={<StarDetail/>}/>
             <Route path="/star" element={<Star/>}/>
             <Route path="/about" element={<About/>}/>
