@@ -10,6 +10,6 @@ const rootReducer = combineReducers({
   logReducer,
   profileReducer,
 });
-const store = createStore(rootReducer, applyMiddleware(thunk));
+const store = createStore(rootReducer);
 
 export default store;
