@@ -19,7 +19,7 @@ const Router = () => {
   return (
     <>
       <BrowserRouter>
-        <GlobalStyle/>
+        <GlobalStyle />
         <Layout>
           <Routes>
             <Route path="/" element={<Home/>}/>
@@ -36,7 +36,7 @@ const Router = () => {
         </Layout>
       </BrowserRouter>
     </>
-  )
-}
+  );
+};
 
-export default Router
+export default Router;
