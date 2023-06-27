@@ -1,17 +1,14 @@
 import React, { useEffect } from "react";
 import { styled } from "styled-components";
-import { HeaderComp, UserHeaderComp } from "../components/common/header/HeaderComp";
+import { HeaderComp, UserHeaderComp } from "../components/common/Header.jsx/HeaderComp";
 import { auth } from "../firebase";
-import { onAuthStateChanged } from "firebase/auth";
 
 export default function Layout({ children }) {
   const user = auth.currentUser;
-  //console.log(user);
+  console.log(user);
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      console.log("user", user);
-    });
+    <StLayout />;
   }, []);
 
   return (
