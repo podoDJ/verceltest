@@ -4,19 +4,8 @@ import { styled } from "styled-components";
 export default function Layout({ children }) {
   return (
     <StLayout>
-      <Header />
       <div>{children}</div>
     </StLayout>
-  );
-}
-
-function Header() {
-  return (
-    <>
-      <span>React Rookies</span>
-    </>
-      
-  
   );
 }
 
@@ -25,4 +14,3 @@ const StLayout = styled.div`
   min-width: 800px;
   margin: 2px auto;
 `;
-
