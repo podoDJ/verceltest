@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { db } from "../../firebase";
+import { addDoc, collection, getDocs, query } from "firebase/firestore";
 import shortid from "shortid";
 
 const PostForm = () => {
@@ -10,20 +12,23 @@ const PostForm = () => {
   const navigate = useNavigate();
   return (
     <form
-      onSubmit={(event) => {
+      onSubmit={ async (event) => {
         event.preventDefault();
+        const newPost = { postId: shortid.generate(), postTitle, postBody };
+
+        const collectionRef = collection(db, "posts");
+        await addDoc(collectionRef, newPost)
         //navigate : 등록하기 버튼 누르면 submit하고 전체 게시글로 나옴. postdetail로 가는 방법을 찾아야 함.
-        navigate("/post")
+
+        // dispatch 전에 async await로 통신 보내고 통신 보내면 아래 dispatch가 진행됨.
+        // or .then
         dispatch({
           type: "ADD_POST",
-          payload: {
-            postId: shortid.generate(),
-            postTitle,
-            postBody,
-          },
+          payload: newPost
         });
         setPostTitle("");
         setPostBody("");
+        navigate("/post");
       }}
     >
       <div>
