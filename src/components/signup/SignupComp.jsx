@@ -3,6 +3,7 @@ import { auth } from "../../firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
+import { ERR_CODE } from "../../constant";
 
 const SignupComp = () => {
   const [name, setName] = useState("");
@@ -24,21 +25,10 @@ const SignupComp = () => {
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
+      alert(ERR_CODE[errorCode]);
       console.log("error", errorCode, errorMessage);
-      switch (errorCode) {
-        case "auth/email-already-in-use":
-          return alert("이미 사용 중인 이메일입니다.");
-        case "auth/weak-password":
-          return alert("비밀번호는 6글자 이상이어야 합니다.");
-        case "auth/network-request-failed":
-          return alert("네트워크 연결에 실패 하였습니다.");
-        case "auth/invalid-email":
-          return alert("잘못된 이메일 형식입니다.");
-        case "auth/internal-error":
-          return alert("잘못된 요청입니다.");
-        default:
-          return alert("로그인에 실패 하였습니다. 개발팀에 연락해");
-      }
+
+      return;
     }
   };
 
@@ -98,6 +88,7 @@ export default SignupComp;
 const S = {
   SignupForm: styled.form`
     background-color: #ffbf9b;
+    color: #4d4d4d;
     width: 500px;
     height: 600px;
 
