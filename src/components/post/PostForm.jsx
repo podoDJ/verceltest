@@ -6,6 +6,7 @@ import { addDoc, collection, getDocs, query } from "firebase/firestore";
 import shortid from "shortid";
 
 const PostForm = () => {
+  console.log("여기는 POSTFORM");
   const [postTitle, setPostTitle] = useState("");
   const [postBody, setPostBody] = useState("");
   const dispatch = useDispatch();
@@ -18,6 +19,7 @@ const PostForm = () => {
     <form
       onSubmit={ async (event) => {
         event.preventDefault();
+        location.reload()
         //firebase에 새 데이터 입력
         const newPost = { postId: shortid.generate(), postTitle, postBody };
         const collectionRef = collection(db, "posts");

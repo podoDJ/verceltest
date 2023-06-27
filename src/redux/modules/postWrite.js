@@ -3,7 +3,7 @@ import { db } from "../../firebase";
 import { collection, getDocs, query } from "firebase/firestore";
 
 let newArr = [];
-
+console.log("여기는 POSTLIST");
 const fetchData = async () => {
   const q = query(collection(db, "posts"));
   const querySnapshot = await getDocs(q);
@@ -19,7 +19,7 @@ fetchData();
 const posts = (state = newArr, action) => {
   switch (action.type) {
     case "ADD_POST":
-      return [...state, action.payload];
+      return [action.payload, ...state];
     case "DELETE_POST":
       return state.filter((post) => {
         return post.postId !== action.payload;

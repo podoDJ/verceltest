@@ -6,10 +6,11 @@ import { db } from "../../firebase";
 import { styled } from "styled-components";
 
 const PostDetailBrowse = () => {
+  console.log("여기는 POSTDETAILBROWSE");
   const { id } = useParams();
   const posts = useSelector((state) => state.posts);
   const post = posts.filter((post) => post.postId === id)[0];
-  console.log("post => ", post);
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
   return (

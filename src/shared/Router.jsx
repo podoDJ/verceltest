@@ -13,8 +13,6 @@ import About from '../pages/About'
 import Mypage from '../pages/Mypage'
 import PostCreate from '../pages/PostCreate'
 
-
-
 const Router = () => {
   return (
     <>
