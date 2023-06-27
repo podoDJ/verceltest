@@ -4,18 +4,19 @@ import { ERR_CODE } from "../../constant";
 import { auth } from "../../firebase";
 import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logChange } from "../../redux/modules/logReducer";
 
 const LoginComp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const loginFunc = async (event) => {
-    event.preventDefault();
+  const loginFunc = async () => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       console.log("user with signIn", userCredential);
-      navigate("/");
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
@@ -24,8 +25,15 @@ const LoginComp = () => {
     }
   };
 
+  const loginSubmitHandler = (event) => {
+    event.preventDefault();
+    loginFunc();
+    navigate("/");
+    dispatch(logChange(true));
+  };
+
   return (
-    <S.LoginForm onSubmit={loginFunc}>
+    <S.LoginForm onSubmit={loginSubmitHandler}>
       <S.LoginTitle>E-mail</S.LoginTitle>
       <S.LoginInput
         value={email}
