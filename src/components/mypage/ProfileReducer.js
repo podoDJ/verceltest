@@ -27,6 +27,12 @@ const profileReducer = (state = initialState, action) => {
         profileCmt: action.payload, // 소개글 업데이트
       };
 
+    case "SET_GUESTBOOK":
+      return {
+        ...state,
+        guestbook: action.payload,
+      };
+
     default:
       return state;
   }

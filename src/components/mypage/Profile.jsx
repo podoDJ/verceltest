@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updatePhotoURL, updateDisplayname, updateProfileCmt } from "./ProfileActions";
+import { updatePhotoURL, updateDisplayname, updateProfileCmt, getGuestbook, getPosts } from "./ProfileActions";
 
 const Profile = () => {
   const uid = useSelector((state) => state.profile.uid); // uid 가져오기
@@ -30,6 +30,11 @@ const Profile = () => {
     dispatch(updateProfileCmt(newProfileCmt, uid));
   };
 
+  useEffect(() => {
+    dispatch(getPosts(uid)); // 내가 작성한 게시글 가져오기
+    dispatch(getGuestbook(uid)); // 방명록 가져오기
+  }, [dispatch, uid]);
+
   return (
     <>
       <div>
@@ -53,6 +58,7 @@ const Profile = () => {
         {posts.map((post) => (
           <div key={post.uid}>
             <h3>{post.title}</h3>
+            <p>{post.displayname}</p>
             <p>{post.content}</p>
           </div>
         ))}
@@ -61,8 +67,8 @@ const Profile = () => {
         <h2>Guestbook</h2>
         {guestbook.map((entry) => (
           <div key={entry.uid}>
-            <h3>{entry.name}</h3>
-            <p>{entry.message}</p>
+            <h3>작성자 : {entry.displayname}</h3>
+            <p>내용 : {entry.comment}</p>
           </div>
         ))}
       </div>

@@ -1,6 +1,7 @@
 import { app, firestore } from "../../firebase";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getFirestore, updateDoc, doc } from "firebase/firestore";
+import shortid from "shortid";
 
 export const updatePhotoURL = (file, uid) => {
   return async (dispatch, getState) => {
@@ -52,6 +53,66 @@ export const updateProfileCmt = (newProfileCmt, uid) => {
       dispatch({ type: "UPDATE_PROFILE_CMT", payload: newProfileCmt });
     } catch (error) {
       console.error("소개글 업데이트 오류:", error);
+    }
+  };
+};
+
+const fetchGuestbook = async (uid) => {
+  const mockGuestbookData = [
+    {
+      uid: shortid.generate(),
+      displayname: "jerry",
+      comment: "Hello",
+    },
+  ];
+
+  return mockGuestbookData;
+};
+
+export const setGuestbook = (guestbook) => {
+  return {
+    type: "SET_GUESTBOOK",
+    payload: guestbook,
+  };
+};
+
+export const getGuestbook = (uid) => {
+  return async (dispatch) => {
+    try {
+      const guestbookData = await fetchGuestbook(uid);
+      dispatch(setGuestbook(guestbookData));
+    } catch (error) {
+      console.error("방명록 가져오기 오류:", error);
+    }
+  };
+};
+
+const fetchPosts = async (uid) => {
+  // uid로 파이어베이스에서 게시글 가져오기
+  const snapshot = await firestore.collection("posts").where("uid", "==", uid).get();
+
+  const posts = [];
+  snapshot.forEach((doc) => {
+    posts.push(doc.data());
+  });
+
+  return posts;
+};
+
+export const setPosts = (posts) => {
+  return {
+    type: "SET_POTS",
+    payload: posts,
+  };
+};
+
+export const getPosts = (uid) => {
+  return async (dispatch) => {
+    try {
+      const posts = await fetchPosts(uid);
+      dispatch(setPosts(posts));
+    } catch (error) {
+      console.error("게시글 가져오기 오류:", error);
     }
   };
 };
