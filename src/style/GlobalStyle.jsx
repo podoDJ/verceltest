@@ -9,7 +9,7 @@ const GlobalStyle = createGlobalStyle`
   --color-box: #FFBF9B;
 }
 
-  * {
+  body {
     background-color: var(--color-bg);
   }
 `;
