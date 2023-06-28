@@ -1,52 +1,51 @@
-import { collection, doc, getDoc, getDocs, query, updateDoc } from "firebase/firestore";
-import { db } from "../../firebase";
 import React, { useEffect, useState } from "react";
-// import InfiniteScroll from "react-infinite-scroll-component";
+import { useNavigate } from "react-router-dom";
+import { collection, doc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { styled } from "styled-components";
 import { BiSolidLike } from "react-icons/bi";
-import { useNavigate } from "react-router-dom";
+import { db } from "../../firebase";
+// import InfiniteScroll from "react-infinite-scroll-component";
 
 export default function StarList() {
   const navigate = useNavigate();
   const [starList, setStarList] = useState([]);
 
   useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    const q = query(collection(db, "starList"));
-    const querySnapshot = await getDocs(q);
-    const initialStarList = [];
-    querySnapshot.forEach((doc) => {
-      const data = {
-        id: doc.uid,
-        isLiked: false,
-        ...doc.data(),
-      };
-      // console.log("data", data);
-      initialStarList.push(data);
-    });
-    setStarList(initialStarList);
-  };
-
-  const handleLike = async (id) => {
-    const starDocRef = doc(db, "starList", id);
-    const starDocSnapshot = await getDoc(starDocRef);
-    console.log("db", db);
-    if (starDocSnapshot.exists()) {
-      // 현재 좋아요 수 가져오기
-      const currentLikes = starDocSnapshot.data().likes || 0;
-
-      // 좋아요 수 업데이트
-      await updateDoc(starDocRef, {
-        likes: currentLikes + 1,
+    const fetchData = async () => {
+      // q = 요청 객체
+      const q = query(collection(db, "starList"));
+      const querySnapshot = await getDocs(q);
+      const initialStarList = [];
+      querySnapshot.forEach((doc) => {
+        const data = {
+          id: doc.id,
+          ...doc.data(),
+        };
+        initialStarList.push(data);
       });
-      setStarList((prevStarList) => prevStarList.map((star) => (star.id === id ? { ...star, isLiked: true } : star)));
-      // 데이터 다시 불러오기
-      fetchData();
-    }
-    // await addDoc(collection(db, "starList"), );
+      setStarList(initialStarList);
+    };
+
+    fetchData();
+  }, [setStarList]);
+
+  const updateLikeHandler = async (uid, likes, isLiked) => {
+    const q = query(collection(db, "starList"), where("uid", "==", uid));
+    const starListRef = await getDocs(q);
+    // console.log(starListRef);
+
+    console.log("1", starListRef.docs[0].ref);
+    // 업데이트할 문서를 참조
+    // const starListRef = doc(db, "starList", uid);
+
+    // 좋아요 수와 isLiked 상태를 업데이트
+    await updateDoc(starListRef.docs[0].ref, {
+      likes: isLiked ? likes - 1 : likes + 1,
+      isLiked: !isLiked,
+    });
+
+    // starList 상태 업데이트
+    setStarList((prevStarList) => prevStarList.map((star) => (star.id === uid ? { ...star, isLiked: !isLiked } : star)));
   };
 
   return (
@@ -57,7 +56,7 @@ export default function StarList() {
           return (
             <Profile key={star.uid} onClick={() => navigate(`/star/members/${star.uid}`)}>
               <LikesWrapper>
-                <LikeBtn onClick={() => handleLike(star.id)} isLiked={star.isLiked}>
+                <LikeBtn onClick={() => updateLikeHandler(star.uid, star.likes, star.isLiked)} isLiked={star.isLiked}>
                   <BiSolidLike size={25} />
                 </LikeBtn>
                 <p>{star.likes || 0}</p>
