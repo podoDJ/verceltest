@@ -20,7 +20,7 @@ const PostList = () => {
             <S.PostingBox key={post.postId}>
               <Link to={`/post/${post.postId}`}>글 상세보기</Link>
               
-              <div><span onClick={() => {}}>👍{`${post?.whoLiked?.length()}`}</span></div>
+              <div><span onClick={() => {}}>👍{(post?.whoLiked?.length) || 0}</span></div>
               <p>글 아이디: {post.postId}</p>
               <p>제목: {post.postTitle}</p>
               <p>내용: {post.postBody}</p>
