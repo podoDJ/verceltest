@@ -17,6 +17,7 @@ const LoginComp = () => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       console.log("user with signIn", userCredential);
+      dispatch(logChange(true));
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
@@ -29,7 +30,6 @@ const LoginComp = () => {
     event.preventDefault();
     loginFunc();
     navigate("/");
-    dispatch(logChange(true));
   };
 
   return (
