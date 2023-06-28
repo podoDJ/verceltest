@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { db } from "../../firebase";
-import { addDoc, collection, getDocs, query } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, query, setDoc } from "firebase/firestore";
 import shortid from "shortid";
 
 const PostForm = () => {
@@ -24,6 +24,9 @@ const PostForm = () => {
           const docRef = await addDoc(collectionRef, { postTitle, postBody });
 
           console.log("파이어스토어의 도큐먼트 아이디 => ", docRef.id);
+          // 도큐먼트 아이디가 바로 필드에 반영되도록 하는 코드
+          const postDocRef = doc(db, "posts", docRef.id);
+          await setDoc(postDocRef, { postId: docRef.id }, { merge: true });
 
           //navigate : 등록하기 버튼 누르면 submit하고 전체 게시글로 나옴. postdetail로 가는 방법을 찾아야 함. (DJ : 해결)
 
@@ -33,7 +36,7 @@ const PostForm = () => {
           dispatch({
             type: "ADD_POST",
             payload: {
-              id: docRef.id,
+              postId: docRef.id,
               postTitle,
               postBody,
             },
