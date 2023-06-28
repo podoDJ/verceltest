@@ -12,14 +12,13 @@ export const logChange = (payload) => {
   };
 };
 
-
 const initialState = { isLogin: false };
-
 
 //reducer
 const logReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOG_CHANGE:
+      console.log("state", action.payload);
       return { ...state, isLogin: action.payload };
 
     default:

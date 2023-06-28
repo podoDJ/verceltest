@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./Layout";
 import GlobalStyle from "../style/GlobalStyle";
@@ -16,7 +16,19 @@ import Mypage from "../pages/Mypage";
 import PostCreate from "../pages/PostCreate";
 import PostUpdate from "../pages/PostUpdate";
 
+//진솔 추가
+import { getAuth } from "firebase/auth";
+import { useDispatch } from "react-redux";
+import { logChange } from "../redux/modules/logReducer";
+
 const Router = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const auth = getAuth();
+    console.log("유저있니", auth.currentUser);
+    auth.currentUser ? dispatch(logChange(true)) : dispatch(logChange(false));
+  }, []);
+
   return (
     <>
       <BrowserRouter>
