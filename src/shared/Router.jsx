@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./Layout";
 import GlobalStyle from "../style/GlobalStyle";
@@ -17,17 +16,23 @@ import PostCreate from "../pages/PostCreate";
 import PostUpdate from "../pages/PostUpdate";
 
 //진솔 추가
-import { getAuth } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { useDispatch } from "react-redux";
-import { logChange } from "../redux/modules/logReducer";
+import { logChange, showUser } from "../redux/modules/logReducer";
+import { auth } from "../firebase";
 
 const Router = () => {
   const dispatch = useDispatch();
-  useEffect(() => {
-    const auth = getAuth();
-    console.log("유저있니", auth.currentUser);
-    auth.currentUser ? dispatch(logChange(true)) : dispatch(logChange(false));
-  }, []);
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      dispatch(showUser(user));
+      dispatch(logChange(true));
+    } else {
+      // User is signed out
+      dispatch(logChange(false));
+    }
+  });
 
   return (
     <>
