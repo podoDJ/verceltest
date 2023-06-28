@@ -1,14 +1,17 @@
-import { createStore } from "redux";
+import { applyMiddleware, createStore } from "redux";
 import { combineReducers } from "redux";
 import tempReducer from "../modules/temp";
 import logReducer from "../modules/logReducer";
 import posts from "../modules/postWrite";
+import profileReducer from "../../components/mypage/ProfileReducer";
+import thunk from "redux-thunk";
 
 const rootReducer = combineReducers({
   tempReducer,
   logReducer,
   posts,
-}) 
-const store = createStore(rootReducer)
+  profile: profileReducer,
+});
+const store = createStore(rootReducer, applyMiddleware(thunk));
 
 export default store;
