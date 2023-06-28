@@ -4,8 +4,15 @@ import { Link, useNavigate } from "react-router-dom";
 import { db } from "../../firebase";
 import { addDoc, collection, doc, getDocs, query, setDoc } from "firebase/firestore";
 import shortid from "shortid";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const PostForm = () => {
+
+  //UID는 여기서 가져옵니다.
+  const auth = getAuth();
+  // console.log("auth.currentUser.uid", auth.currentUser.uid)
+  const UID = auth.currentUser.uid
+
   console.log("여기는 POSTFORM");
   const [postTitle, setPostTitle] = useState("");
   const [postBody, setPostBody] = useState("");
@@ -21,12 +28,12 @@ const PostForm = () => {
           event.preventDefault();
           // 이전에 사용했던 방법: const newPost = { postId: shortid.generate(), postTitle, postBody };
           const collectionRef = collection(db, "posts");
-          const docRef = await addDoc(collectionRef, { postTitle, postBody });
+          const docRef = await addDoc(collectionRef, { postTitle, postBody, UID });
 
           console.log("파이어스토어의 도큐먼트 아이디 => ", docRef.id);
           // 도큐먼트 아이디가 바로 필드에 반영되도록 하는 코드
           const postDocRef = doc(db, "posts", docRef.id);
-          await setDoc(postDocRef, { postId: docRef.id }, { merge: true})
+          await setDoc(postDocRef, { postId: docRef.id }, { merge: true });
 
           //navigate : 등록하기 버튼 누르면 submit하고 전체 게시글로 나옴. postdetail로 가는 방법을 찾아야 함. (DJ : 해결)
 
@@ -39,6 +46,7 @@ const PostForm = () => {
               postId: docRef.id,
               postTitle,
               postBody,
+              UID,
             },
           });
           setPostTitle("");

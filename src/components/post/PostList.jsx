@@ -18,9 +18,10 @@ const PostList = () => {
           return (
             <S.PostingBox key={post.postId}>
               <Link to={`/post/${post.postId}`}>글 상세보기</Link>
-              <p>{post.postId}</p>
-              <p>{post.postTitle}</p>
-              <p>{post.postBody}</p>
+              <p>글 아이디: {post.postId}</p>
+              <p>제목: {post.postTitle}</p>
+              <p>내용: {post.postBody}</p>
+              <p>UID: {post.UID}</p>
             </S.PostingBox>
           );
         })}

@@ -1,6 +1,25 @@
 import shortid from "shortid";
 import { db } from "../../firebase";
 import { collection, getDocs, query } from "firebase/firestore";
+import { getAuth, onAuthStateChanged } from "@firebase/auth";
+
+
+
+//실험페이지
+
+ const auth = getAuth();
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // User is signed in, see docs for a list of available properties
+    // https://firebase.google.com/docs/reference/js/auth.user
+    const uid = user.uid;
+    // ...
+  } else {
+    // User is signed out
+    // ...
+  }
+});
+// console.log("현재 uid : ",auth.currentUser.uid)
 
 //action value
 const SORT_LIKE_POSTS = "SORT_LIKE_POSTS";
@@ -22,7 +41,7 @@ export const sortLikePosts = () => {
 
 // initial state
 let newArr = [];
-console.log("여기는 POSTLIST");
+
 const fetchData = async () => {
   const q = query(collection(db, "posts"));
   const querySnapshot = await getDocs(q);
