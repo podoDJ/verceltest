@@ -7,20 +7,29 @@ import shortid from "shortid";
 import { getAuth } from "firebase/auth";
 
 const PostForm = () => {
-
   //UID는 여기서 가져옵니다.
   const auth = getAuth();
   // console.log("auth.currentUser.uid", auth.currentUser.uid)
-  const UID = auth.currentUser.uid
-  const postLike = 0
-  const postWhoLiked = []
+  const UID = auth.currentUser.uid;
+  // const postLike = 0
+  const postWhoLiked = [];
+  //========================오늘 날짜 불러오는 함수==============================//
+  const today = new Date(); // 현재 날짜와 시간을 가져옴
+  const year = today.getFullYear(); // 연도를 가져옴
+  const month = String(today.getMonth() + 1).padStart(2, "0"); // 월을 가져오고, 한 자리 수인 경우 앞에 0을 추가
+  const day = String(today.getDate()).padStart(2, "0"); // 일을 가져오고, 한 자리 수인 경우 앞에 0을 추가
+  const hours = String(today.getHours()).padStart(2, "0");
+  const minutes = String(today.getMinutes()).padStart(2, "0");
+  const seconds = String(today.getSeconds()).padStart(2, "0");
 
+  const postDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`; // 연도, 월, 일을 조합하여 날짜 문자열 생성
+  //========================오늘 날짜 불러오는 함수==============================//
   console.log("여기는 POSTFORM");
   const [postTitle, setPostTitle] = useState("");
   const [postBody, setPostBody] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
+
   return (
     <>
       <div>
@@ -31,7 +40,7 @@ const PostForm = () => {
           event.preventDefault();
           // 이전에 사용했던 방법: const newPost = { postId: shortid.generate(), postTitle, postBody };
           const collectionRef = collection(db, "posts");
-          const docRef = await addDoc(collectionRef, { postTitle, postBody, UID, postLike, postWhoLiked });
+          const docRef = await addDoc(collectionRef, { postTitle, postBody, UID, postWhoLiked });
 
           // 도큐먼트 아이디가 바로 필드에 반영되도록 하는 코드
           const postDocRef = doc(db, "posts", docRef.id);
@@ -50,7 +59,8 @@ const PostForm = () => {
               postBody,
               UID,
               // postLike,
-              // postWhoLiked,
+              postWhoLiked,
+              postDate,
             },
           });
           setPostTitle("");

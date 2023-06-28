@@ -15,6 +15,7 @@ const PostDetailBrowse = () => {
   //console.log("TestUID : ", TestUID);
   const { id } = useParams(); // id === documentId
   const posts = useSelector((state) => state.posts);
+  console.log("post.postId check0 => ",posts)
   const post = posts.filter((post) => post.postId === id)[0];
   if (!post) {
     navigate("/post");
@@ -22,58 +23,51 @@ const PostDetailBrowse = () => {
   }
   console.log("포스트브라우저의 포스트 : ", post);
 
-  
-
   //좋아요 기능.
-  // const [updatedPostWhoLiked, setUpdatedPostWhoLiked] = useState(post.postWhoLiked || []);
-  // const [updatedPostLike, setUpdatedPostLike] = useState(post.postLike);
+  const [updatedPostWhoLiked, setUpdatedPostWhoLiked] = useState(post.postWhoLiked || []);
 
-  // const updateLike = async (event) => {
-  //   if (post.postWhoLiked.includes(TestUID)) {
-  //     alert("이미 좋아요를 누르신 게시글입니다.");
-  //     return;
-  //   } else {
-  //     setUpdatedPostWhoLiked([...post.postWhoLiked, TestUID]);
-  //     setUpdatedPostLike(updatedPostLike + 1);
-  //     const postRef = doc(db, "posts", post.postId);
-  //     await updateDoc(postRef, { ...post, postLike: updatedPostLike + 1, postWhoLiked: updatedPostWhoLiked });
-      
+  const updateLike = async (event) => {
+    if (post.postWhoLiked.includes(TestUID)) {
+      alert("이미 좋아요를 누르신 게시글입니다.");
+      return;
+    } else {
+      setUpdatedPostWhoLiked([...post.postWhoLiked, TestUID]);
+      console.log("updatedPostWhoLiked==>",updatedPostWhoLiked)
+      // setUpdatedPostLike(post.postWhoLiked.length);
+      const postRef = doc(db, "posts", post.postId);
+      // postLike: updatedPostLike + 1 아래 updateDoc에서 얘를 뺌.
+      await updateDoc(postRef, { ...post, postWhoLiked: updatedPostWhoLiked });
+    }
 
-  //     setUpdatedPostLike(post.postWhoLiked.length);
-  //   }
-
-  //   dispatch({
-  //     type: "UPDATE_POSTLIKE",
-  //     payload: {
-  //       postId: post.postId,
-  //       postLike: updatedPostLike + 1,
-  //       postWhoLiked: updatedPostWhoLiked,
-  //     },
-  //   });
-  // };
-
+    dispatch({
+      type: "UPDATE_POSTLIKE",
+      payload: {
+        postId: post.postId,
+        // postLike: updatedPostLike,
+        postWhoLiked: updatedPostWhoLiked,
+      },
+    });
+  };
 
   return (
     <S.PostDetailBox>
-      {/* <div>
-        <span onClick={updateLike}>👍{updatedPostLike}</span>
-      </div> */}
+      <div>
+        <span onClick={updateLike}>👍</span>
+      </div>
       <p>{post.postId}</p>
       <p>{post.postTitle}</p>
       <p>{post.postBody}</p>
+      <p>{post.postDate}</p>
       <button
         onClick={async () => {
-          console.log("post.postId check1 => ",post.postId)
           if (post.UID !== TestUID) {
             alert("회원님이 등록하신 글이 아닙니다.");
             return;
           } else if (post.UID === TestUID) {
             if (confirm("정말로 삭제하시겠습니까?")) {
               //문서아이디=필드아이디
-              console.log("post.postId check2 => ",post.postId)
               const postRef = doc(db, "posts", post.postId);
               await deleteDoc(postRef);
-              console.log("post.postId check3 => ",post.postId)
               dispatch({
                 type: "DELETE_POST",
                 payload: post.postId,

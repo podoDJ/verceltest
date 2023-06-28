@@ -41,7 +41,9 @@ const posts = (state = newArr, action) => {
     case "UPDATE_POSTLIKE":
       return state.map((post) => {
         if (post.postId === action.payload.postId) {
-          return { ...post, postLike: action.payload.postLike, postWhoLiked: action.payload.postWhoLiked }
+          return { ...post, postWhoLiked: action.payload.postWhoLiked }
+        } else {
+          return post;
         }
       })
     default:
