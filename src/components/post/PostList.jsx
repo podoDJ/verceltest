@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { styled } from "styled-components";
 
 const PostList = () => {
-  console.log("여기는 POSTLIST");
+  useEffect(() => {
+    console.log("여기는 POSTLIST");
+  },[])
+  
 
   const posts = useSelector((state) => {
     return state.posts;

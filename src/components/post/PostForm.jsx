@@ -40,7 +40,7 @@ const PostForm = () => {
           event.preventDefault();
           // 이전에 사용했던 방법: const newPost = { postId: shortid.generate(), postTitle, postBody };
           const collectionRef = collection(db, "posts");
-          const docRef = await addDoc(collectionRef, { postTitle, postBody, UID, postWhoLiked });
+          const docRef = await addDoc(collectionRef, { postTitle, postBody, UID, postWhoLiked, postDate });
 
           // 도큐먼트 아이디가 바로 필드에 반영되도록 하는 코드
           const postDocRef = doc(db, "posts", docRef.id);
@@ -66,6 +66,7 @@ const PostForm = () => {
           setPostTitle("");
           setPostBody("");
           navigate(`/post/${docRef.id}`);
+          console.log(postDate)
         }}
       >
         <div>
