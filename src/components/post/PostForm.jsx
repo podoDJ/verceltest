@@ -28,6 +28,7 @@ const PostForm = () => {
           const postDocRef = doc(db, "posts", docRef.id);
           await setDoc(postDocRef, { postId: docRef.id }, { merge: true})
 
+
           //navigate : 등록하기 버튼 누르면 submit하고 전체 게시글로 나옴. postdetail로 가는 방법을 찾아야 함. (DJ : 해결)
 
           // dispatch 전에 async await로 통신 보내고 통신 보내면 아래 dispatch가 진행됨.
