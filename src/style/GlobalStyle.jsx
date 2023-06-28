@@ -7,6 +7,7 @@ const GlobalStyle = createGlobalStyle`
   --color-text: #4D4D4D;
   --color-accent: #B46060;
   --color-box: #FFBF9B;
+  --color-white: #FEFEFE;
 }
 
   body {
