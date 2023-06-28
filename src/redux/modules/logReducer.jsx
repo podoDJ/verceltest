@@ -1,3 +1,4 @@
+//진솔님파트-로그인상태에 따라 헤더변경
 const LOG_CHANGE = "LOG_CHANGE";
 
 export const logChange = (payload) => {
