@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { db } from "../../firebase";
-import { addDoc, collection, doc, getDocs, query, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import shortid from "shortid";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 
 const PostForm = () => {
 
@@ -12,12 +12,15 @@ const PostForm = () => {
   const auth = getAuth();
   // console.log("auth.currentUser.uid", auth.currentUser.uid)
   const UID = auth.currentUser.uid
+  const postLike = 0
+  const postWhoLiked = []
 
   console.log("여기는 POSTFORM");
   const [postTitle, setPostTitle] = useState("");
   const [postBody, setPostBody] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  
   return (
     <>
       <div>
@@ -28,9 +31,8 @@ const PostForm = () => {
           event.preventDefault();
           // 이전에 사용했던 방법: const newPost = { postId: shortid.generate(), postTitle, postBody };
           const collectionRef = collection(db, "posts");
-          const docRef = await addDoc(collectionRef, { postTitle, postBody, UID });
+          const docRef = await addDoc(collectionRef, { postTitle, postBody, UID, postLike, postWhoLiked });
 
-          console.log("파이어스토어의 도큐먼트 아이디 => ", docRef.id);
           // 도큐먼트 아이디가 바로 필드에 반영되도록 하는 코드
           const postDocRef = doc(db, "posts", docRef.id);
           await setDoc(postDocRef, { postId: docRef.id }, { merge: true });
@@ -47,6 +49,8 @@ const PostForm = () => {
               postTitle,
               postBody,
               UID,
+              // postLike,
+              // postWhoLiked,
             },
           });
           setPostTitle("");
