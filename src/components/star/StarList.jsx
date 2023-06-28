@@ -1,5 +1,6 @@
 import { collection, getDocs, query } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
+// import InfiniteScroll from "react-infinite-scroll-component";
 import { styled } from "styled-components";
 import { db } from "../../firebase";
 
@@ -45,7 +46,8 @@ export default function StarList() {
 const Title = styled.h2`
   text-align: center;
   font-size: 3rem;
-  padding: 20px;
+  padding-top: 70px;
+  padding-bottom: 50px;
 `;
 
 const Container = styled.div`
