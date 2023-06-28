@@ -29,9 +29,20 @@ const PostDetailBrowse = () => {
   const [updatedPostWhoLiked, setUpdatedPostWhoLiked] = useState(post.postWhoLiked || []);
 
   const updateLike = async (event) => {
+    
     if (post.postWhoLiked.includes(TestUID)) {
-      alert("이미 좋아요를 누르신 게시글입니다.");
-      return;
+      const updatedWhoLiked = post.postWhoLiked.filter((like) => like !== TestUID)
+      setUpdatedPostWhoLiked(updatedWhoLiked)
+      const postRef = doc(db, "posts", post.postId);
+      await updateDoc(postRef, { ...post, postWhoLiked: updatedWhoLiked });
+      dispatch({
+        type: "UPDATE_POSTLIKE",
+        payload: {
+          postId: post.postId,
+          // postLike: updatedPostLike,
+          postWhoLiked: updatedWhoLiked,
+        },
+      });
     } else {
       const updatedWhoLiked = [...post.postWhoLiked, TestUID];
       setUpdatedPostWhoLiked(updatedWhoLiked);
