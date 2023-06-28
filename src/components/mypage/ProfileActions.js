@@ -1,7 +1,11 @@
-import { app } from "../../firebase";
+import { auth, db, storage } from "../../firebase";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getFirestore, getDocs, updateDoc, doc, collection, query, where } from "firebase/firestore";
+import { initializeApp } from "firebase/app";
+import { firebaseConfig } from "../../firebase";
 import shortid from "shortid";
+
+const app = initializeApp(firebaseConfig);
 
 export const updatePhotoURL = (file, uid) => {
   return async (dispatch, getState) => {
@@ -34,7 +38,7 @@ export const setDisplayname = (displayname) => {
   };
 };
 
-export const setpropfileCmt = (profileCmt) => {
+export const setprofileCmt = (profileCmt) => {
   return {
     type: "SET_PROFILE_CMT",
     payload: profileCmt,
@@ -70,7 +74,7 @@ export const updateProfileCmt = (newProfileCmt, uid) => {
       await updateDoc(userRef, { profileCmt: newProfileCmt });
 
       // 상태 업데이트
-      dispatch(setpropfileCmt(newProfileCmt));
+      dispatch(setprofileCmt(newProfileCmt));
     } catch (error) {
       console.error("소개글 업데이트 오류:", error);
     }

@@ -48,7 +48,7 @@ const Profile = () => {
         <label>Profile Image</label>
         <input type="file" onChange={photoURLChange} />
         {photoURL && <img src={photoURL} alt="profile" />}
-        sss <button onClick={uploadPhotoURL}>Upload</button>
+        <button onClick={uploadPhotoURL}>Upload</button>
       </div>
       <div>
         <span>Email :{email}</span>
