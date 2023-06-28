@@ -1,8 +1,11 @@
 import React from 'react'
+import PostDetailBrowse from '../components/postDetail/PostDetailBrowse';
 
 const PostDetail = () => {
   return (
-    <div>Post_detail</div>
+    <div>
+      <PostDetailBrowse/>
+    </div>
   )
 }
 
