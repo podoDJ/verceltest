@@ -4,7 +4,6 @@ import Profile from "../components/mypage/Profile";
 const Mypage = () => {
   return (
     <div>
-      Mypage
       <Profile />
     </div>
   );

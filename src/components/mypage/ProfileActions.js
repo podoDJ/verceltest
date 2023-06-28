@@ -1,4 +1,4 @@
-import { app, firestore } from "../../firebase";
+import { app } from "../../firebase";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getFirestore, getDocs, updateDoc, doc, collection, query, where } from "firebase/firestore";
 import shortid from "shortid";
@@ -27,15 +27,32 @@ export const updatePhotoURL = (file, uid) => {
   };
 };
 
+export const setDisplayname = (displayname) => {
+  return {
+    type: "SET_DISPLAYNAME",
+    payload: displayname,
+  };
+};
+
+export const setpropfileCmt = (profileCmt) => {
+  return {
+    type: "SET_PROFILE_CMT",
+    payload: profileCmt,
+  };
+};
+
 export const updateDisplayname = (newDisplayname, uid) => {
   return async (dispatch, getState) => {
     try {
+      // 파이어스토어 인스턴스 가져오지
+      const firestore = getFirestore(app);
+
       // 파이어베이스에 유저네임 업데이트
-      const userRef = firestore.collection("users").doc(uid);
-      await userRef.update({ displayname: newDisplayname });
+      const userRef = doc(firestore, "users", uid);
+      await updateDoc(userRef, { displayname: newDisplayname });
 
       // 상태 업데이트
-      dispatch({ type: "UPDATE_DISPLAYNAME", payload: newDisplayname });
+      dispatch(setDisplayname(newDisplayname));
     } catch (error) {
       console.error("유저네임 업데이트 오류:", error);
     }
@@ -45,12 +62,15 @@ export const updateDisplayname = (newDisplayname, uid) => {
 export const updateProfileCmt = (newProfileCmt, uid) => {
   return async (dispatch, getState) => {
     try {
+      // 파이어스토어 인스턴스 가져오기
+      const firestore = getFirestore(app);
+
       // 파이어베이스에 소개글 업데이트
-      const userRef = firestore.collection("cmts").doc(uid);
-      await userRef.update({ profileCmt: newProfileCmt });
+      const userRef = doc(firestore, "cmts", uid);
+      await updateDoc(userRef, { profileCmt: newProfileCmt });
 
       // 상태 업데이트
-      dispatch({ type: "UPDATE_PROFILE_CMT", payload: newProfileCmt });
+      dispatch(setpropfileCmt(newProfileCmt));
     } catch (error) {
       console.error("소개글 업데이트 오류:", error);
     }

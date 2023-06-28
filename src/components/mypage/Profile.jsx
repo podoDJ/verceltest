@@ -1,9 +1,11 @@
 import React, { useEffect } from "react";
+import { auth, firestore, storage } from "../../firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { updatePhotoURL, updateDisplayname, updateProfileCmt, getGuestbook, getPosts } from "./ProfileActions";
+import { ref, uploadBytes } from "firebase/storage";
 
 const Profile = () => {
-  const uid = useSelector((state) => state.profile.uid); // uid 가져오기
+  const uid = useSelector((state) => state.profile.uid);
   const photoURL = useSelector((state) => state.profile.photoURL);
   const displayname = useSelector((state) => state.profile.displayname);
   const email = useSelector((state) => state.profile.email);
@@ -16,6 +18,11 @@ const Profile = () => {
     const file = e.target.files[0];
 
     dispatch(updatePhotoURL(file, uid));
+  };
+
+  const uploadPhotoURL = async () => {
+    const imgRef = ref(storage, `${auth.currentUser.uid}/${photoURL.name}`);
+    await uploadBytes(imgRef, photoURL);
   };
 
   const displaynameChange = (e) => {
@@ -41,6 +48,7 @@ const Profile = () => {
         <label>Profile Image</label>
         <input type="file" onChange={photoURLChange} />
         {photoURL && <img src={photoURL} alt="profile" />}
+        sss <button onClick={uploadPhotoURL}>Upload</button>
       </div>
       <div>
         <span>Email :{email}</span>
@@ -48,10 +56,12 @@ const Profile = () => {
       <div>
         <label>User Name</label>
         <input type="text" value={displayname} onChange={displaynameChange} />
+        <button>변경</button>
       </div>
       <div>
         <label>Profile Cmt</label>
         <input type="text" value={profileCmt} onChange={profileCmtChange} />
+        <button>변경</button>
       </div>
       <div>
         <h2>My Post</h2>
