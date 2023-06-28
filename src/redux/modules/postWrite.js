@@ -22,11 +22,11 @@ const posts = (state = newArr, action) => {
       return [action.payload, ...state];
     case "DELETE_POST":
       return state.filter((post) => {
-        return post.id !== action.payload;
+        return post.postId !== action.payload;
       });
     case "UPDATE_POST":
       return state.map((post) => {
-        if (post.id === action.payload.id) {
+        if (post.postId === action.payload.postId) {
           return {...post, postTitle: action.payload.postTitle, postBody: action.payload.postBody}
         } else {return post}
       })
