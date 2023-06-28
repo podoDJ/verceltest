@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../firebase";
 import { styled } from "styled-components";
@@ -29,7 +29,6 @@ const PostDetailBrowse = () => {
           
           const postRef = doc(db, "posts", post.id);
           await deleteDoc(postRef);
-          // navigate("/post");
           dispatch({
             type: "DELETE_POST",
             payload: post.id,
@@ -38,6 +37,11 @@ const PostDetailBrowse = () => {
       >
         삭제하기
       </button>
+      <Link to={`/postupdate/${post.id}`}>
+      <button>
+        수정하기
+      </button>
+      </Link>
     </S.PostDetailBox>
   );
 };

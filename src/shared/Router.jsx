@@ -11,7 +11,10 @@ import StarDetail from '../pages/StarDetail'
 import Star from '../pages/Star'
 import About from '../pages/About'
 import Mypage from '../pages/Mypage'
+
+//동준 추가
 import PostCreate from '../pages/PostCreate'
+import PostUpdate from '../pages/PostUpdate'
 
 const Router = () => {
   return (
@@ -26,6 +29,7 @@ const Router = () => {
             <Route path="/post/:id" element={<PostDetail/>}/>
             <Route path="/post" element={<Post/>}/>
             <Route path="/postcreate" element={<PostCreate/>}/>
+            <Route path="/postupdate/:id" element={<PostUpdate/>}/>
             <Route path="/:id" element={<StarDetail/>}/>
             <Route path="/star" element={<Star/>}/>
             <Route path="/about" element={<About/>}/>

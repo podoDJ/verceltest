@@ -24,6 +24,12 @@ const posts = (state = newArr, action) => {
       return state.filter((post) => {
         return post.id !== action.payload;
       });
+    case "UPDATE_POST":
+      return state.map((post) => {
+        if (post.id === action.payload.id) {
+          return {...post, postTitle: action.payload.postTitle, postBody: action.payload.postBody}
+        } else {return post}
+      })
     default:
       return state;
   }

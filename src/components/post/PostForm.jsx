@@ -19,15 +19,13 @@ const PostForm = () => {
       <form
         onSubmit={async (event) => {
           event.preventDefault();
-          //location.reload()
-          //firebase에 새 데이터 입력
-          // const newPost = { postId: shortid.generate(), postTitle, postBody };
+          // 이전에 사용했던 방법: const newPost = { postId: shortid.generate(), postTitle, postBody };
           const collectionRef = collection(db, "posts");
           const docRef = await addDoc(collectionRef, { postTitle, postBody });
 
           console.log("파이어스토어의 도큐먼트 아이디 => ", docRef.id);
 
-          //navigate : 등록하기 버튼 누르면 submit하고 전체 게시글로 나옴. postdetail로 가는 방법을 찾아야 함.
+          //navigate : 등록하기 버튼 누르면 submit하고 전체 게시글로 나옴. postdetail로 가는 방법을 찾아야 함. (DJ : 해결)
 
           // dispatch 전에 async await로 통신 보내고 통신 보내면 아래 dispatch가 진행됨.
           // or .then
@@ -58,7 +56,7 @@ const PostForm = () => {
           <label>내용</label>
           <textarea
             text="text"
-            name="postTitle"
+            name="postBody"
             value={postBody}
             onChange={(event) => {
               setPostBody(event.target.value);
