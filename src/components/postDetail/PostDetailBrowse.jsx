@@ -5,17 +5,17 @@ import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import { styled } from "styled-components";
 
-
 const PostDetailBrowse = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const uid = useSelector((state) => state.logReducer.user.uid);
-  console.log("uid =>", uid)
+  console.log("uid =>", uid);
 
   const { id } = useParams(); // id === documentId
   const posts = useSelector((state) => state.posts);
   console.log("post.postId check0 => ", posts);
   const post = posts.filter((post) => post.postId === id)[0];
+  const [updatedPostWhoLiked, setUpdatedPostWhoLiked] = useState(post?.postWhoLiked || []);
 
   if (!post) {
     navigate("/post");
@@ -25,13 +25,11 @@ const PostDetailBrowse = () => {
   console.log("포스트브라우저의 포스트 : ", post);
 
   //좋아요 기능. 근데 state가 쓸모가 있는건가????
-  const [updatedPostWhoLiked, setUpdatedPostWhoLiked] = useState(post.postWhoLiked || []);
 
   const updateLike = async (event) => {
-    
     if (post.postWhoLiked.includes(uid)) {
-      const updatedWhoLiked = post.postWhoLiked.filter((like) => like !== uid)
-      setUpdatedPostWhoLiked(updatedWhoLiked)
+      const updatedWhoLiked = post.postWhoLiked.filter((like) => like !== uid);
+      setUpdatedPostWhoLiked(updatedWhoLiked);
       const postRef = doc(db, "posts", post.postId);
       await updateDoc(postRef, { ...post, postWhoLiked: updatedWhoLiked });
       dispatch({
@@ -71,13 +69,14 @@ const PostDetailBrowse = () => {
       <p>{post.postTitle}</p>
       <p>{post.postBody}</p>
       <p>{post.postDate}</p>
+      <img src={post.photoURL} />
       <button
         onClick={async () => {
           if (post.uid !== uid) {
             alert("회원님이 등록하신 글이 아닙니다.");
             return;
           } else if (post.uid === uid) {
-            if (confirm("정말로 삭제하시겠습니까?")) {
+            if (window.confirm("정말로 삭제하시겠습니까?")) {
               //문서아이디=필드아이디
               const postRef = doc(db, "posts", post.postId);
               await deleteDoc(postRef);

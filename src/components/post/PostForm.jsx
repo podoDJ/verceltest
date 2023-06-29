@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { db } from "../../firebase";
+import { auth, db, storage } from "../../firebase";
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import shortid from "shortid";
 import { getAuth } from "firebase/auth";
+import { getDownloadURL, ref, uploadBytes } from "@firebase/storage";
 
 const PostForm = () => {
   //uid는 여기서 가져옵니다.
   const uid = useSelector((state) => state.logReducer.user.uid);
-  console.log("uid =>", uid)
+  console.log("uid =>", uid);
 
   // const postLike = 0
   const postWhoLiked = [];
@@ -30,12 +31,21 @@ const PostForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // 테스트입니당 (추후 삭제해주세용...!)
-  const user = useSelector((state) => {
-    return state.logReducer.user;
-  });
-  console.log(user);
+  // ========================
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [photoURL, setPhotoURL] = useState("");
+  const handleFileSelect = (event) => {
+    setSelectedFile(event.target.files[0]);
+  };
 
+  const handleUpload = async (event) => {
+    event.preventDefault();
+    const imageRef = ref(storage, `${auth.currentUser.uid}/${selectedFile.name}`);
+    await uploadBytes(imageRef, selectedFile);
+    const photoURL = await getDownloadURL(imageRef);
+    setPhotoURL(photoURL);
+  };
+  console.log("ssss", photoURL);
   return (
     <>
       <div>
@@ -46,7 +56,7 @@ const PostForm = () => {
           event.preventDefault();
           // 이전에 사용했던 방법: const newPost = { postId: shortid.generate(), postTitle, postBody };
           const collectionRef = collection(db, "posts");
-          const docRef = await addDoc(collectionRef, { postTitle, postBody, uid, postWhoLiked, postDate });
+          const docRef = await addDoc(collectionRef, { postTitle, postBody, uid, postWhoLiked, postDate, photoURL });
 
           // 도큐먼트 아이디가 바로 필드에 반영되도록 하는 코드
           const postDocRef = doc(db, "posts", docRef.id);
@@ -67,12 +77,12 @@ const PostForm = () => {
               // postLike,
               postWhoLiked,
               postDate,
+              photoURL,
             },
           });
           setPostTitle("");
           setPostBody("");
           navigate(`/post/${docRef.id}`);
-          console.log(postDate)
         }}
       >
         <div>
@@ -94,6 +104,10 @@ const PostForm = () => {
               setPostBody(event.target.value);
             }}
           />
+        </div>
+        <div style={{ backgroundColor: "green", height: "200px" }}>
+          <input type="file" onChange={handleFileSelect} />
+          <button onClick={handleUpload}>업로드</button>
         </div>
         <button>등록하기</button>
       </form>
