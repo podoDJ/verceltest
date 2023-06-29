@@ -2,12 +2,10 @@
 const SHOW_POSTS = "postWrite/SHOW_POSTS";
 const SORT_LIKE_POSTS = "postWrite/SORT_LIKE_POSTS";
 
-const ADD_POSTS = "postWrite/ADD_POSTS"
-const DELETE_POSTS = "postWrite/DELETE_POSTS"
-const UPDATE_POSTS = "postWrite/UPDATE_POSTS"
-const UPDATE_POSTS_Like = "postWrite/UPDATE_POSTS_Like"
-
-
+const ADD_POSTS = "postWrite/ADD_POSTS";
+const DELETE_POSTS = "postWrite/DELETE_POSTS";
+const UPDATE_POSTS = "postWrite/UPDATE_POSTS";
+const UPDATE_POSTS_Like = "postWrite/UPDATE_POSTS_Like";
 
 //action creater
 
@@ -18,9 +16,10 @@ export const showPosts = (payload) => {
   };
 };
 
-export const sortLikePosts = () => {
+export const sortLikePosts = (payload) => {
   return {
     type: SORT_LIKE_POSTS,
+    payload,
   };
 };
 
@@ -28,29 +27,29 @@ export const addPosts = (payload) => {
   return {
     type: ADD_POSTS,
     payload,
-  }
-}
+  };
+};
 
 export const deletePosts = (payload) => {
   return {
     type: DELETE_POSTS,
     payload,
-  }
-}
+  };
+};
 
 export const updatePosts = (payload) => {
   return {
     type: UPDATE_POSTS,
     payload,
-  }
-}
+  };
+};
 
 export const updatePostsLike = (payload) => {
   return {
     type: UPDATE_POSTS_Like,
     payload,
-  }
-}
+  };
+};
 
 let newArr = [];
 
@@ -67,18 +66,13 @@ const posts = (state = newArr, action) => {
     case UPDATE_POSTS:
       return state.map((post) => {
         if (post.postId === action.payload.postId) {
-          return { ...post, 
-            postTitle: action.payload.postTitle, 
-            postBody: action.payload.postBody,
-            postIngredient: action.payload.postIngredient,
-            postRecipe: action.payload.postRecipe,
-          };
+          return { ...post, postTitle: action.payload.postTitle, postBody: action.payload.postBody, postIngredient: action.payload.postIngredient, postRecipe: action.payload.postRecipe };
         } else {
           return post;
         }
       });
     case SORT_LIKE_POSTS:
-      return state.sort((a, b) => b.postWhoLiked?.length || 0 - a.postWhoLiked?.length || 0);
+      return action.payload.sort((a, b) => b.postWhoLiked - a.postWhoLiked);
     case UPDATE_POSTS_Like:
       return state.map((post) => {
         if (post.postId === action.payload.postId) {

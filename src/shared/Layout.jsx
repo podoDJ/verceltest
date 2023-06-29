@@ -6,6 +6,7 @@ export default function Layout({ children }) {
   const user = useSelector((state) => {
     return state.logReducer.user;
   });
+
   return (
     <StLayout>
       {user ? <UserHeaderComp /> : <HeaderComp />}
