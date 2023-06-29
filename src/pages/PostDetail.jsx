@@ -1,9 +1,14 @@
-import React from 'react'
+import React from "react";
+import PostDetailBrowse from "../components/postDetail/PostDetailBrowse";
+import PostComments from "../components/postComments/PostComments";
 
 const PostDetail = () => {
   return (
-    <div>Post_detail</div>
-  )
-}
+    <div>
+      <PostDetailBrowse />
+      {/* <PostComments /> */}
+    </div>
+  );
+};
 
-export default PostDetail
+export default PostDetail;
