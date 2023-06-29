@@ -58,13 +58,14 @@ const PostDetailBrowse = ({ post, id }) => {
       <p>{post.postIngredient}</p>
       <p>{post.postRecipe}</p>
       <p>{post.postDate}</p>
+      <img src={post.photoURL} />
       <S.Btn
         onClick={async () => {
           if (post.uid !== uid) {
             alert("회원님이 등록하신 글이 아닙니다.");
             return;
           } else if (post.uid === uid) {
-            if (windows.confirm("정말로 삭제하시겠습니까?")) {
+            if (confirm("정말로 삭제하시겠습니까?")) {
               //문서아이디=필드아이디
               const postRef = doc(db, "posts", post.postId);
               await deleteDoc(postRef);

@@ -8,11 +8,19 @@ const PostList = () => {
     return state.posts;
   });
   const navigate = useNavigate()
+  // console.log(typeof posts[0].postDate);
+
+  const sortByDate = (a, b) => {
+    return new Date(a.postDate).getTime() - new Date(b.postDate).getTime();
+  };
+  const sortedPosts = posts.sort(sortByDate).reverse();
+
   return (
     <>
-      <h1>전체게시글</h1>
-      <S.PostingBoxCtn>
-        {posts.map((post) => {
+        <h1>전체게시글</h1>
+        <S.PostingBoxCtn>
+        {sortedPosts.map((post) => {
+          console.log(post)
           return (
               <S.PostingBox onClick = {() => navigate(`/post/${post.postId}`)} key={post.postId}>
                 <div>
@@ -24,6 +32,7 @@ const PostList = () => {
                 <S.PostingBody>{post.postBody}</S.PostingBody>
                 {/* <p>uid: {post.uid}</p> */}
                 <p>작성일: {post.postDate}</p>
+                <img src={post.photoURL} />
               </S.PostingBox>
           );
         })}
