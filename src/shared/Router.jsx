@@ -18,7 +18,7 @@ import PostUpdate from "../pages/PostUpdate";
 //진솔 추가
 import { onAuthStateChanged } from "firebase/auth";
 import { useDispatch } from "react-redux";
-import { logChange, showUser } from "../redux/modules/logReducer";
+import { showUser } from "../redux/modules/logReducer";
 import { auth } from "../firebase";
 
 const Router = () => {
@@ -27,11 +27,8 @@ const Router = () => {
   onAuthStateChanged(auth, (user) => {
     if (user) {
       dispatch(showUser(user));
-      dispatch(logChange(true));
-    } else {
-      // User is signed out
-      dispatch(logChange(false));
-    }
+      // dispatch(logChange(true));
+    } else return;
   });
 
   return (
