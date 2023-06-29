@@ -13,25 +13,6 @@ export default function StarList() {
   // const [setStarList, setStarList] = useState([]);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      // q = 요청 객체
-      const q = query(collection(db, "starList"));
-      const querySnapshot = await getDocs(q);
-      const initialStarList = [];
-      querySnapshot.forEach((doc) => {
-        const data = {
-          id: doc.id,
-          ...doc.data(),
-        };
-        initialStarList.push(data);
-        dispatch(showMembers(initialStarList));
-      });
-    };
-
-    fetchData();
-  }, [StarList]);
-
   const user = useSelector((state) => {
     return state.logReducer.user;
   });

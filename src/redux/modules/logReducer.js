@@ -39,9 +39,11 @@ const logReducer = (state = initialState, action) => {
     case SHOW_USER:
       return { ...state, user: action.payload };
     case SHOW_MEMBERS:
+      console.log("aaaaaaa", state);
       return { ...state, members: action.payload };
     case SORT_LIKE_MEMBERS:
-      return state.sort((a, b) => b.like - a.like);
+      console.log("eeeeee", state);
+      return { ...state, members: members.sort((a, b) => b.likes - a.likes) };
 
     default:
       return state;
