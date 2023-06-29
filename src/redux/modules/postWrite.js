@@ -67,7 +67,12 @@ const posts = (state = newArr, action) => {
     case UPDATE_POSTS:
       return state.map((post) => {
         if (post.postId === action.payload.postId) {
-          return { ...post, postTitle: action.payload.postTitle, postBody: action.payload.postBody };
+          return { ...post, 
+            postTitle: action.payload.postTitle, 
+            postBody: action.payload.postBody,
+            postIngredient: action.payload.postIngredient,
+            postRecipe: action.payload.postRecipe,
+          };
         } else {
           return post;
         }

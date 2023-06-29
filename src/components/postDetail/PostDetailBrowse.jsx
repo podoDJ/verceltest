@@ -34,13 +34,10 @@ const PostDetailBrowse = ({ post, id }) => {
     } else {
       const updatedPostWhoLiked = [...post.postWhoLiked, uid];
       setUpdatedPostWhoLiked(updatedPostWhoLiked);
-      console.log("updatedPostWhoLiked==>", updatedPostWhoLiked);
       // setUpdatedPostLike(post.postWhoLiked.length);
       const postRef = doc(db, "posts", post.postId);
-      console.log("postRef ==>", postRef);
       // postLike: updatedPostLike + 1 아래 updateDoc에서 얘를 뺌.
       await updateDoc(postRef, { ...post, postWhoLiked: updatedPostWhoLiked });
-
       dispatch(
         updatePostsLike({
           postId: post.postId,
@@ -58,8 +55,10 @@ const PostDetailBrowse = ({ post, id }) => {
       <p>{post.postId}</p>
       <p>{post.postTitle}</p>
       <p>{post.postBody}</p>
+      <p>{post.postIngredient}</p>
+      <p>{post.postRecipe}</p>
       <p>{post.postDate}</p>
-      <button
+      <S.Btn
         onClick={async () => {
           if (post.uid !== uid) {
             alert("회원님이 등록하신 글이 아닙니다.");
@@ -78,9 +77,9 @@ const PostDetailBrowse = ({ post, id }) => {
         }}
       >
         삭제하기
-      </button>
+      </S.Btn>
       <Link to={`/postupdate/${post.postId}`}>
-        <button>수정하기</button>
+        <S.Btn>수정하기</S.Btn>
       </Link>
     </S.PostDetailBox>
   );
@@ -93,5 +92,16 @@ const S = {
     border: 1px solid black;
     margin: 10px;
     padding: 10px;
+  `,
+
+  Btn: styled.button`
+    width: 200px;
+    height: 40px;
+    color: white;
+    background-color: #b46060;
+    border-color: transparent;
+    border-radius: 10px;
+    margin-top: 30px;
+    cursor: pointer;
   `,
 };
