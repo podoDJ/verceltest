@@ -3,8 +3,8 @@ import { db } from "../../firebase";
 import { collection, getDocs, query } from "firebase/firestore";
 
 //action value
-const SORT_LIKE_POSTS = "SORT_LIKE_POSTS";
 const SHOW_POSTS = "SHOW_POSTS";
+const SORT_LIKE_POSTS = "SORT_LIKE_POSTS";
 
 //action creater
 export const showPosts = (payload) => {
@@ -45,6 +45,7 @@ const posts = (state = newArr, action) => {
       });
     case SORT_LIKE_POSTS:
       return state.sort((a, b) => b.like - a.like);
+
     default:
       return state;
   }
