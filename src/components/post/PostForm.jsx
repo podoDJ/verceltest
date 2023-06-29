@@ -12,6 +12,7 @@ const PostForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // 테스트입니당 (추후 삭제해주세용...!)
   const user = useSelector((state) => {
     return state.logReducer.user;
   });

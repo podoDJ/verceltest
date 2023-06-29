@@ -3,19 +3,12 @@
 
 // action value
 const SHOW_USER = "SHOW_USER";
-const LOG_CHANGE = "LOG_CHANGE";
 
 //action create
 
 export const showUser = (payload) => {
   return {
     type: SHOW_USER,
-    payload,
-  };
-};
-export const logChange = (payload) => {
-  return {
-    type: LOG_CHANGE,
     payload,
   };
 };
@@ -27,8 +20,6 @@ const logReducer = (state = initialState, action) => {
   switch (action.type) {
     case SHOW_USER:
       return { ...state, user: action.payload };
-    case LOG_CHANGE:
-      return { ...state, isLogin: action.payload };
 
     default:
       return state;
