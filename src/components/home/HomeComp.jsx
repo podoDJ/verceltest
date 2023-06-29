@@ -46,7 +46,7 @@ const HomeComp = () => {
   const StarList = useSelector((state) => {
     return state.logReducer.members;
   });
-  console.log("StarList", StarList);
+  console.log("StarList", StarList.slice(0, 5));
 
   return (
     <>
@@ -56,9 +56,10 @@ const HomeComp = () => {
           {popPosts.slice(0, 5).map((item) => {
             return (
               <S.Card key={item.id}>
-                <p>{item.like}</p>
+                <p>{item.postWhoLiked?.length || 0}</p>
                 <p>{item.postTitle}</p>
-                <p>{item.id}</p>
+                <p>{item.postDate}</p>
+                <p>작성자</p>
               </S.Card>
             );
           })}
@@ -67,11 +68,15 @@ const HomeComp = () => {
       <S.Container>
         <p>인기 멤버</p>
         <S.CardContainer>
-          <S.Card>
-            <p>이름</p>
-            <p>좋아요</p>
-            <p>게시글</p>
-          </S.Card>
+          {StarList.slice(0, 5).map((item) => {
+            return (
+              <S.Card key={item.id}>
+                <p>{item.displayName}</p>
+                <p>{item.likes}</p>
+                <p>게시글</p>
+              </S.Card>
+            );
+          })}
         </S.CardContainer>
       </S.Container>
     </>

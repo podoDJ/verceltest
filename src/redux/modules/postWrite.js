@@ -37,7 +37,8 @@ const posts = (state = newArr, action) => {
         }
       });
     case SORT_LIKE_POSTS:
-      return state.sort((a, b) => b.like - a.like);
+      console.log("state", state);
+      return state.sort((a, b) => b.postWhoLiked?.length || 0 - a.postWhoLiked?.length || 0);
     case "UPDATE_POSTLIKE":
       return state.map((post) => {
         if (post.postId === action.payload.postId) {
