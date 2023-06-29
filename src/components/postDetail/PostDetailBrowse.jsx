@@ -10,23 +10,19 @@ const PostDetailBrowse = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const uid = useSelector((state) => state.logReducer.user.uid);
-  console.log("uid =>", uid)
-
+  
   const { id } = useParams(); // id === documentId
   const posts = useSelector((state) => state.posts);
-  console.log("post.postId check0 => ", posts);
   const post = posts.filter((post) => post.postId === id)[0];
-
+  
   if (!post) {
     navigate("/post");
     return null;
   }
 
-  console.log("포스트브라우저의 포스트 : ", post);
-
   //좋아요 기능. 근데 state가 쓸모가 있는건가????
-  const [updatedPostWhoLiked, setUpdatedPostWhoLiked] = useState(post.postWhoLiked || []);
-
+  
+  const [updatedPostWhoLiked, setUpdatedPostWhoLiked] = useState(post?.postWhoLiked || []);
   const updateLike = async (event) => {
     
     if (post.postWhoLiked.includes(uid)) {
