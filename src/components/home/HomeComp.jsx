@@ -10,43 +10,12 @@ const HomeComp = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const newArr = [];
-    const fetchPostsData = async () => {
-      const q = query(collection(db, "posts"));
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        newArr.push({ id: doc.id, ...doc.data() });
-      });
-      dispatch(showPosts(newArr));
-      dispatch(sortLikePosts());
-    };
-    fetchPostsData();
-
-    const fetchMemberData = async () => {
-      // q = 요청 객체
-      const q = query(collection(db, "starList"));
-      const querySnapshot = await getDocs(q);
-      const initialStarList = [];
-      querySnapshot.forEach((doc) => {
-        const data = {
-          id: doc.id,
-          ...doc.data(),
-        };
-        initialStarList.push(data);
-      });
-      dispatch(showMembers(initialStarList));
-      dispatch(sortLikeMembers());
-    };
-    fetchMemberData();
+    dispatch(sortLikePosts());
+    dispatch(sortLikeMembers());
   }, []);
 
   const popPosts = useSelector((state) => state.posts);
-  console.log("popPosts", popPosts);
-
-  const StarList = useSelector((state) => {
-    return state.logReducer.members;
-  });
-  console.log("StarList", StarList);
+  const StarList = useSelector((state) => state.logReducer.members);
 
   return (
     <>
@@ -56,9 +25,10 @@ const HomeComp = () => {
           {popPosts.slice(0, 5).map((item) => {
             return (
               <S.Card key={item.id}>
-                <p>{item.like}</p>
+                <p>{item.postWhoLiked?.length || 0}</p>
                 <p>{item.postTitle}</p>
-                <p>{item.id}</p>
+                <p>{item.postDate}</p>
+                <p>작성자</p>
               </S.Card>
             );
           })}
@@ -67,11 +37,15 @@ const HomeComp = () => {
       <S.Container>
         <p>인기 멤버</p>
         <S.CardContainer>
-          <S.Card>
-            <p>이름</p>
-            <p>좋아요</p>
-            <p>게시글</p>
-          </S.Card>
+          {StarList.slice(0, 5).map((item) => {
+            return (
+              <S.Card key={item.id}>
+                <p>{item.displayName}</p>
+                <p>{item.likes}</p>
+                <p>게시글</p>
+              </S.Card>
+            );
+          })}
         </S.CardContainer>
       </S.Container>
     </>
