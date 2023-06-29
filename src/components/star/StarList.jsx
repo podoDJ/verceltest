@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { collection, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { styled } from "styled-components";
@@ -13,6 +13,10 @@ export default function StarList() {
   const dispatch = useDispatch();
 
   const starList = useSelector((state) => state.logReducer.members);
+
+  useEffect(() => {
+    dispatch(showMembers(starList));
+  }, []);
 
   const updateLikeHandler = async (uid, likes, isLiked) => {
     // where()함수는 쿼리에 필터를 추가하기 위해 사용된다.
