@@ -3,13 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { db } from "../../firebase";
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
-import shortid from "shortid";
-import { getAuth } from "firebase/auth";
+import { addPosts } from "../../redux/modules/postWrite";
 
 const PostForm = () => {
   //uid는 여기서 가져옵니다.
   const uid = useSelector((state) => state.logReducer.user.uid);
-  console.log("uid =>", uid)
+  console.log("uid =>", uid);
 
   // const postLike = 0
   const postWhoLiked = [];
@@ -57,9 +56,8 @@ const PostForm = () => {
           // dispatch 전에 async await로 통신 보내고 통신 보내면 아래 dispatch가 진행됨.
           // or .then
           // reducer로 새 데이터 넘겨주기
-          dispatch({
-            type: "ADD_POST",
-            payload: {
+          dispatch(
+            addPosts({
               postId: docRef.id,
               postTitle,
               postBody,
@@ -67,12 +65,12 @@ const PostForm = () => {
               // postLike,
               postWhoLiked,
               postDate,
-            },
-          });
+            })
+          );
           setPostTitle("");
           setPostBody("");
           navigate(`/post/${docRef.id}`);
-          console.log(postDate)
+          console.log(postDate);
         }}
       >
         <div>
