@@ -12,6 +12,7 @@ const PostList = () => {
   const posts = useSelector((state) => {
     return state.posts;
   });
+  console.log(posts);
 
   return (
     <>
@@ -35,7 +36,6 @@ const PostList = () => {
       </div>
     </>
   );
-  
 };
 
 export default PostList;

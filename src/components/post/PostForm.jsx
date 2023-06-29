@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { db } from "../../firebase";
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
@@ -29,6 +29,12 @@ const PostForm = () => {
   const [postBody, setPostBody] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // 테스트입니당 (추후 삭제해주세용...!)
+  const user = useSelector((state) => {
+    return state.logReducer.user;
+  });
+  console.log(user);
 
   return (
     <>

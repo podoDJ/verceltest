@@ -10,13 +10,13 @@ export const showPosts = (payload) => {
   };
 };
 
-let newArr = []
-
 export const sortLikePosts = () => {
   return {
     type: SORT_LIKE_POSTS,
   };
 };
+
+let newArr = []
 
 const posts = (state = newArr, action) => {
   switch (action.type) {

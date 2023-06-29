@@ -2,25 +2,24 @@
 // isLogin: true ==> 로그인 된 상태
 
 // action value
-const LOG_CHANGE = "LOG_CHANGE";
+const SHOW_USER = "SHOW_USER";
 
 //action create
-export const logChange = (payload) => {
+
+export const showUser = (payload) => {
   return {
-    type: LOG_CHANGE,
+    type: SHOW_USER,
     payload,
   };
 };
 
-
-const initialState = { isLogin: false };
-
+const initialState = { isLogin: false, user: "" };
 
 //reducer
 const logReducer = (state = initialState, action) => {
   switch (action.type) {
-    case LOG_CHANGE:
-      return { ...state, isLogin: action.payload };
+    case SHOW_USER:
+      return { ...state, user: action.payload };
 
     default:
       return state;
