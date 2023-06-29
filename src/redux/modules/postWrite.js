@@ -1,6 +1,6 @@
 //action value
-const SORT_LIKE_POSTS = "SORT_LIKE_POSTS";
 const SHOW_POSTS = "SHOW_POSTS";
+const SORT_LIKE_POSTS = "SORT_LIKE_POSTS";
 
 //action creater
 export const showPosts = (payload) => {
@@ -16,7 +16,7 @@ export const sortLikePosts = () => {
   };
 };
 
-let newArr = []
+let newArr = [];
 
 const posts = (state = newArr, action) => {
   switch (action.type) {
@@ -41,11 +41,11 @@ const posts = (state = newArr, action) => {
     case "UPDATE_POSTLIKE":
       return state.map((post) => {
         if (post.postId === action.payload.postId) {
-          return { ...post, postWhoLiked: action.payload.postWhoLiked }
+          return { ...post, postWhoLiked: action.payload.postWhoLiked };
         } else {
           return post;
         }
-      })
+      });
     default:
       return state;
   }
