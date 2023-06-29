@@ -7,10 +7,10 @@ import shortid from "shortid";
 import { getAuth } from "firebase/auth";
 
 const PostForm = () => {
-  //UID는 여기서 가져옵니다.
-  const auth = getAuth();
-  // console.log("auth.currentUser.uid", auth.currentUser.uid)
-  const UID = auth.currentUser.uid;
+  //uid는 여기서 가져옵니다.
+  const uid = useSelector((state) => state.logReducer.user.uid);
+  console.log("uid =>", uid)
+
   // const postLike = 0
   const postWhoLiked = [];
   //========================오늘 날짜 불러오는 함수==============================//
@@ -46,7 +46,7 @@ const PostForm = () => {
           event.preventDefault();
           // 이전에 사용했던 방법: const newPost = { postId: shortid.generate(), postTitle, postBody };
           const collectionRef = collection(db, "posts");
-          const docRef = await addDoc(collectionRef, { postTitle, postBody, UID, postWhoLiked, postDate });
+          const docRef = await addDoc(collectionRef, { postTitle, postBody, uid, postWhoLiked, postDate });
 
           // 도큐먼트 아이디가 바로 필드에 반영되도록 하는 코드
           const postDocRef = doc(db, "posts", docRef.id);
@@ -63,7 +63,7 @@ const PostForm = () => {
               postId: docRef.id,
               postTitle,
               postBody,
-              UID,
+              uid,
               // postLike,
               postWhoLiked,
               postDate,

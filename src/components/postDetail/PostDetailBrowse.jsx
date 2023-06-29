@@ -4,15 +4,14 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import { styled } from "styled-components";
-import { getAuth } from "firebase/auth";
+
 
 const PostDetailBrowse = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const uid = useSelector((state) => state.logReducer.user.uid);
+  console.log("uid =>", uid)
 
-  const auth = getAuth();
-  const TestUID = auth.currentUser.uid;
-  //console.log("TestUID : ", TestUID);
   const { id } = useParams(); // id === documentId
   const posts = useSelector((state) => state.posts);
   console.log("post.postId check0 => ", posts);
@@ -30,8 +29,8 @@ const PostDetailBrowse = () => {
 
   const updateLike = async (event) => {
     
-    if (post.postWhoLiked.includes(TestUID)) {
-      const updatedWhoLiked = post.postWhoLiked.filter((like) => like !== TestUID)
+    if (post.postWhoLiked.includes(uid)) {
+      const updatedWhoLiked = post.postWhoLiked.filter((like) => like !== uid)
       setUpdatedPostWhoLiked(updatedWhoLiked)
       const postRef = doc(db, "posts", post.postId);
       await updateDoc(postRef, { ...post, postWhoLiked: updatedWhoLiked });
@@ -44,7 +43,7 @@ const PostDetailBrowse = () => {
         },
       });
     } else {
-      const updatedWhoLiked = [...post.postWhoLiked, TestUID];
+      const updatedWhoLiked = [...post.postWhoLiked, uid];
       setUpdatedPostWhoLiked(updatedWhoLiked);
       console.log("updatedPostWhoLiked==>", updatedWhoLiked);
       // setUpdatedPostLike(post.postWhoLiked.length);
@@ -74,10 +73,10 @@ const PostDetailBrowse = () => {
       <p>{post.postDate}</p>
       <button
         onClick={async () => {
-          if (post.UID !== TestUID) {
+          if (post.uid !== uid) {
             alert("회원님이 등록하신 글이 아닙니다.");
             return;
-          } else if (post.UID === TestUID) {
+          } else if (post.uid === uid) {
             if (confirm("정말로 삭제하시겠습니까?")) {
               //문서아이디=필드아이디
               const postRef = doc(db, "posts", post.postId);

@@ -28,7 +28,7 @@ const PostList = () => {
               <p>글 아이디: {post.postId}</p>
               <p>제목: {post.postTitle}</p>
               <p>내용: {post.postBody}</p>
-              <p>UID: {post.UID}</p>
+              <p>uid: {post.uid}</p>
               <p>작성일: {post.postDate}</p>
             </S.PostingBox>
           );
