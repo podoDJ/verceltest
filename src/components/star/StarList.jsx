@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { collection, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { styled } from "styled-components";
@@ -6,32 +6,15 @@ import { BiSolidLike } from "react-icons/bi";
 import { db } from "../../firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { showMembers } from "../../redux/modules/logReducer";
-import { useSelector } from "react-redux";
 // import InfiniteScroll from "react-infinite-scroll-component";
 
 export default function StarList() {
   const navigate = useNavigate();
-  const user = useSelector((state) => state.logReducer.user);
-  const uid = user?.uid;
-
-  // const [setStarList, setStarList] = useState([]);
   const dispatch = useDispatch();
 
-  const user = useSelector((state) => {
-    return state.logReducer.user;
-  });
-  const uid = user?.uid;
-
-    fetchData();
-  }, []);
   const starList = useSelector((state) => state.logReducer.members);
-  console.log(starList);
 
   const updateLikeHandler = async (uid, likes, isLiked) => {
-    console.log("uid", uid);
-    console.log("likes", likes);
-    console.log("isLiked", isLiked);
-
     // where()함수는 쿼리에 필터를 추가하기 위해 사용된다.
     const q = query(collection(db, "starList"), where("uid", "==", uid));
     const starListRef = await getDocs(q);
@@ -44,9 +27,6 @@ export default function StarList() {
     });
 
     const newStarList = starList.map((prevStar) => (prevStar.uid === uid ? { ...prevStar, likes: isLiked ? prevStar.likes - 1 : prevStar.likes + 1, isLiked: !prevStar.isLiked } : prevStar));
-    // starList 상태 업데이트
-    //setStarList(newStarList);
-    const newStarList = starList.map((star) => (star.uid === uid ? { ...star, likes: isLiked ? likes - 1 : likes + 1, isLiked: !star.isLiked } : star));
     dispatch(showMembers(newStarList));
   };
 
