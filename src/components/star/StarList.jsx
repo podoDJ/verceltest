@@ -1,33 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { collection, doc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { styled } from "styled-components";
 import { BiSolidLike } from "react-icons/bi";
 import { db } from "../../firebase";
+import { useDispatch, useSelector } from "react-redux";
+import { showMembers } from "../../redux/modules/logReducer";
 // import InfiniteScroll from "react-infinite-scroll-component";
 
 export default function StarList() {
   const navigate = useNavigate();
-  const [starList, setStarList] = useState([]);
+  // const [setStarList, setStarList] = useState([]);
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      // q = 요청 객체
-      const q = query(collection(db, "starList"));
-      const querySnapshot = await getDocs(q);
-      const initialStarList = [];
-      querySnapshot.forEach((doc) => {
-        const data = {
-          id: doc.id,
-          ...doc.data(),
-        };
-        initialStarList.push(data);
-      });
-      setStarList(initialStarList);
-    };
+  const user = useSelector((state) => {
+    return state.logReducer.user;
+  });
+  const uid = user?.uid;
 
-    fetchData();
-  }, [setStarList]);
+  const starList = useSelector((state) => state.logReducer.members);
+  console.log(starList);
 
   const updateLikeHandler = async (uid, likes, isLiked) => {
     const q = query(collection(db, "starList"), where("uid", "==", uid));
@@ -45,7 +37,9 @@ export default function StarList() {
     });
 
     // starList 상태 업데이트
-    setStarList((prevStarList) => prevStarList.map((star) => (star.id === uid ? { ...star, isLiked: !isLiked } : star)));
+    //setStarList((prevStarList) => prevStarList.map((star) => (star.id === uid ? { ...star, isLiked: !isLiked } : star)));
+    const newStarList = starList.map((star) => (star.uid === uid ? { ...star, likes: isLiked ? likes - 1 : likes + 1, isLiked: !star.isLiked } : star));
+    dispatch(showMembers(newStarList));
   };
 
   return (
@@ -56,7 +50,18 @@ export default function StarList() {
           return (
             <Profile key={star.uid} onClick={() => navigate(`/star/members/${star.uid}`)}>
               <LikesWrapper>
-                <LikeBtn onClick={() => updateLikeHandler(star.uid, star.likes, star.isLiked)} isLiked={star.isLiked}>
+                <LikeBtn
+                  onClick={(e) => {
+                    // 프로필 클릭 이벤트 전파 방지
+                    e.stopPropagation();
+                    if (uid) {
+                      updateLikeHandler(star.uid, star.likes, star.isLiked);
+                    }
+                  }}
+                  isLiked={star.isLiked}
+                  disabled={!uid}
+                >
+                  {" "}
                   <BiSolidLike size={25} />
                 </LikeBtn>
                 <p>{star.likes || 0}</p>
