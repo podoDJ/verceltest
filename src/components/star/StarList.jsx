@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { collection, doc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { collection, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { styled } from "styled-components";
 import { BiSolidLike } from "react-icons/bi";
 import { db } from "../../firebase";
+import { useSelector } from "react-redux";
 // import InfiniteScroll from "react-infinite-scroll-component";
 
 export default function StarList() {
   const navigate = useNavigate();
+  const user = useSelector((state) => state.logReducer.user);
+  const uid = user?.uid;
+
   const [starList, setStarList] = useState([]);
 
   useEffect(() => {
@@ -27,16 +31,17 @@ export default function StarList() {
     };
 
     fetchData();
-  }, [setStarList]);
+  }, []);
 
   const updateLikeHandler = async (uid, likes, isLiked) => {
+    console.log("uid", uid);
+    console.log("likes", likes);
+    console.log("isLiked", isLiked);
+
+    // where()함수는 쿼리에 필터를 추가하기 위해 사용된다.
     const q = query(collection(db, "starList"), where("uid", "==", uid));
     const starListRef = await getDocs(q);
-    // console.log(starListRef);
-
     console.log("1", starListRef.docs[0].ref);
-    // 업데이트할 문서를 참조
-    // const starListRef = doc(db, "starList", uid);
 
     // 좋아요 수와 isLiked 상태를 업데이트
     await updateDoc(starListRef.docs[0].ref, {
@@ -44,8 +49,9 @@ export default function StarList() {
       isLiked: !isLiked,
     });
 
+    const newStarList = starList.map((prevStar) => (prevStar.uid === uid ? { ...prevStar, likes: isLiked ? prevStar.likes - 1 : prevStar.likes + 1, isLiked: !prevStar.isLiked } : prevStar));
     // starList 상태 업데이트
-    setStarList((prevStarList) => prevStarList.map((star) => (star.id === uid ? { ...star, isLiked: !isLiked } : star)));
+    setStarList(newStarList);
   };
 
   return (
@@ -54,9 +60,20 @@ export default function StarList() {
       <Container>
         {starList.map((star) => {
           return (
-            <Profile key={star.uid} onClick={() => navigate(`/star/members/${star.uid}`)}>
+            <Profile key={star.uid} onClick={() => navigate(`/star/members/${star.uid} `)}>
               <LikesWrapper>
-                <LikeBtn onClick={() => updateLikeHandler(star.uid, star.likes, star.isLiked)} isLiked={star.isLiked}>
+                <LikeBtn
+                  onClick={(e) => {
+                    // 프로필 클릭 이벤트 전파 방지
+                    e.stopPropagation();
+                    if (star.uid) {
+                      updateLikeHandler(star.uid, star.likes, star.isLiked);
+                    }
+                  }}
+                  isLiked={star.isLiked}
+                  // uid가 없는 경우 버튼 비활성화
+                  disabled={!star.uid}
+                >
                   <BiSolidLike size={25} />
                 </LikeBtn>
                 <p>{star.likes || 0}</p>
