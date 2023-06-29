@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { collection, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { collection, getDocs, query, runTransaction, updateDoc, where } from "firebase/firestore";
 import { styled } from "styled-components";
 import { BiSolidLike } from "react-icons/bi";
 import { db } from "../../firebase";
@@ -22,7 +22,7 @@ export default function StarList() {
     // where()함수는 쿼리에 필터를 추가하기 위해 사용된다.
     const q = query(collection(db, "starList"), where("uid", "==", uid));
     const starListRef = await getDocs(q);
-    console.log("1", starListRef.docs[0].ref);
+    // console.log("1", starListRef.docs[0].ref);
 
     // 좋아요 수와 isLiked 상태를 업데이트
     await updateDoc(starListRef.docs[0].ref, {
