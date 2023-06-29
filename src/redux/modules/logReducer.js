@@ -43,7 +43,7 @@ const logReducer = (state = initialState, action) => {
       return { ...state, members: action.payload };
     case SORT_LIKE_MEMBERS:
       console.log("eeeeee", state);
-      return { ...state, members: members.sort((a, b) => b.likes - a.likes) };
+      return { ...state, members: state.members.sort((a, b) => b.likes - a.likes) };
 
     default:
       return state;
