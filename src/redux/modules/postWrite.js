@@ -10,9 +10,10 @@ export const showPosts = (payload) => {
   };
 };
 
-export const sortLikePosts = () => {
+export const sortLikePosts = (payload) => {
   return {
     type: SORT_LIKE_POSTS,
+    payload,
   };
 };
 
@@ -37,7 +38,7 @@ const posts = (state = newArr, action) => {
         }
       });
     case SORT_LIKE_POSTS:
-      return state.sort((a, b) => b.postWhoLiked?.length || 0 - a.postWhoLiked?.length || 0);
+      return action.payload.sort((a, b) => b.postWhoLiked - a.postWhoLiked);
     case "UPDATE_POSTLIKE":
       return state.map((post) => {
         if (post.postId === action.payload.postId) {
