@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
+import { BiSolidLike } from "react-icons/bi";
 
 const PostList = () => {
   const posts = useSelector((state) => state.posts);
@@ -30,7 +31,10 @@ const PostList = () => {
 
               {/* <S.PostingBody>{post.display}</S.PostingBody> */}
               <S.PostingBody>작성자</S.PostingBody>
-              <S.PostingLike> 👍🏻 {post.postWhoLiked?.length || 0}</S.PostingLike>
+              <S.PostingLike>
+                <BiSolidLike size={25}/>
+                {post.postWhoLiked?.length || 0}
+                </S.PostingLike>
               {/* <p>uid: {post.uid}</p> */}
               <p> {post.postDate.slice(0, 11)}</p>
             </S.PostingBox>
