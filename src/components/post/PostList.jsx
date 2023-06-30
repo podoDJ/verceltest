@@ -2,11 +2,11 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
+import { BiSolidLike } from "react-icons/bi";
 
 const PostList = () => {
-  const posts = useSelector((state) => {
-    return state.posts;
-  });
+  const posts = useSelector((state) => state.posts);
+  const uid = useSelector((state) => state.logReducer.user.uid);
   const navigate = useNavigate();
   // console.log(typeof posts[0].postDate);
 
@@ -18,7 +18,7 @@ const PostList = () => {
   return (
     <>
       <S.Title>All post</S.Title>
-      <S.PostWriteBox onClick={() => navigate("/postcreate")}>
+      <S.PostWriteBox onClick={uid? () => navigate("/postcreate") : () => alert("로그인 후 이용 바랍니다.")}>
         <S.PostWriteBoxCnt>✏️</S.PostWriteBoxCnt>
         <S.PostWriteBoxCnt>오늘 어떤 음식을 해먹었나요?</S.PostWriteBoxCnt>
       </S.PostWriteBox>
@@ -29,12 +29,15 @@ const PostList = () => {
           return (
             <S.PostingBox onClick={() => navigate(`/post/${post.postId}`)} key={post.postId}>
               {/* <p>글 아이디: {post.postId}</p> */}
-              <S.PostingFoodPhoto src={post.photoURL} />
+              <S.PostingFoodPhoto src={post.photoURL ? post.photoURL : "https://velog.velcdn.com/images/darkfairy7/post/f0d9a0ca-ad26-4a4c-b1b3-756dfb4fb3d0/banner-rtan.png" } />
               <S.PostingTitle>{post.postTitle}</S.PostingTitle>
 
               {/* <S.PostingBody>{post.display}</S.PostingBody> */}
               <S.PostingBody>작성자</S.PostingBody>
-              <S.PostingLike> 👍🏻 {post.postWhoLiked?.length || 0}</S.PostingLike>
+              <S.PostingLike>
+                <BiSolidLike size={25}/>
+                {post.postWhoLiked?.length || 0}
+                </S.PostingLike>
               {/* <p>uid: {post.uid}</p> */}
               <p> {post.postDate.slice(0, 11)}</p>
             </S.PostingBox>
@@ -116,5 +119,10 @@ const S = {
   `,
   PostingLike: styled.div`
     float: right;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 5px;
+    font-size: 20px;
   `,
 };
