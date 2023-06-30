@@ -79,7 +79,7 @@ const Router = () => {
             <Route path="/star/members/:id" element={<StarDetail />} />
             <Route path="/star" element={<Star />} />
             <Route path="/about" element={<About />} />
-            <Route path="/mypage/profile/:id" element={<Mypage />} />
+            <Route path="/mypage" element={<Mypage />} />
           </Routes>
         </Layout>
       </BrowserRouter>
