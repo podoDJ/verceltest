@@ -24,7 +24,6 @@ import { auth, db } from "../firebase";
 import { useEffect } from "react";
 import { collection, getDocs, query } from "@firebase/firestore";
 import { showPosts, sortLikePosts } from "../redux/modules/postWrite";
-import PostCommentUpdata from "../pages/PostCommentUpdata";
 
 const Router = () => {
   const dispatch = useDispatch();

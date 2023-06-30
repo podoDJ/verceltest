@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { db } from "../../firebase";
+import { auth, db, storage } from "../../firebase";
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
-import shortid from "shortid";
-import { getAuth } from "firebase/auth";
+import { addPosts } from "../../redux/modules/postWrite";
+import { styled } from "styled-components";
+import { getDownloadURL, ref, uploadBytes } from "@firebase/storage";
 
 const PostForm = () => {
   //uid는 여기서 가져옵니다.
   const uid = useSelector((state) => state.logReducer.user.uid);
-  console.log("uid =>", uid)
+  console.log("uid =>", uid);
 
   // const postLike = 0
   const postWhoLiked = [];
@@ -24,29 +25,39 @@ const PostForm = () => {
 
   const postDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`; // 연도, 월, 일을 조합하여 날짜 문자열 생성
   //========================오늘 날짜 불러오는 함수==============================//
-  console.log("여기는 POSTFORM");
   const [postTitle, setPostTitle] = useState("");
   const [postBody, setPostBody] = useState("");
+  const [postIngredient, setPostIngredient] = useState("");
+  const [postRecipe, setPostRecipe] = useState("");
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // 테스트입니당 (추후 삭제해주세용...!)
-  const user = useSelector((state) => {
-    return state.logReducer.user;
-  });
-  console.log(user);
+  // ========================
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [photoURL, setPhotoURL] = useState("");
+  const handleFileSelect = (event) => {
+    setSelectedFile(event.target.files[0]);
+  };
 
+  const handleUpload = async (event) => {
+    event.preventDefault();
+    const imageRef = ref(storage, `${auth.currentUser.uid}/${selectedFile.name}`);
+    await uploadBytes(imageRef, selectedFile);
+    const photoURL = await getDownloadURL(imageRef);
+    setPhotoURL(photoURL);
+  };
   return (
     <>
       <div>
         <Link to={"/post"}>전체게시글보기</Link>
       </div>
-      <form
+      <S.PostForm
         onSubmit={async (event) => {
           event.preventDefault();
           // 이전에 사용했던 방법: const newPost = { postId: shortid.generate(), postTitle, postBody };
           const collectionRef = collection(db, "posts");
-          const docRef = await addDoc(collectionRef, { postTitle, postBody, uid, postWhoLiked, postDate });
+          const docRef = await addDoc(collectionRef, { postTitle, postBody, uid, postWhoLiked, postDate, photoURL });
 
           // 도큐먼트 아이디가 바로 필드에 반영되도록 하는 코드
           const postDocRef = doc(db, "posts", docRef.id);
@@ -57,48 +68,164 @@ const PostForm = () => {
           // dispatch 전에 async await로 통신 보내고 통신 보내면 아래 dispatch가 진행됨.
           // or .then
           // reducer로 새 데이터 넘겨주기
-          dispatch({
-            type: "ADD_POST",
-            payload: {
+          dispatch(
+            addPosts({
               postId: docRef.id,
               postTitle,
+              photoURL,
               postBody,
+              postIngredient,
+              postRecipe,
               uid,
               // postLike,
               postWhoLiked,
               postDate,
-            },
-          });
-          setPostTitle("");
+            })
+          ),
+            setPostTitle("");
           setPostBody("");
           navigate(`/post/${docRef.id}`);
-          console.log(postDate)
         }}
       >
         <div>
-          <label>제목</label>
-          <input
-            text="text"
-            name="postTitle"
-            value={postTitle}
-            onChange={(event) => {
-              setPostTitle(event.target.value);
-            }}
-          />
-          <label>내용</label>
-          <textarea
-            text="text"
-            name="postBody"
-            value={postBody}
-            onChange={(event) => {
-              setPostBody(event.target.value);
-            }}
-          />
+          <div>
+            <S.PostLabel for="postTitle">오늘의 혼쿡</S.PostLabel>
+            <S.PostInput
+              text="text"
+              name="postTitle"
+              value={postTitle}
+              onChange={(event) => {
+                setPostTitle(event.target.value);
+              }}
+            />
+          </div>
+
+          <div>
+            <S.PostLabel for="postBody">CooK'Story</S.PostLabel>
+            <S.PostTextarea
+              text="text"
+              name="postBody"
+              value={postBody}
+              onChange={(event) => {
+                setPostBody(event.target.value);
+              }}
+            />
+          </div>
+
+          <div>
+            <S.PostLabel for="postIngredient">오늘의 재료</S.PostLabel>
+            <S.PostTextarea
+              text="text"
+              name="postIngredient"
+              value={postIngredient}
+              onChange={(event) => {
+                setPostIngredient(event.target.value);
+              }}
+            />
+          </div>
+
+          <div>
+            <S.PostLabel for="postRecipe">레시피</S.PostLabel>
+            <S.PostTextarea
+              text="text"
+              name="postRecipe"
+              value={postRecipe}
+              onChange={(event) => {
+                setPostRecipe(event.target.value);
+              }}
+            />
+          </div>
         </div>
-        <button>등록하기</button>
-      </form>
+
+        <div style={{ backgroundColor: "green", height: "200px" }}>
+          <input type="file" onChange={handleFileSelect} />
+          <button onClick={handleUpload}>업로드</button>
+        </div>
+        <S.PostBtnCtn>
+          <S.PostBtn>등록하기</S.PostBtn>
+          {/* window.history.back()은 뒤로가는 메서드(window.history : 윈도우 히스토리 객체) */}
+          <S.PostBtn
+            type="button"
+            onClick={() => {
+              window.history.back();
+            }}
+          >
+            취소
+          </S.PostBtn>
+        </S.PostBtnCtn>
+      </S.PostForm>
     </>
   );
 };
 
 export default PostForm;
+
+const S = {
+  PostForm: styled.form`
+    background-color: #ffbf9b;
+    color: #4d4d4d;
+    width: 500px;
+    height: 700px;
+    margin: auto;
+    padding: 50px;
+    border-radius: 20px;
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  `,
+  PostLabel: styled.label`
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 auto 20px 10px;
+  `,
+
+  PostInput: styled.input`
+    width: 500px;
+    height: 30px;
+    margin-top: 5px;
+    margin-bottom: 30px;
+    padding: 10px;
+    border-radius: 10px;
+    border-color: transparent;
+    font-size: 18px;
+  `,
+
+  PostTextarea: styled.textarea`
+    width: 500px;
+    height: 100px;
+    margin-top: 5px;
+    margin-bottom: 30px;
+    padding: 10px;
+    border-radius: 10px;
+    border-color: transparent;
+    font-size: 18px;
+    resize: none;
+    /* 스크롤바 설정. https://www.geeksforgeeks.org/how-to-style-scrollbar-thumb-for-the-webkit-browsers-and-what-are-components-of-scrollbar/ */
+    overflow: auto;
+    scrollbar-width: thin; /* 스크롤바 너비설정 */
+    scrollbar-color: transparent; /* 스크롤바 색깔 설정 */
+    &::-webkit-scrollbar {
+      width: 1px; /* Set the width of the scrollbar */
+    }
+  `,
+
+  PostBtn: styled.button`
+    width: 200px;
+    height: 40px;
+    color: white;
+    background-color: #b46060;
+    border-color: transparent;
+    border-radius: 10px;
+    margin-top: 10px;
+    font-size: 20px;
+    cursor: pointer;
+  `,
+
+  PostBtnCtn: styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+  `,
+};
