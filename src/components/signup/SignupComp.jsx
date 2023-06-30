@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { auth } from "../../firebase";
+import { auth, db } from "../../firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import { ERR_CODE } from "../../constant";
+import { addDoc, collection, doc, setDoc } from "@firebase/firestore";
 
 const SignupComp = () => {
   const [name, setName] = useState("");
@@ -19,8 +20,14 @@ const SignupComp = () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(auth.currentUser, { displayName: name });
-      console.log(userCredential.user);
+      console.log("가입된 유저 정보", userCredential.user);
       alert("회원가입 완료");
+      const collectionRef = collection(db, "members");
+      const docRef = await addDoc(collectionRef, { displayName: userCredential.user.displayName, email: userCredential.user.email, intro: "", whoLikedMe: [], photoURL: "" });
+
+      const membersDocRef = doc(db, "members", docRef.id);
+      await setDoc(membersDocRef, { memberId: docRef.id }, { merge: true });
+
       navigate("/");
     } catch (error) {
       const errorCode = error.code;
