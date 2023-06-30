@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ADD_COMMENT, REMOVE_COMMENT, baseComment } from "../../redux/modules/comment";
-import { addDoc, collection, deleteDoc, doc, getDocs, query, setDoc, where } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, query, setDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import { Link } from "react-router-dom";
 import { styled } from "styled-components";
+import CommentChange from "./CommentChange";
 
 const PostComments = ({ post, id }) => {
   const uid = useSelector((state) => state.logReducer.user.uid);
@@ -33,6 +34,11 @@ const PostComments = ({ post, id }) => {
     };
     fetchData();
   }, [dispatch]);
+  const [isModal, setIsModal] = useState(false);
+
+  const openModal = () => {
+    setIsModal(true);
+  };
 
   return (
     <div>
@@ -40,6 +46,10 @@ const PostComments = ({ post, id }) => {
       <form
         onSubmit={async (e) => {
           e.preventDefault();
+          if (!title || !comment) {
+            alert("내용을 추가해주세요");
+            return false;
+          }
           const collectionRef = collection(db, "comments");
           const docRef = await addDoc(collectionRef, { title, comment });
           console.log(docRef.id);
@@ -94,9 +104,18 @@ const PostComments = ({ post, id }) => {
                 <p>{comment.title}</p>
                 <p>{comment.comment}</p>
                 {isOpen && (
-                  <Link to={`/post/commentup/${comment.commentId}`}>
-                    <button>수정</button>
-                  </Link>
+                  <button onClick={openModal}>수정</button>
+                  // <Link to={`/post/commentup/${comment.commentId}`}>
+                  //   <button>수정</button>
+                  // </Link>
+                )}
+
+                {isModal && (
+                  <StModalBox>
+                    <StModalContents>
+                      <CommentChange commentId={comment.commentId} />
+                    </StModalContents>
+                  </StModalBox>
                 )}
                 {isOpen && (
                   <button
@@ -127,4 +146,33 @@ export default PostComments;
 const Stspan = styled.div`
   display: flex;
   border: 1px solid black;
+`;
+
+const StModalBox = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const StModalContents = styled.div`
+  background-color: #fff;
+  padding: 20px;
+  width: 70%;
+  height: 50%;
+  border-radius: 12px;
+`;
+const StButton = styled.button`
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  background-color: rgb(85, 239, 196);
+  color: rgb(0, 0, 0);
+  height: 40px;
+  width: 100px;
 `;

@@ -6,17 +6,15 @@ import { db } from "../../firebase";
 import { doc, updateDoc } from "@firebase/firestore";
 import { UPDATE_COMMENT } from "../../redux/modules/comment";
 
-const CommentChange = () => {
+const CommentChange = ({ commentId }) => {
   const navigate = useNavigate();
   const [uptitle, setUpTitle] = useState();
   const [upComment, setUpComment] = useState();
   const { id } = useParams();
-
   const comments = useSelector((state) => state.comment);
   const comment = comments.find((comment) => comment.commentId === id);
 
-  console.log("id", id);
-
+  console.log(comment);
   const dispatch = useDispatch();
 
   return (
@@ -24,7 +22,11 @@ const CommentChange = () => {
       <form
         onSubmit={async (e) => {
           e.preventDefault();
-          const commentRef = doc(db, "comments", comment.commentId);
+          if (!uptitle || !upComment) {
+            alert("내용을 추가해주세요");
+            return false;
+          }
+          const commentRef = doc(db, "comments", commentId);
 
           await updateDoc(commentRef, { ...comment, title: uptitle, comment: upComment });
 
@@ -36,7 +38,7 @@ const CommentChange = () => {
               comment: upComment,
             },
           });
-          navigate(`/post/${comment.postId}`);
+          navigate(`/post/${comments.postId}`);
         }}
       >
         <input
