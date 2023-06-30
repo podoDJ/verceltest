@@ -136,12 +136,11 @@ const PostForm = () => {
             />
           </div>
         </div>
-
+        
         <div style={{ backgroundColor: "green", height: "200px" }}>
           <input type="file" onChange={handleFileSelect} />
           <button onClick={handleUpload}>업로드</button>
         </div>
-        
         <S.PostBtnCtn>
           <S.PostBtn>등록하기</S.PostBtn>
         {/* window.history.back()은 뒤로가는 메서드(window.history : 윈도우 히스토리 객체) */}

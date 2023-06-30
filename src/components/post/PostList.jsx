@@ -23,16 +23,16 @@ const PostList = () => {
           console.log(post)
           return (
               <S.PostingBox onClick = {() => navigate(`/post/${post.postId}`)} key={post.postId}>
-                <div>
+                <S.PostingLike>
                   👍{post.postWhoLiked?.length || 0}
-                </div>
+                </S.PostingLike>
                 {/* <p>글 아이디: {post.postId}</p> */}
-                <S.PostingFoodPhoto src={"https://pelicana.co.kr/resources/images/menu/original_menu02_200529.png"} alt="member" />
+                <S.PostingFoodPhoto src={post.photoURL} />
                 <S.PostingTitle>{post.postTitle}</S.PostingTitle>
                 <S.PostingBody>{post.postBody}</S.PostingBody>
                 {/* <p>uid: {post.uid}</p> */}
                 <p>작성일: {post.postDate}</p>
-                <img src={post.photoURL} />
+                
               </S.PostingBox>
           );
         })}
@@ -82,4 +82,7 @@ const S = {
   PostingBody: styled.p`
     padding-bottom: 10px;
   `,
+  PostingLike: styled.div`
+  float: right;
+  `
 };
