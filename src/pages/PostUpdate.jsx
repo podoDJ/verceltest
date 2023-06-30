@@ -100,10 +100,17 @@ const PostUpdate = () => {
           </div>
         </div>
         <S.UpdateBtnCtn>
-        <S.UpdatePostBtn>수정완료</S.UpdatePostBtn>
-        {/* type="button"으로 form의 자동 onSubmit 속성 해제.
+          <S.UpdatePostBtn>수정완료</S.UpdatePostBtn>
+          {/* type="button"으로 form의 자동 onSubmit 속성 해제.
         window.history.back()은 뒤로가는 메서드(window.history : 윈도우 히스토리 객체) */}
-        <S.UpdatePostBtn type="button" onClick={() => {window.history.back()}}>취소</S.UpdatePostBtn>
+          <S.UpdatePostBtn
+            type="button"
+            onClick={() => {
+              window.history.back();
+            }}
+          >
+            취소
+          </S.UpdatePostBtn>
         </S.UpdateBtnCtn>
       </S.UpdatePostForm>
     </>
@@ -154,7 +161,7 @@ const S = {
     font-size: 18px;
     resize: none;
     /* 스크롤바 설정. https://www.geeksforgeeks.org/how-to-style-scrollbar-thumb-for-the-webkit-browsers-and-what-are-components-of-scrollbar/ */
-    overflow: auto; 
+    overflow: auto;
     scrollbar-width: thin; /* Set the width of the scrollbar */
     scrollbar-color: transparent; /* Set the color of the scrollbar */
     &::-webkit-scrollbar {
@@ -179,5 +186,5 @@ const S = {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-  `
+  `,
 };

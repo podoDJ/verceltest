@@ -59,7 +59,7 @@ const PostDetailBrowse = ({ post, id }) => {
       <p>{post.postIngredient}</p>
       <p>{post.postRecipe}</p>
       <p>{post.postDate}</p>
-      
+
       <S.Btn
         onClick={async () => {
           if (post.uid !== uid) {
