@@ -1,5 +1,5 @@
 import React from "react";
-import StarProfile from "../components/star/StarProfile";
+import StarProfile from "../components/starDetail/StarProfile";
 
 const StarDetail = () => {
   return <StarProfile />;
