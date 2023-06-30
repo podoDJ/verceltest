@@ -29,6 +29,8 @@ export const UserHeaderComp = () => {
   const logOutFunc = async () => {
     await signOut(auth);
     window.location.reload();
+    // 로그아웃 시 로컬스토리지 photoURL 값 제거 (제이 추가)
+    localStorage.removeItem("photoURL");
   };
 
   const user = useSelector((state) => {
