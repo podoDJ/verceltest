@@ -63,7 +63,6 @@ const PostDetailCss = ({ post, id }) => {
           <p>{post.postIngredient}</p>
           <p>{post.postRecipe}</p>
           <p>{post.postDate}</p>
-          <p>{post.uid}</p>
           <S.PostBtnCtn uid={uid} postuid={post.uid}>
             <S.Btn
               onClick={async () => {
@@ -104,12 +103,12 @@ const S = {
   `,
 
   PostDetailBox: styled.div`
+    position: relative;
     width: 800px;
     height: 400px;
     padding: 10px;
     border: none;
     border-radius: 5px;
-
     background-color: #fff4e0;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   `,
