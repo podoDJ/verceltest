@@ -10,26 +10,6 @@ const Profile = () => {
   const userProfile = useSelector((state) => state.logReducer.user);
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   if (uid) {
-  //     const fetchData = async () => {
-  //       const q = await query(collection(db, "profile"));
-  //       const querySnapshot = await getDocs(q);
-  //       const initialProfile = [];
-  //       querySnapshot.forEach((doc) => {
-  //         const data = {
-  //           id: doc.id,
-  //           ...doc.data(),
-  //         };
-  //         console.log("data", data);
-  //         initialProfile.push(data);
-  //       });
-  //       dispatch(setProfile(initialProfile));
-  //     };
-  //     fetchData();
-  //   }
-  // }, []);
-
   const [selectedFile, setSelectedFile] = useState(null);
   const [photoURL, setPhotoURL] = useState("");
   const [displayName, setDisplayName] = useState(userProfile.displayName || "");
@@ -92,7 +72,6 @@ const Profile = () => {
               <P.ImageUploadBox>
                 <input type="file" style={{ display: "none" }} ref={imageFileInput} onChange={changedPhoto} />
                 <P.Btns onClick={onClickImageFile}>이미지 업로드</P.Btns>
-                <P.Btns onClick={UploadPhoto}>프로필 사진 변경하기</P.Btns>
               </P.ImageUploadBox>
             </P.ProfileImageWrap>
             <P.ProfileBody>
