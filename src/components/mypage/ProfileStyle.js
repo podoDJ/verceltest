@@ -6,7 +6,7 @@ export const P = {
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    gap: 80px;
+    gap: 120px;
     margin-top: 30px;
   `,
 
@@ -18,8 +18,8 @@ export const P = {
   `,
 
   ProfileImageBox: styled.div`
-    width: 280px;
-    height: 280px;
+    width: 300px;
+    height: 300px;
     overflow: hidden;
     border-radius: 100%;
     margin: 30px;
@@ -32,9 +32,11 @@ export const P = {
   `,
 
   ImageUploadBox: styled.div`
-    display: flex;
-    gap: 8px;
     margin-bottom: 15px;
+  `,
+
+  ImageInput: styled.input`
+    display: none;
   `,
 
   FileBoxLabel: styled.label`
@@ -49,12 +51,15 @@ export const P = {
   ProfileBody: styled.div`
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 15px;
   `,
-  NameBox: styled.span`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+  MemberInput: styled.input`
+    width: 300px;
+    height: 40px;
+    padding-left: 15px;
+    border: 0.03rem solid gray;
+    border-radius: 5px;
+    background-color: transparent;
   `,
 
   Contents: styled.div`
@@ -80,18 +85,21 @@ export const P = {
     cursor: pointer;
     border-radius: 5px;
     margin-left: 10px;
+    background-color: #e4dccf;
 
-    ${({ size }) => {
-      switch (size) {
-        case "large":
+    ${({ btn }) => {
+      switch (btn) {
+        case "imageBtn":
           return css`
-            width: 80px;
+            width: 150px;
             height: 30px;
+            margin-right: 5px;
           `;
-        case "medium":
+        case "introBtn":
           return css`
-            width: 50px;
-            height: 30px;
+            width: 300px;
+            height: 40px;
+            margin-top: 20px;
           `;
       }
     }}

@@ -39,7 +39,7 @@ export default function StarList() {
     // where()함수 : 쿼리에 필터를 추가하기 위해 사용
     const q = query(collection(db, "starList"), where("uid", "==", uid));
     const starListRef = await getDocs(q);
-    // console.log("1", starListRef.docs[0].ref);
+    console.log("11111111", starListRef.docs[0].ref);
 
     // 좋아요 수와 isLiked 상태를 업데이트
     await updateDoc(starListRef.docs[0].ref, {
