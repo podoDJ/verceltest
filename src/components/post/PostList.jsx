@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 
 const PostList = () => {
@@ -18,6 +18,7 @@ const PostList = () => {
   return (
     <>
       <S.Title>All post</S.Title>
+      <S.PostWriteBox onClick={() => navigate("/postcreate")}>글 작성하기</S.PostWriteBox>
       <S.PostingBoxCtn>
         {sortedPosts.map((post) => {
           console.log(post);
@@ -27,6 +28,7 @@ const PostList = () => {
               {/* <p>글 아이디: {post.postId}</p> */}
               <S.PostingFoodPhoto src={post.photoURL} />
               <S.PostingTitle>{post.postTitle}</S.PostingTitle>
+
               {/* <S.PostingBody>{post.display}</S.PostingBody> */}
               <S.PostingBody>작성자</S.PostingBody>
               <S.PostingLike> 👍🏻 {post.postWhoLiked?.length || 0}</S.PostingLike>
@@ -48,8 +50,15 @@ const S = {
     font-weight: bold;
     margin: 40px auto;
     color: #4d4d4d;
+    text-align: center;
   `,
-
+  PostWriteBox: styled.div`
+    background-color: white;
+    width: 1200px;
+    height: 80px;
+    border-radius: 20px;
+    cursor: pointer;
+  `,
   PostingBoxCtn: styled.div`
     display: flex;
     flex-wrap: wrap;
