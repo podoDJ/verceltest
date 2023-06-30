@@ -4,6 +4,7 @@ import { ADD_COMMENT, REMOVE_COMMENT, baseComment } from "../../redux/modules/co
 import { addDoc, collection, deleteDoc, doc, getDocs, query, setDoc, where } from "firebase/firestore";
 import { db } from "../../firebase";
 import { Link } from "react-router-dom";
+import { styled } from "styled-components";
 
 const PostComments = ({ post, id }) => {
   const uid = useSelector((state) => state.logReducer.user.uid);
@@ -47,7 +48,7 @@ const PostComments = ({ post, id }) => {
           dispatch({
             type: ADD_COMMENT,
             payload: {
-              uid: uid,
+              userId: uid,
               commentId: docRef.id,
               title,
               comment,
@@ -72,21 +73,24 @@ const PostComments = ({ post, id }) => {
             setComment(e.target.value);
           }}
         />
+
         <button>작성</button>
       </form>
 
       <div>
         {console.log("comments", comments)}
         {comments
+          .sort((a, b) => a - b)
           .filter((item) => {
             return item.postId === id;
           })
           .map((comment) => {
             const isOpen = comment.userId === uid;
-            console.log(isOpen);
+            console.log("comment55555", comment.userId);
+            console.log("uid55555", uid);
+
             return (
-              <div key={comment.commentId}>
-                <p>{comment.commentId}</p>
+              <Stspan key={comment.commentId}>
                 <p>{comment.title}</p>
                 <p>{comment.comment}</p>
                 {isOpen && (
@@ -110,7 +114,7 @@ const PostComments = ({ post, id }) => {
                     삭제
                   </button>
                 )}
-              </div>
+              </Stspan>
             );
           })}
       </div>
@@ -119,3 +123,8 @@ const PostComments = ({ post, id }) => {
 };
 
 export default PostComments;
+
+const Stspan = styled.div`
+  display: flex;
+  border: 1px solid black;
+`;
