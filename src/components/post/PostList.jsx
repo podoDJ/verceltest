@@ -17,7 +17,7 @@ const PostList = () => {
 
   return (
     <>
-      <h1>전체게시글</h1>
+      <S.Title>All post</S.Title>
       <S.PostingBoxCtn>
         {sortedPosts.map((post) => {
           console.log(post);
@@ -42,6 +42,13 @@ const PostList = () => {
 export default PostList;
 
 const S = {
+  Title: styled.p`
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 40px auto;
+    color: #4d4d4d;
+  `,
+
   PostingBoxCtn: styled.div`
     display: flex;
     flex-wrap: wrap;
