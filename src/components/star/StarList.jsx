@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { collection, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { S } from "../star/starList.styles";
 import { BiSolidLike } from "react-icons/bi";
 import { db } from "../../firebase";
@@ -12,8 +12,23 @@ export default function StarList() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const starList = useSelector((state) => state.logReducer.members);
+  const uid = useSelector((state) => state.logReducer.user.uid);
+  //얘는 컬렉션이고
+  const members = useSelector((state) => state.logReducer.members);
+  const [likeClicked, setLikeClicked] = useState("");
+  const thatMember = members.filter((member) => member.memberId === likeClicked || "안정해짐")
+  console.log("thatMember==>", thatMember);
+  //얘는 문서야. 문서에서 whoLikedMe프로퍼티만 가져왔어.
+  // console.log("member==>",member)
+  // console.log("member==>", member.whoLikedMe)
 
+  //memberLikeClicked 정보는 객체. id를 키로 프로퍼티 있음.
+
+  // const likeRef = doc(db, "memberList", memberLikeClicked.memberId)
+  // console.log("likeRef", likeRef)
+  // await updateDoc(likeRef, { ...memberLikeClicked, whoLikedMe: updatedWhoLikedMe })
+
+  /*********************************************************************************************************************************
   useEffect(() => {
     // showMembers 액션을 디스패치하여 멤버 정보 표시
     dispatch(showMembers(starList));
@@ -36,30 +51,34 @@ export default function StarList() {
     const newStarList = starList.map((prevStar) => (prevStar.uid === uid ? { ...prevStar, likes: isLiked ? prevStar.likes - 1 : prevStar.likes + 1, isLiked: !prevStar.isLiked } : prevStar));
     dispatch(showMembers(newStarList));
   };
-
+ ****************************************************************************************************************************/
   return (
     <>
       <S.Title>Stellar Cooks</S.Title>
       <S.Container>
-        {starList.map((star) => {
+        {members.map((star) => {
           return (
             <S.Profile key={star.uid} onClick={() => navigate(`/star/members/${star.uid} `)}>
               <S.LikesWrapper>
-                <S.LikeBtn
+                <button
+                  value={star.memberId}
                   onClick={(e) => {
                     // 프로필 클릭 이벤트 전파 방지
                     e.stopPropagation();
-                    if (star.uid) {
-                      updateLikeHandler(star.uid, star.likes, star.isLiked);
-                    }
+                    // if (star.uid) {
+                    //   updateLikeHandler(star.uid, star.likes, star.isLiked);
+                    // }
+                    setLikeClicked(e.target.value);
+                    // updateStarLike(e)
                   }}
-                  isLiked={star.isLiked}
-                  // uid가 없는 경우 버튼 비활성화
-                  disabled={!star.uid}
+                  // isLiked={star.isLiked}
+                  // // uid가 없는 경우 버튼 비활성화
+                  // disabled={!star.uid}
                 >
-                  <BiSolidLike size={25} />
-                </S.LikeBtn>
-                <p>{star.likes || 0}</p>
+                  {/* <BiSolidLike size={25} /> */}
+                  클릭하기
+                </button>
+                {/* <p>{star.likes || 0}</p> */}
               </S.LikesWrapper>
               <S.Photo src={star.photoURL} alt="member" />
               <S.Name>{star.displayName}</S.Name>
