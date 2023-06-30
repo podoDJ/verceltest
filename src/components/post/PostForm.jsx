@@ -73,14 +73,14 @@ const PostForm = () => {
             addPosts({
               postId: docRef.id,
               postTitle,
+              photoURL,
               postBody,
               postIngredient,
               postRecipe,
               uid,
               // postLike,
               postWhoLiked,
-              postDate,
-              photoURL,
+              postDate,   
             })),
           setPostTitle("");
           setPostBody("");

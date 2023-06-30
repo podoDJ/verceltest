@@ -54,11 +54,12 @@ const PostDetailBrowse = ({ post, id }) => {
       </div>
       <p>{post.postId}</p>
       <p>{post.postTitle}</p>
+      <img src={post.photoURL} />
       <p>{post.postBody}</p>
       <p>{post.postIngredient}</p>
       <p>{post.postRecipe}</p>
       <p>{post.postDate}</p>
-      <img src={post.photoURL} />
+      
       <S.Btn
         onClick={async () => {
           if (post.uid !== uid) {
