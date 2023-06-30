@@ -4,13 +4,11 @@ import { ERR_CODE } from "../../constant";
 import { auth } from "../../firebase";
 import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 
 const LoginComp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const loginFunc = async () => {
     try {
@@ -63,7 +61,7 @@ const S = {
     width: 500px;
     height: 300px;
 
-    margin: auto;
+    margin: 100px auto;
     padding: 50px;
     border-radius: 20px;
 

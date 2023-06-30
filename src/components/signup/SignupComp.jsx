@@ -97,7 +97,7 @@ const S = {
     width: 500px;
     height: 600px;
 
-    margin: auto;
+    margin: 100px auto;
     padding: 50px;
     border-radius: 20px;
 
