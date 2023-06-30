@@ -19,14 +19,19 @@ const SignupComp = () => {
   const signupFunc = async () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      await updateProfile(auth.currentUser, { displayName: name });
+      // await updateProfile(auth.currentUser, { displayName: name });
       console.log("가입된 유저 정보", userCredential.user);
-      alert("회원가입 완료");
-      const collectionRef = collection(db, "members");
-      const docRef = await addDoc(collectionRef, { displayName: userCredential.user.displayName, email: userCredential.user.email, intro: "", whoLikedMe: [], photoURL: "" });
 
-      const membersDocRef = doc(db, "members", docRef.id);
-      await setDoc(membersDocRef, { memberId: docRef.id }, { merge: true });
+      const collectionRef = collection(db, "members");
+      await setDoc(doc(collectionRef, userCredential.user.uid), {
+        displayName: name,
+        email: userCredential.user.email,
+        intro: "",
+        whoLikedMe: [],
+        photoURL: "https://i.pinimg.com/originals/99/f3/06/99f3068e425e6b9f56d683b0859ee942.jpg",
+      });
+
+      alert("회원가입 완료");
 
       navigate("/");
     } catch (error) {

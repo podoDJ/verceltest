@@ -6,7 +6,7 @@ export const P = {
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    gap: 80px;
+    gap: 120px;
     margin-top: 30px;
   `,
 
@@ -18,8 +18,8 @@ export const P = {
   `,
 
   ProfileImageBox: styled.div`
-    width: 280px;
-    height: 280px;
+    width: 300px;
+    height: 300px;
     overflow: hidden;
     border-radius: 100%;
     margin: 30px;
@@ -32,8 +32,6 @@ export const P = {
   `,
 
   ImageUploadBox: styled.div`
-    display: flex;
-    gap: 8px;
     margin-bottom: 15px;
   `,
 
@@ -53,7 +51,7 @@ export const P = {
   ProfileBody: styled.div`
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 15px;
   `,
   MemberInput: styled.input`
     width: 300px;
@@ -87,6 +85,7 @@ export const P = {
     cursor: pointer;
     border-radius: 5px;
     margin-left: 10px;
+    background-color: #e4dccf;
 
     ${({ btn }) => {
       switch (btn) {
@@ -94,16 +93,13 @@ export const P = {
           return css`
             width: 150px;
             height: 30px;
-          `;
-        case "nameBtn":
-          return css`
-            width: 50px;
-            height: 30px;
+            margin-right: 5px;
           `;
         case "introBtn":
           return css`
-            width: 80px;
-            height: 30px;
+            width: 300px;
+            height: 40px;
+            margin-top: 20px;
           `;
       }
     }}
