@@ -106,7 +106,11 @@ const PostUpdate = () => {
           <S.UpdatePostBtn
             type="button"
             onClick={() => {
-              window.history.back();
+              if (window.confirm("취소하시겠습니까?")) {
+                window.history.back();
+              } else {
+                return;
+              }
             }}
           >
             취소

@@ -4,9 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 
 const PostList = () => {
-  const posts = useSelector((state) => {
-    return state.posts;
-  });
+  const posts = useSelector((state) => state.posts);
+  const uid = useSelector((state) => state.logReducer.user.uid);
   const navigate = useNavigate();
   // console.log(typeof posts[0].postDate);
 
@@ -18,7 +17,7 @@ const PostList = () => {
   return (
     <>
       <S.Title>All post</S.Title>
-      <S.PostWriteBox onClick={() => navigate("/postcreate")}>글 작성하기</S.PostWriteBox>
+      <S.PostWriteBox onClick={uid? () => navigate("/postcreate") : () => alert("로그인 후 이용 바랍니다.")}>글 작성하기</S.PostWriteBox>
       <S.PostingBoxCtn>
         {sortedPosts.map((post) => {
           console.log(post);
@@ -26,7 +25,7 @@ const PostList = () => {
           return (
             <S.PostingBox onClick={() => navigate(`/post/${post.postId}`)} key={post.postId}>
               {/* <p>글 아이디: {post.postId}</p> */}
-              <S.PostingFoodPhoto src={post.photoURL} />
+              <S.PostingFoodPhoto src={post.photoURL ? post.photoURL : "https://velog.velcdn.com/images/darkfairy7/post/f0d9a0ca-ad26-4a4c-b1b3-756dfb4fb3d0/banner-rtan.png" } />
               <S.PostingTitle>{post.postTitle}</S.PostingTitle>
 
               {/* <S.PostingBody>{post.display}</S.PostingBody> */}
