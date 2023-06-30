@@ -17,6 +17,10 @@ const GlobalStyle = createGlobalStyle`
     font-style: normal;
 }
 
+  * {
+    font-family: 'CookieRun-Regular';
+  }
+
   body {
     background-color: var(--color-bg);
     font-family: 'CookieRun-Regular';

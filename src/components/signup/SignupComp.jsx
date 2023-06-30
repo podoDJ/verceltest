@@ -27,8 +27,9 @@ const SignupComp = () => {
         displayName: name,
         email: userCredential.user.email,
         intro: "",
-        whoLikedMe: [],
         photoURL: "https://i.pinimg.com/originals/99/f3/06/99f3068e425e6b9f56d683b0859ee942.jpg",
+        isLiked: false,
+        likes: 0,
       });
 
       alert("회원가입 완료");
