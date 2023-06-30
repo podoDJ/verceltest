@@ -1,117 +1,129 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { collection, getDocs, query } from "firebase/firestore";
-import { db } from "../../firebase";
-import { setProfile, setPhotoURL, setDisplayName, setProfileCmt } from "./ProfileActions";
-import { useNavigate } from "react-router-dom";
-import { styled } from "styled-components";
+import { collection, doc, getDocs, query } from "firebase/firestore";
+import { auth, db, storage } from "../../firebase";
+import { P } from "./ProfileStyle";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { updateProfile } from "firebase/auth";
 
 const Profile = () => {
-  const profile = useSelector((state) => state.profile.profile);
-  const photoURL = useSelector((state) => state.profile.photoURL);
-  const displayName = useSelector((state) => state.profile.displayName);
-  const profileCmt = useSelector((state) => state.profile.profileCmt);
-  const navigate = useNavigate();
+  const userProfile = useSelector((state) => state.logReducer.user);
   const dispatch = useDispatch();
 
-  const changeDisplayName = (e) => dispatch(setDisplayName(e.target.value));
-  const changeProfileCmt = (e) => dispatch(setProfileCmt(e.target.value));
-  const changePhotoURL = (e) => {
+  // useEffect(() => {
+  //   if (uid) {
+  //     const fetchData = async () => {
+  //       const q = await query(collection(db, "profile"));
+  //       const querySnapshot = await getDocs(q);
+  //       const initialProfile = [];
+  //       querySnapshot.forEach((doc) => {
+  //         const data = {
+  //           id: doc.id,
+  //           ...doc.data(),
+  //         };
+  //         console.log("data", data);
+  //         initialProfile.push(data);
+  //       });
+  //       dispatch(setProfile(initialProfile));
+  //     };
+  //     fetchData();
+  //   }
+  // }, []);
+
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [photoURL, setPhotoURL] = useState("");
+  const [displayName, setDisplayName] = useState(userProfile.displayName || "");
+  const [profileCmt, setProfileCmt] = useState(userProfile.profileCmt || "");
+
+  // useRef를 이용하여 input태그에 접근
+  const imageFileInput = useRef();
+  // 이미지 업로드 버튼 클릭 시 이미지 파일 인풋 태그에 클릭 이벤트 걸기
+  const onClickImageFile = () => {
+    imageFileInput.current.click();
+  };
+
+  const nameChangeHandler = (e) => {
+    setDisplayName(e.target.value);
+  };
+
+  const changeName = async (e) => {
+    e.preventDefault();
+    await updateProfile(auth.currentUser, { displayName: displayName });
+    alert("닉네임 변경 완료");
+  };
+
+  const profileCmtChangeHandler = (e) => {
+    setProfileCmt(e.target.value);
+  };
+
+  const changeProfileCmt = async (e) => {
+    e.preventDefault();
+    await updateProfile(auth.currentUser, { profileCmt: profileCmt });
+    alert("소개글 변경 완료");
+  };
+
+  const changedPhoto = (e) => {
     const file = e.target.files[0];
-    dispatch(setPhotoURL(file));
+    setSelectedFile(file);
+    console.log(file);
+    UploadPhoto(e, file);
+    alert("프로필 사진 변경 완료");
   };
 
-  const updateDisplayName = () => {
-    // displayName을 업데이트하는 액션 디스패치
+  const UploadPhoto = async (e, file) => {
+    e.preventDefault();
+    const URL = `${userProfile.uid}/${file.name}`;
+    const storageRef = ref(storage, URL);
+    await uploadBytes(storageRef, file);
+    const photoURL = await getDownloadURL(storageRef);
+    setPhotoURL(photoURL);
+    await updateProfile(auth.currentUser, { photoURL: photoURL });
   };
-
-  const updateProfileCmt = () => {
-    // profileCmt를 업데이트하는 액션 디스패치
-  };
-
-  const uploadPhotoURL = () => {
-    // photoURL을 업로드하는 액션 디스패치
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const q = query(collection(db, "profile"));
-      const snapshot = await getDocs(q);
-      const initialProfile = [];
-      snapshot.forEach((doc) => {
-        const data = {
-          id: doc.uid,
-          ...doc.data(),
-        };
-        console.log("data", data);
-        initialProfile.push(data);
-      });
-      dispatch(setProfile(initialProfile));
-    };
-    fetchData();
-  }, [dispatch]);
 
   return (
     <>
-      <div>My Profile</div>
       <div>
-        {profile.map((user) => {
-          return (
-            <div key={user.uid}>
-              <P.ProfileImage src={user.photoURL} alt="profile" />
-              <P.ProfileBody>
-                <P.FileBox>
-                  <input type="file" onChange={changePhotoURL} />
-                  <button onClick={uploadPhotoURL}>프로필 사진 변경하기</button>
-                </P.FileBox>
-                <P.Email>email : {user.email}</P.Email>
-                <P.NameBox>
-                  <p>name : {user.displayName}</p>
-                  <P.ChangeNameBtn onClick={updateDisplayName}>변경</P.ChangeNameBtn>
-                </P.NameBox>
-                <div style={{ display: "flex" }}>
-                  <p>intro : {user.profileCmt}</p>
-                  <button onClick={updateProfileCmt}>수정하기</button>
-                </div>
-              </P.ProfileBody>
-              <div onClick={() => navigate("/post")}>내가 쓴 글</div>
-              <div>방명록</div>
-            </div>
-          );
-        })}
+        <div key={userProfile.uid}>
+          <P.ProfileContainer>
+            <P.ProfileImageWrap>
+              <P.ProfileImageBox>
+                <P.ProfileImage src={userProfile.photoURL} alt="profile" />
+              </P.ProfileImageBox>
+              <P.ImageUploadBox>
+                <input type="file" style={{ display: "none" }} ref={imageFileInput} onChange={changedPhoto} />
+                <P.Btns onClick={onClickImageFile}>이미지 업로드</P.Btns>
+                <P.Btns onClick={UploadPhoto}>프로필 사진 변경하기</P.Btns>
+              </P.ImageUploadBox>
+            </P.ProfileImageWrap>
+            <P.ProfileBody>
+              <p>EMAIL</p>
+              <input type="email" placeholder={userProfile.email} disabled={true} />
+              <P.NameBox>
+                <p>NAME : </p>
+                <input type="text" value={displayName} onChange={nameChangeHandler} />
+                {/* <p>좋아요 수 : {profile.likes}</p> */}
+                <P.Btns type="submit" size="medium" onClick={changeName}>
+                  변경
+                </P.Btns>
+              </P.NameBox>
+              <div style={{ display: "flex" }}>
+                <p>INTRO : {userProfile.profileCmt}</p>
+                <input value={profileCmt} onChange={profileCmtChangeHandler} />
+                <P.Btns size="large" onClick={changeProfileCmt}>
+                  수정하기
+                </P.Btns>
+              </div>
+            </P.ProfileBody>
+          </P.ProfileContainer>
+          <P.Contents>
+            <P.ContentsTitle>내가 쓴 글</P.ContentsTitle>
+            <P.ContentsTitle>방명록</P.ContentsTitle>
+          </P.Contents>
+          <P.contentsBody>게시글 연결은 어느세월에,,,</P.contentsBody>
+        </div>
       </div>
     </>
   );
 };
 
 export default Profile;
-
-const P = {
-  ProfileImage: styled.img`
-    width: 300px;
-  `,
-
-  ProfileBody: styled.div`
-    float: right;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: left;
-    margin-top: 60px;
-    margin-right: 360px;
-  `,
-
-  FileBox: styled.div`
-    margin-bottom: 20px;
-  `,
-  Email: styled.p`
-    margin-bottom: 20px;
-  `,
-  NameBox: styled.p`
-    display: flex;
-    margin-bottom: 20px;
-  `,
-  ChangeNameBtn: styled.button`
-    margin-left: 5px;
-  `,
-};
