@@ -7,13 +7,15 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { updateProfile } from "firebase/auth";
 
 const Profile = () => {
-  const defaultProfileImage = "https://i.pinimg.com/originals/99/f3/06/99f3068e425e6b9f56d683b0859ee942.jpg";
+  // const defaultProfileImage = "https://i.pinimg.com/originals/99/f3/06/99f3068e425e6b9f56d683b0859ee942.jpg";
+  const uid = useSelector((state) => state.logReducer.user.uid);
   const userProfile = useSelector((state) => state.logReducer.user);
   const dispatch = useDispatch();
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [photoURL, setPhotoURL] = useState(() => {
     const storedPhotoURL = localStorage.getItem("photoURL");
+    const defaultProfileImage = userProfile.photoURL;
     return storedPhotoURL || userProfile.photoURL || defaultProfileImage;
   });
   const [displayName, setDisplayName] = useState(userProfile.displayName || "");
