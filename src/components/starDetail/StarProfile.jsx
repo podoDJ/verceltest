@@ -36,6 +36,17 @@ const Profile = () => {
           </div>
         </P.ProfileBody>
       </P.ProfileContainer>
+      <p>1개의 방명록</p>
+      <P.Textarea name="guestbook" />
+      <button>등록</button>
+      <div>
+        <img src={user.photoURL} alt="profile" />
+        <p>{user.displayName}</p>
+        <div>작성시간</div>
+        <button>수정</button>
+        <button>삭제</button>
+        <p>작성 글</p>
+      </div>
     </>
   );
 };
