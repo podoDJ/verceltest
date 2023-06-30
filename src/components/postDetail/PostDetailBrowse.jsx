@@ -1,89 +1,76 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import { styled } from "styled-components";
+import { deletePosts, updatePostsLike } from "../../redux/modules/postWrite";
 
-const PostDetailBrowse = () => {
+const PostDetailBrowse = ({ post, id }) => {
+  console.log(id);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const uid = useSelector((state) => state.logReducer.user.uid);
-  console.log("uid =>", uid);
 
-  const { id } = useParams(); // id === documentId
-  const posts = useSelector((state) => state.posts);
-  console.log("post.postId check0 => ", posts);
-  const post = posts.filter((post) => post.postId === id)[0];
   const [updatedPostWhoLiked, setUpdatedPostWhoLiked] = useState(post?.postWhoLiked || []);
-
   if (!post) {
     navigate("/post");
     return null;
   }
 
-  console.log("포스트브라우저의 포스트 : ", post);
-
-  //좋아요 기능. 근데 state가 쓸모가 있는건가????
-
   const updateLike = async (event) => {
     if (post.postWhoLiked.includes(uid)) {
-      const updatedWhoLiked = post.postWhoLiked.filter((like) => like !== uid);
-      setUpdatedPostWhoLiked(updatedWhoLiked);
+      const updatedPostWhoLiked = post.postWhoLiked.filter((like) => like !== uid);
+      setUpdatedPostWhoLiked(updatedPostWhoLiked);
       const postRef = doc(db, "posts", post.postId);
-      await updateDoc(postRef, { ...post, postWhoLiked: updatedWhoLiked });
-      dispatch({
-        type: "UPDATE_POSTLIKE",
-        payload: {
+      await updateDoc(postRef, { ...post, postWhoLiked: updatedPostWhoLiked });
+      dispatch(
+        updatePostsLike({
           postId: post.postId,
           // postLike: updatedPostLike,
-          postWhoLiked: updatedWhoLiked,
-        },
-      });
+          postWhoLiked: updatedPostWhoLiked,
+        })
+      );
     } else {
-      const updatedWhoLiked = [...post.postWhoLiked, uid];
-      setUpdatedPostWhoLiked(updatedWhoLiked);
-      console.log("updatedPostWhoLiked==>", updatedWhoLiked);
+      const updatedPostWhoLiked = [...post.postWhoLiked, uid];
+      setUpdatedPostWhoLiked(updatedPostWhoLiked);
       // setUpdatedPostLike(post.postWhoLiked.length);
       const postRef = doc(db, "posts", post.postId);
-      console.log("postRef ==>", postRef);
       // postLike: updatedPostLike + 1 아래 updateDoc에서 얘를 뺌.
-      await updateDoc(postRef, { ...post, postWhoLiked: updatedWhoLiked });
-
-      dispatch({
-        type: "UPDATE_POSTLIKE",
-        payload: {
+      await updateDoc(postRef, { ...post, postWhoLiked: updatedPostWhoLiked });
+      dispatch(
+        updatePostsLike({
           postId: post.postId,
           // postLike: updatedPostLike,
-          postWhoLiked: updatedWhoLiked,
-        },
-      });
+          postWhoLiked: updatedPostWhoLiked,
+        })
+      );
     }
   };
   return (
     <S.PostDetailBox>
       <div>
-        <span onClick={updateLike}>👍{post?.postWhoLiked?.length || 0}</span>
+        <span onClick={updateLike}>👍{updatedPostWhoLiked.length || 0}</span>
       </div>
       <p>{post.postId}</p>
       <p>{post.postTitle}</p>
-      <p>{post.postBody}</p>
-      <p>{post.postDate}</p>
       <img src={post.photoURL} />
-      <button
+      <p>{post.postBody}</p>
+      <p>{post.postIngredient}</p>
+      <p>{post.postRecipe}</p>
+      <p>{post.postDate}</p>
+      
+      <S.Btn
         onClick={async () => {
           if (post.uid !== uid) {
             alert("회원님이 등록하신 글이 아닙니다.");
             return;
           } else if (post.uid === uid) {
-            if (window.confirm("정말로 삭제하시겠습니까?")) {
+            if (confirm("정말로 삭제하시겠습니까?")) {
               //문서아이디=필드아이디
               const postRef = doc(db, "posts", post.postId);
               await deleteDoc(postRef);
-              dispatch({
-                type: "DELETE_POST",
-                payload: post.postId,
-              });
+              dispatch(deletePosts(post.postId));
               navigate("/post");
             } else {
               alert("삭제를 취소하였습니다.");
@@ -92,9 +79,9 @@ const PostDetailBrowse = () => {
         }}
       >
         삭제하기
-      </button>
+      </S.Btn>
       <Link to={`/postupdate/${post.postId}`}>
-        <button>수정하기</button>
+        <S.Btn>수정하기</S.Btn>
       </Link>
     </S.PostDetailBox>
   );
@@ -107,5 +94,16 @@ const S = {
     border: 1px solid black;
     margin: 10px;
     padding: 10px;
+  `,
+
+  Btn: styled.button`
+    width: 200px;
+    height: 40px;
+    color: white;
+    background-color: #b46060;
+    border-color: transparent;
+    border-radius: 10px;
+    margin-top: 30px;
+    cursor: pointer;
   `,
 };
