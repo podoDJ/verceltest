@@ -1,9 +1,8 @@
-import React from 'react'
+import React from "react";
+import StarProfile from "../components/starDetail/StarProfile";
 
 const StarDetail = () => {
-  return (
-    <div>Star_detail</div>
-  )
-}
+  return <StarProfile />;
+};
 
-export default StarDetail
+export default StarDetail;
