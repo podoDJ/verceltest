@@ -37,6 +37,10 @@ export const P = {
     margin-bottom: 15px;
   `,
 
+  ImageInput: styled.input`
+    display: none;
+  `,
+
   FileBoxLabel: styled.label`
     display: inline-block;
     padding: 10px 20px;
@@ -51,10 +55,13 @@ export const P = {
     flex-direction: column;
     gap: 25px;
   `,
-  NameBox: styled.span`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+  MemberInput: styled.input`
+    width: 300px;
+    height: 40px;
+    padding-left: 15px;
+    border: 0.03rem solid gray;
+    border-radius: 5px;
+    background-color: transparent;
   `,
 
   Contents: styled.div`
@@ -81,16 +88,21 @@ export const P = {
     border-radius: 5px;
     margin-left: 10px;
 
-    ${({ size }) => {
-      switch (size) {
-        case "large":
+    ${({ btn }) => {
+      switch (btn) {
+        case "imageBtn":
           return css`
-            width: 80px;
+            width: 150px;
             height: 30px;
           `;
-        case "medium":
+        case "nameBtn":
           return css`
             width: 50px;
+            height: 30px;
+          `;
+        case "introBtn":
+          return css`
+            width: 80px;
             height: 30px;
           `;
       }
