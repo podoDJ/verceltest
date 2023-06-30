@@ -24,7 +24,7 @@ import { auth, db } from "../firebase";
 import { useEffect } from "react";
 import { collection, getDocs, query } from "@firebase/firestore";
 import { showPosts, sortLikePosts } from "../redux/modules/postWrite";
-
+import PostCommentUpdata from "../pages/PostCommentUpdata";
 const Router = () => {
   const dispatch = useDispatch();
 
@@ -79,6 +79,7 @@ const Router = () => {
             <Route path="/star/members/:id" element={<StarDetail />} />
             <Route path="/star" element={<Star />} />
             <Route path="/about" element={<About />} />
+            <Route path="/post/commentup/:id" element={<PostCommentUpdata />} />
             <Route path="/mypage" element={<Mypage />} />
           </Routes>
         </Layout>

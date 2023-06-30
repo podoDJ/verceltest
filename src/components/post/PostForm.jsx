@@ -79,9 +79,10 @@ const PostForm = () => {
               uid,
               // postLike,
               postWhoLiked,
-              postDate,   
-            })),
-          setPostTitle("");
+              postDate,
+            })
+          ),
+            setPostTitle("");
           setPostBody("");
           navigate(`/post/${docRef.id}`);
         }}
@@ -135,17 +136,23 @@ const PostForm = () => {
             />
           </div>
         </div>
-        
+
         <div style={{ backgroundColor: "green", height: "200px" }}>
           <input type="file" onChange={handleFileSelect} />
           <button onClick={handleUpload}>업로드</button>
         </div>
         <S.PostBtnCtn>
           <S.PostBtn>등록하기</S.PostBtn>
-        {/* window.history.back()은 뒤로가는 메서드(window.history : 윈도우 히스토리 객체) */}
-        <S.PostBtn type="button" onClick={() => {window.history.back()}}>취소</S.PostBtn>
+          {/* window.history.back()은 뒤로가는 메서드(window.history : 윈도우 히스토리 객체) */}
+          <S.PostBtn
+            type="button"
+            onClick={() => {
+              window.history.back();
+            }}
+          >
+            취소
+          </S.PostBtn>
         </S.PostBtnCtn>
-        
       </S.PostForm>
     </>
   );
@@ -195,7 +202,7 @@ const S = {
     font-size: 18px;
     resize: none;
     /* 스크롤바 설정. https://www.geeksforgeeks.org/how-to-style-scrollbar-thumb-for-the-webkit-browsers-and-what-are-components-of-scrollbar/ */
-    overflow: auto; 
+    overflow: auto;
     scrollbar-width: thin; /* 스크롤바 너비설정 */
     scrollbar-color: transparent; /* 스크롤바 색깔 설정 */
     &::-webkit-scrollbar {
@@ -216,9 +223,9 @@ const S = {
   `,
 
   PostBtnCtn: styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-`
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+  `,
 };
