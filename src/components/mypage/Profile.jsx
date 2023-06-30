@@ -7,11 +7,15 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { updateProfile } from "firebase/auth";
 
 const Profile = () => {
+  const defaultProfileImage = "https://i.pinimg.com/originals/99/f3/06/99f3068e425e6b9f56d683b0859ee942.jpg";
   const userProfile = useSelector((state) => state.logReducer.user);
   const dispatch = useDispatch();
 
   const [selectedFile, setSelectedFile] = useState(null);
-  const [photoURL, setPhotoURL] = useState("");
+  const [photoURL, setPhotoURL] = useState(() => {
+    const storedPhotoURL = localStorage.getItem("photoURL");
+    return storedPhotoURL || userProfile.photoURL || defaultProfileImage;
+  });
   const [displayName, setDisplayName] = useState(userProfile.displayName || "");
   const [profileCmt, setProfileCmt] = useState(userProfile.profileCmt || "");
 
@@ -42,23 +46,33 @@ const Profile = () => {
     alert("소개글 변경 완료");
   };
 
-  const changedPhoto = (e) => {
+  const changedPhoto = async (e) => {
     const file = e.target.files[0];
     setSelectedFile(file);
-    console.log(file);
-    UploadPhoto(e, file);
-    alert("프로필 사진 변경 완료");
+
+    try {
+      const URL = `${userProfile.uid}/${file.name}`;
+      const storageRef = ref(storage, URL);
+      await uploadBytes(storageRef, file);
+      const photoURL = await getDownloadURL(storageRef);
+
+      setPhotoURL(photoURL);
+      localStorage.setItem("photoURL", photoURL);
+      await updateProfile(auth.currentUser, { photoURL: photoURL });
+      alert("프로필 사진 변경 완료");
+    } catch (error) {
+      console.log(error);
+      alert("프로필 사진 변경에 실패했습니다.");
+    }
   };
 
-  const UploadPhoto = async (e, file) => {
-    e.preventDefault();
-    const URL = `${userProfile.uid}/${file.name}`;
-    const storageRef = ref(storage, URL);
-    await uploadBytes(storageRef, file);
-    const photoURL = await getDownloadURL(storageRef);
-    setPhotoURL(photoURL);
-    await updateProfile(auth.currentUser, { photoURL: photoURL });
-  };
+  useEffect(() => {
+    // 컴포넌트가 마운트될 때 로컬 스토리지에서 포토URL 값을 가져와 초기화
+    const storedPhotoURL = localStorage.getItem("photoURL");
+    if (storedPhotoURL) {
+      setPhotoURL(storedPhotoURL);
+    }
+  }, []);
 
   return (
     <>
@@ -67,28 +81,30 @@ const Profile = () => {
           <P.ProfileContainer>
             <P.ProfileImageWrap>
               <P.ProfileImageBox>
-                <P.ProfileImage src={userProfile.photoURL} alt="profile" />
+                <P.ProfileImage src={photoURL} alt="profile" />
               </P.ProfileImageBox>
               <P.ImageUploadBox>
-                <input type="file" style={{ display: "none" }} ref={imageFileInput} onChange={changedPhoto} />
-                <P.Btns onClick={onClickImageFile}>이미지 업로드</P.Btns>
+                <P.ImageInput type="file" ref={imageFileInput} onChange={changedPhoto} />
+                <P.Btns onClick={onClickImageFile} btn="imageBtn">
+                  이미지 업로드
+                </P.Btns>
               </P.ImageUploadBox>
             </P.ProfileImageWrap>
             <P.ProfileBody>
               <p>EMAIL</p>
-              <input type="email" placeholder={userProfile.email} disabled={true} />
-              <P.NameBox>
-                <p>NAME : </p>
-                <input type="text" value={displayName} onChange={nameChangeHandler} />
-                {/* <p>좋아요 수 : {profile.likes}</p> */}
-                <P.Btns type="submit" size="medium" onClick={changeName}>
-                  변경
-                </P.Btns>
-              </P.NameBox>
-              <div style={{ display: "flex" }}>
-                <p>INTRO : {userProfile.profileCmt}</p>
-                <input value={profileCmt} onChange={profileCmtChangeHandler} />
-                <P.Btns size="large" onClick={changeProfileCmt}>
+              <P.MemberInput type="email" placeholder={userProfile.email} disabled={true} />
+
+              <p>NAME</p>
+              <P.MemberInput type="text" value={displayName} onChange={nameChangeHandler} />
+              {/* <p>좋아요 수 : {profile.likes}</p> */}
+              {/* <P.Btns type="submit" size="medium" btn="nameBtn" onClick={changeName}>
+                변경
+              </P.Btns> */}
+
+              <p>INTRO {userProfile.profileCmt}</p>
+              <div>
+                <P.MemberInput value={profileCmt} onChange={profileCmtChangeHandler} />
+                <P.Btns size="large" onClick={changeProfileCmt} btn="introBtn">
                   수정하기
                 </P.Btns>
               </div>
@@ -104,5 +120,4 @@ const Profile = () => {
     </>
   );
 };
-
 export default Profile;
