@@ -18,7 +18,10 @@ const PostList = () => {
   return (
     <>
       <S.Title>All post</S.Title>
-      <S.PostWriteBox onClick={() => navigate("/postcreate")}>글 작성하기</S.PostWriteBox>
+      <S.PostWriteBox onClick={() => navigate("/postcreate")}>
+        <S.PostWriteBoxCnt>✏️</S.PostWriteBoxCnt>
+        <S.PostWriteBoxCnt>오늘 어떤 음식을 해먹었나요?</S.PostWriteBoxCnt>
+      </S.PostWriteBox>
       <S.PostingBoxCtn>
         {sortedPosts.map((post) => {
           console.log(post);
@@ -48,16 +51,29 @@ const S = {
   Title: styled.p`
     font-size: 2rem;
     font-weight: bold;
-    margin: 40px auto;
+    margin: 40px auto 20px auto;
     color: #4d4d4d;
     text-align: center;
   `,
   PostWriteBox: styled.div`
     background-color: white;
-    width: 1200px;
-    height: 80px;
+    width: 92.5%;
+    height: 70px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
     border-radius: 20px;
+    box-shadow: 7px 5px 23px -9px rgba(0, 0, 0, 0.3);
+    margin: 30px auto;
+    -webkit-box-shadow: 7px 5px 23px -9px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: 7px 5px 23px -9px rgba(0, 0, 0, 0.3);
     cursor: pointer;
+  `,
+  PostWriteBoxCnt: styled.span`
+    font-size: 23px;
+    font-weight: 500;
+    color: #4d4d4d;
+    margin: 10px;
   `,
   PostingBoxCtn: styled.div`
     display: flex;
