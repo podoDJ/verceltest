@@ -103,5 +103,10 @@ const S = {
   `,
   PostingLike: styled.div`
     float: right;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 5px;
+    font-size: 20px;
   `,
 };
