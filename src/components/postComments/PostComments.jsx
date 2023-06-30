@@ -82,28 +82,34 @@ const PostComments = ({ post, id }) => {
             return item.postId === id;
           })
           .map((comment) => {
+            const isOpen = comment.userId === uid;
+            console.log(isOpen);
             return (
               <div key={comment.commentId}>
                 <p>{comment.commentId}</p>
                 <p>{comment.title}</p>
                 <p>{comment.comment}</p>
-                <Link to={`/post/commentup/${comment.commentId}`}>
-                  <button>수정</button>
-                </Link>
-                <button
-                  onClick={async () => {
-                    const commentRef = doc(db, "comments", comment.commentId);
-                    console.log("commentRef=>", commentRef);
-                    await deleteDoc(commentRef);
+                {isOpen && (
+                  <Link to={`/post/commentup/${comment.commentId}`}>
+                    <button>수정</button>
+                  </Link>
+                )}
+                {isOpen && (
+                  <button
+                    onClick={async () => {
+                      const commentRef = doc(db, "comments", comment.commentId);
+                      console.log("commentRef=>", commentRef);
+                      await deleteDoc(commentRef);
 
-                    dispatch({
-                      type: REMOVE_COMMENT,
-                      payload: comment.commentId,
-                    });
-                  }}
-                >
-                  삭제
-                </button>
+                      dispatch({
+                        type: REMOVE_COMMENT,
+                        payload: comment.commentId,
+                      });
+                    }}
+                  >
+                    삭제
+                  </button>
+                )}
               </div>
             );
           })}
