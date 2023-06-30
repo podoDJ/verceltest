@@ -21,6 +21,7 @@ const HomeComp = () => {
             return (
               <S.Card key={item.id} onClick={() => navigate(`/post/${item.postId}`)}>
                 <S.Like>❤️ {item.postWhoLiked?.length || 0}</S.Like>
+                <S.Food src={item.photoURL} />
                 <S.Name>{item.postTitle}</S.Name>
                 <S.Cmt>작성자</S.Cmt>
               </S.Card>
@@ -93,6 +94,11 @@ const S = {
     width: 250px;
     height: 250px;
     border-radius: 100%;
+  `,
+  Food: styled.img`
+    width: 250px;
+    height: 250px;
+    border-radius: 5px;
   `,
   Name: styled.p`
     font-size: 1.5rem;

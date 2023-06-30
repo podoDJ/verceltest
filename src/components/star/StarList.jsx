@@ -71,9 +71,13 @@ export default function StarList() {
 
 const Title = styled.h2`
   text-align: center;
-  font-size: 3rem;
+  /*font-size: 3rem;
   padding-top: 70px;
-  padding-bottom: 50px;
+  padding-bottom: 50px; */
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 40px auto;
+  color: #4d4d4d;
 `;
 
 const Container = styled.div`
@@ -83,7 +87,7 @@ const Container = styled.div`
 `;
 
 const Profile = styled.div`
-  width: 220px;
+  width: 240px;
   text-align: center;
   padding: 1rem;
   background-color: var(--color-white);
@@ -102,7 +106,7 @@ const Profile = styled.div`
 `;
 
 const LikesWrapper = styled.div`
-  margin-left: 180px;
+  margin-left: 200px;
 `;
 
 const LikeBtn = styled.button`

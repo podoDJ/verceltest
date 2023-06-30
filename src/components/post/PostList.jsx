@@ -7,7 +7,7 @@ const PostList = () => {
   const posts = useSelector((state) => {
     return state.posts;
   });
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   // console.log(typeof posts[0].postDate);
 
   const sortByDate = (a, b) => {
@@ -17,23 +17,21 @@ const PostList = () => {
 
   return (
     <>
-        <h1>전체게시글</h1>
-        <S.PostingBoxCtn>
+      <h1>전체게시글</h1>
+      <S.PostingBoxCtn>
         {sortedPosts.map((post) => {
-          console.log(post)
+          console.log(post);
           return (
-              <S.PostingBox onClick = {() => navigate(`/post/${post.postId}`)} key={post.postId}>
-                <S.PostingLike>
-                  👍{post.postWhoLiked?.length || 0}
-                </S.PostingLike>
-                {/* <p>글 아이디: {post.postId}</p> */}
-                <S.PostingFoodPhoto src={post.photoURL} />
-                <S.PostingTitle>{post.postTitle}</S.PostingTitle>
-                <S.PostingBody>{post.postBody}</S.PostingBody>
-                {/* <p>uid: {post.uid}</p> */}
-                <p>작성일: {post.postDate}</p>
-                
-              </S.PostingBox>
+            <S.PostingBox onClick={() => navigate(`/post/${post.postId}`)} key={post.postId}>
+              {/* <p>글 아이디: {post.postId}</p> */}
+              <S.PostingFoodPhoto src={post.photoURL} />
+              <S.PostingTitle>{post.postTitle}</S.PostingTitle>
+              {/* <S.PostingBody>{post.display}</S.PostingBody> */}
+              <S.PostingBody>작성자</S.PostingBody>
+              <S.PostingLike> 👍🏻 {post.postWhoLiked?.length || 0}</S.PostingLike>
+              {/* <p>uid: {post.uid}</p> */}
+              <p> {post.postDate.slice(0, 11)}</p>
+            </S.PostingBox>
           );
         })}
       </S.PostingBoxCtn>
@@ -51,7 +49,7 @@ const S = {
   `,
 
   PostingBox: styled.div`
-    width: 220px;
+    width: 240px;
     text-align: center;
     padding: 1rem;
     background-color: var(--color-white);
@@ -69,9 +67,10 @@ const S = {
     }
   `,
   PostingFoodPhoto: styled.img`
-    width: 200px;
-    height: 200px;
-    border-radius: 100%;
+    width: 230px;
+    height: 230px;
+    border-radius: 5px;
+    margin-top: 5px;
   `,
 
   PostingTitle: styled.h2`
@@ -83,6 +82,6 @@ const S = {
     padding-bottom: 10px;
   `,
   PostingLike: styled.div`
-  float: right;
-  `
+    float: right;
+  `,
 };
