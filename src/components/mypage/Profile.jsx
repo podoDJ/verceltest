@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { collection, doc, getDocs, query } from "firebase/firestore";
+import { collection, doc, getDocs, query, updateDoc } from "firebase/firestore";
 import { auth, db, storage } from "../../firebase";
 import { P } from "./ProfileStyle";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -33,7 +33,10 @@ const Profile = () => {
   const changeName = async (e) => {
     e.preventDefault();
     await updateProfile(auth.currentUser, { displayName: displayName });
+    const userDocRef = doc(db, "members", userProfile.memberid);
+    await updateDoc(userDocRef, { displayName: displayName });
     alert("닉네임 변경 완료");
+    console.log(userDocRef);
   };
 
   const profileCmtChangeHandler = (e) => {
@@ -43,6 +46,8 @@ const Profile = () => {
   const changeProfileCmt = async (e) => {
     e.preventDefault();
     await updateProfile(auth.currentUser, { profileCmt: profileCmt });
+    const userDocRef = doc(db, "members", userProfile.uid);
+    await updateDoc(userDocRef, { profileCmt: profileCmt });
     alert("소개글 변경 완료");
   };
 
@@ -62,7 +67,7 @@ const Profile = () => {
       alert("프로필 사진 변경 완료");
     } catch (error) {
       console.log(error);
-      alert("프로필 사진 변경에 실패했습니다.");
+      alert("프로필 사진 변경 실패", error);
     }
   };
 
@@ -86,7 +91,7 @@ const Profile = () => {
               <P.ImageUploadBox>
                 <P.ImageInput type="file" ref={imageFileInput} onChange={changedPhoto} />
                 <P.Btns onClick={onClickImageFile} btn="imageBtn">
-                  이미지 업로드
+                  프로필 사진 변경
                 </P.Btns>
               </P.ImageUploadBox>
             </P.ProfileImageWrap>
@@ -97,17 +102,16 @@ const Profile = () => {
               <p>NAME</p>
               <P.MemberInput type="text" value={displayName} onChange={nameChangeHandler} />
               {/* <p>좋아요 수 : {profile.likes}</p> */}
-              {/* <P.Btns type="submit" size="medium" btn="nameBtn" onClick={changeName}>
+              {/* <P.Btns type="submit" btn="nameBtn" onClick={changeName}>
                 변경
               </P.Btns> */}
 
               <p>INTRO {userProfile.profileCmt}</p>
-              <div>
-                <P.MemberInput value={profileCmt} onChange={profileCmtChangeHandler} />
-                <P.Btns size="large" onClick={changeProfileCmt} btn="introBtn">
-                  수정하기
-                </P.Btns>
-              </div>
+
+              <P.MemberInput value={profileCmt} onChange={profileCmtChangeHandler} />
+              <P.Btns onClick={changeProfileCmt} btn="introBtn">
+                프로필 정보 변경
+              </P.Btns>
             </P.ProfileBody>
           </P.ProfileContainer>
           <P.Contents>
