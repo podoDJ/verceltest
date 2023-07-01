@@ -68,7 +68,7 @@ export default function StarList() {
                 >
                   <BiSolidLike size={25} />
                 </S.LikeBtn>
-                <p>{star.likes || 0}</p>
+                <S.LikeCut>{star.likes || 0}</S.LikeCut>
               </S.LikesWrapper>
               <S.Photo src={star.photoURL} alt="member" />
               <S.Name>{star.displayName}</S.Name>

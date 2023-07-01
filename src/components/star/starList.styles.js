@@ -3,6 +3,7 @@ import { styled } from "styled-components";
 export const S = {
   Title: styled.h2`
     text-align: center;
+    color: var(--color-text);
     font-size: 3rem;
     padding-top: 70px;
     padding-bottom: 50px;
@@ -49,6 +50,10 @@ export const S = {
     }
   `,
 
+  LikeCut: styled.p`
+    color: var(--color-text);
+  `,
+
   Photo: styled.img`
     width: 200px;
     height: 200px;
@@ -59,9 +64,11 @@ export const S = {
     font-size: 1.5rem;
     font-weight: bold;
     padding: 20px;
+    color: var(--color-text);
   `,
 
   Cmt: styled.p`
     padding-bottom: 10px;
+    color: var(--color-text);
   `,
 };
