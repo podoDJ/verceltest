@@ -35,6 +35,8 @@ export const UserHeaderComp = () => {
   const user = useSelector((state) => {
     return state.logReducer.user;
   });
+  console.log("이동준user =>", user)
+  console.log("이동준user.photoURL =>", user.photoURL)
 
   return (
     <S.Header>
