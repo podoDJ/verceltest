@@ -22,9 +22,14 @@ import { showMembers, showUser, sortLikeMembers } from "../redux/modules/logRedu
 import { auth, db } from "../firebase";
 
 import { useEffect } from "react";
-import { collection, getDocs, query } from "@firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, where } from "@firebase/firestore";
 import { showPosts, sortLikePosts } from "../redux/modules/postWrite";
 import PostCommentUpdata from "../pages/PostCommentUpdata";
+
+// 제이 추가
+import { userProfile } from "../redux/modules/profileReducer";
+import { myPosts } from "../redux/modules/myPostReducer";
+
 const Router = () => {
   const dispatch = useDispatch();
 
@@ -35,6 +40,33 @@ const Router = () => {
     } else return;
   });
   useEffect(() => {
+    // 제이 추가----
+    const getProfile = () => {
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          const docRef = doc(db, "members", user.uid);
+          const docSnap = await getDoc(docRef);
+          dispatch(userProfile({ ...docSnap.data(), uid: user.uid }));
+        }
+      });
+    };
+    getProfile();
+
+    const getMyPosts = () => {
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          let arr = new Array();
+          const q = query(collection(db, "posts"), where("uid", "==", user.uid));
+          const docSnap = await getDocs(q);
+          docSnap.forEach((info) => {
+            arr.push(info.data());
+          });
+          dispatch(myPosts(arr));
+        }
+      });
+    };
+    getMyPosts();
+    //------제이 추가
     const newArr = [];
     const fetchPostsData = async () => {
       const q = query(collection(db, "posts"));

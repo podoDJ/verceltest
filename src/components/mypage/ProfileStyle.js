@@ -84,7 +84,7 @@ export const P = {
     border: none;
     cursor: pointer;
     border-radius: 5px;
-    margin-left: 10px;
+
     background-color: #e4dccf;
 
     ${({ btn }) => {
@@ -95,10 +95,11 @@ export const P = {
             height: 30px;
             margin-right: 5px;
           `;
-        case "introBtn":
+        case "profileBtn":
           return css`
-            width: 300px;
+            width: 319px;
             height: 40px;
+
             margin-top: 20px;
           `;
       }

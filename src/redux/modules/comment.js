@@ -17,7 +17,6 @@ export const initialState = [];
 const comment = (state = initialState, action) => {
   switch (action.type) {
     case "BASE_COMMENT":
-      console.log("asdf", action.payload);
       return [...action.payload];
     case ADD_COMMENT:
       return [...state, action.payload];

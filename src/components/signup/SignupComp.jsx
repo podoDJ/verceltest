@@ -19,9 +19,9 @@ const SignupComp = () => {
   const signupFunc = async () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      // await updateProfile(auth.currentUser, { displayName: name });
+      await updateProfile(auth.currentUser, { displayName: name });
       console.log("가입된 유저 정보", userCredential.user);
-
+      // 2023-07-01 12:51 설희님추가
       let addId;
       const userValidCount = (await getCountFromServer(collection(db, "members"))).data().count;
 
