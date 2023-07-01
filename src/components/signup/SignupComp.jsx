@@ -28,11 +28,11 @@ const SignupComp = () => {
       if (!userValidCount) {
         addId = 1;
       } else {
-        const q = query(collection(db, "members"), orderBy("id", "desc"), limit(1));
+        const q = query(collection(db, "members"), orderBy("memberId", "desc"), limit(1));
         const docSnap = await getDocs(q);
 
         docSnap.forEach((x) => {
-          addId = x.data().id + 1;
+          addId = x.data().memberId + 1;
         });
       }
       //============================================
@@ -44,10 +44,7 @@ const SignupComp = () => {
         photoURL: "https://i.pinimg.com/originals/99/f3/06/99f3068e425e6b9f56d683b0859ee942.jpg",
         isLiked: false,
         likes: 0,
-        id: addId,
-        isLiked: false,
-        likes: 0,
-        id: addId,
+        memberId: addId,
       });
 
       alert("회원가입 완료");
