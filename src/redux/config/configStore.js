@@ -3,16 +3,18 @@ import { combineReducers } from "redux";
 import tempReducer from "../modules/temp";
 import logReducer from "../modules/logReducer";
 import posts from "../modules/postWrite";
-import profileReducer from "../../components/mypage/ProfileReducer";
 import thunk from "redux-thunk";
 import comment from "../modules/comment";
+import profile from "../modules/profileReducer";
+import myPosts from "../modules/myPostReducer";
 
 const rootReducer = combineReducers({
   tempReducer,
   logReducer,
   posts,
-  profile: profileReducer,
   comment,
+  profile,
+  myPosts,
 });
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
