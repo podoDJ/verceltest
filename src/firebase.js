@@ -14,7 +14,7 @@ export const firebaseConfig = {
   projectId: "honcooknewhome",
   storageBucket: "honcooknewhome.appspot.com",
   messagingSenderId: "951230277951",
-  appId: "1:951230277951:web:001aef3c37671353bdcb8a"
+  appId: "1:951230277951:web:001aef3c37671353bdcb8a",
 };
 
 // Initialize Firebase

@@ -24,8 +24,6 @@ const PostList = () => {
       </S.PostWriteBox>
       <S.PostingBoxCtn>
         {sortedPosts.map((post) => {
-          console.log(post);
-          console.log(post);
           return (
             <S.PostingBox onClick={() => navigate(`/post/${post.postId}`)} key={post.postId}>
               {/* <p>글 아이디: {post.postId}</p> */}
