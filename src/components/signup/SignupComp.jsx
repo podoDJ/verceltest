@@ -21,7 +21,21 @@ const SignupComp = () => {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       // await updateProfile(auth.currentUser, { displayName: name });
       console.log("가입된 유저 정보", userCredential.user);
+      // 2023-07-01 12:15 설희님추가
+      let addId;
+      const userValidCount = (await getCountFromServer(collection(db, "members"))).data().count;
 
+      if (!userValidCount) {
+        addId = 1;
+      } else {
+        const q = query(collection(db, "members"), orderBy("id", "desc"), limit(1));
+        const docSnap = await getDocs(q);
+
+        docSnap.forEach((x) => {
+          addId = x.data().id + 1;
+        });
+      }
+      //============================================
       const collectionRef = collection(db, "members");
       await setDoc(doc(collectionRef, userCredential.user.uid), {
         displayName: name,
@@ -29,6 +43,9 @@ const SignupComp = () => {
         intro: "",
         whoLikedMe: [],
         photoURL: "https://i.pinimg.com/originals/99/f3/06/99f3068e425e6b9f56d683b0859ee942.jpg",
+        isLiked: false,
+        likes: 0,
+        id: addId,
       });
 
       alert("회원가입 완료");
