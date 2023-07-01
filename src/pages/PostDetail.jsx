@@ -7,8 +7,7 @@ import { useSelector } from "react-redux";
 const PostDetail = () => {
   const { id } = useParams(); // id === documentId
   const posts = useSelector((state) => state.posts);
-
-  const post = posts.filter((post) => post.postId === id)[0];
+  const post = posts.find((post) => post.postId === id);
   return (
     <div>
       <PostDetailBrowse post={post} id={id} />
