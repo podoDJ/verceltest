@@ -7,6 +7,57 @@ import { addPosts } from "../../redux/modules/postWrite";
 import { styled } from "styled-components";
 import { getDownloadURL, ref, uploadBytes } from "@firebase/storage";
 
+const PreviewModal = ({ photoURL, setOpenModal, setPhotoURL, selectedFile }) => {
+  return (
+    <S.ModalDiv>
+      <S.Modal>
+        <S.PreviewImgDiv>
+          <S.ImgPreview src={photoURL} />
+        </S.PreviewImgDiv>
+        <S.PreviewBtnDiv>
+          <S.PreviewBtn
+            onClick={async (event) => {
+              event.stopPropagation();
+              event.preventDefault();
+              document.querySelector("#inputFile").click();
+            }}
+          >
+            <S.PreviewBtnTxt>파일 선택</S.PreviewBtnTxt>
+          </S.PreviewBtn>
+          <S.PreviewBtn
+            onClick={async (event) => {
+              event.stopPropagation();
+              event.preventDefault();
+              const imageRef = ref(storage, `${auth.currentUser.uid}/${selectedFile.name}`);
+              await uploadBytes(imageRef, selectedFile);
+              const imgURL = await getDownloadURL(imageRef);
+              setPhotoURL(imgURL);
+            }}
+          >
+            <S.PreviewBtnTxt>파일 확인</S.PreviewBtnTxt>
+          </S.PreviewBtn>
+          <S.PreviewBtn onClick={() => setOpenModal(false)}>
+            <S.PreviewBtnTxt>닫기</S.PreviewBtnTxt>
+          </S.PreviewBtn>
+        </S.PreviewBtnDiv>
+      </S.Modal>
+    </S.ModalDiv>
+  );
+};
+
+const FileForm = ({ handleUpload, handleFileSelect, photoURL }) => {
+  return (
+    <S.FileBox>
+      <S.FileLabel for="inputFile">
+        <span style={{ marginRight: "10px" }}>📎</span>
+        <span>{photoURL ? `${photoURL.slice(0, 95)} ...` : "파일 선택"}</span>
+      </S.FileLabel>
+      <S.ImgInput type="file" id="inputFile" onChange={handleFileSelect} />
+      <S.ImgBtn onClick={handleUpload}>업로드</S.ImgBtn>
+    </S.FileBox>
+  );
+};
+
 const PostForm = () => {
   //uid는 여기서 가져옵니다.
   const uid = useSelector((state) => state.logReducer.user.uid);
@@ -34,62 +85,73 @@ const PostForm = () => {
   const navigate = useNavigate();
 
   // ========================
+  const [openModal, setOpenModal] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [photoURL, setPhotoURL] = useState("");
+
   const handleFileSelect = (event) => {
     setSelectedFile(event.target.files[0]);
   };
 
   const handleUpload = async (event) => {
     event.preventDefault();
-    const imageRef = ref(storage, `${auth.currentUser.uid}/${selectedFile.name}`);
-    await uploadBytes(imageRef, selectedFile);
-    const photoURL = await getDownloadURL(imageRef);
-    setPhotoURL(photoURL);
+    event.stopPropagation();
+    if (selectedFile) {
+      const imageRef = ref(storage, `${auth.currentUser.uid}/${selectedFile.name}`);
+      await uploadBytes(imageRef, selectedFile);
+      const imgURL = await getDownloadURL(imageRef);
+      setPhotoURL(imgURL);
+      setOpenModal(true);
+      console.log(photoURL);
+    } else alert("이미지가 선택되지 않았습니다.");
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (photoURL) {
+      // 이전에 사용했던 방법: const newPost = { postId: shortid.generate(), postTitle, postBody };
+      const collectionRef = collection(db, "posts");
+      const docRef = await addDoc(collectionRef, { postTitle, postBody, uid, postWhoLiked, postDate, photoURL });
+
+      // 도큐먼트 아이디가 바로 필드에 반영되도록 하는 코드
+      const postDocRef = doc(db, "posts", docRef.id);
+      await setDoc(postDocRef, { postId: docRef.id }, { merge: true });
+
+      //navigate : 등록하기 버튼 누르면 submit하고 전체 게시글로 나옴. postdetail로 가는 방법을 찾아야 함. (DJ : 해결)
+
+      // dispatch 전에 async await로 통신 보내고 통신 보내면 아래 dispatch가 진행됨.
+      // or .then
+      // reducer로 새 데이터 넘겨주기
+      dispatch(
+        addPosts({
+          postId: docRef.id,
+          postTitle,
+          photoURL,
+          postBody,
+          postIngredient,
+          postRecipe,
+          uid,
+          // postLike,
+          postWhoLiked,
+          postDate,
+        })
+      );
+      setPostTitle("");
+      setPostBody("");
+      navigate(`/post/${docRef.id}`);
+    } else if (!photoURL) alert("이미지가 업로드 되지 않았습니다.\n이미지 선택 후 업로드 버튼을 클릭해주세요!");
   };
   return (
     <>
       <div>
         <Link to={"/post"}>전체게시글보기</Link>
       </div>
-      <S.PostForm
-        onSubmit={async (event) => {
-          event.preventDefault();
-          // 이전에 사용했던 방법: const newPost = { postId: shortid.generate(), postTitle, postBody };
-          const collectionRef = collection(db, "posts");
-          const docRef = await addDoc(collectionRef, { postTitle, postBody, uid, postWhoLiked, postDate, photoURL });
-
-          // 도큐먼트 아이디가 바로 필드에 반영되도록 하는 코드
-          const postDocRef = doc(db, "posts", docRef.id);
-          await setDoc(postDocRef, { postId: docRef.id }, { merge: true });
-
-          //navigate : 등록하기 버튼 누르면 submit하고 전체 게시글로 나옴. postdetail로 가는 방법을 찾아야 함. (DJ : 해결)
-
-          // dispatch 전에 async await로 통신 보내고 통신 보내면 아래 dispatch가 진행됨.
-          // or .then
-          // reducer로 새 데이터 넘겨주기
-          dispatch(
-            addPosts({
-              postId: docRef.id,
-              postTitle,
-              photoURL,
-              postBody,
-              postIngredient,
-              postRecipe,
-              uid,
-              // postLike,
-              postWhoLiked,
-              postDate,
-            })
-          ),
-            setPostTitle("");
-          setPostBody("");
-          navigate(`/post/${docRef.id}`);
-        }}
-      >
+      <S.PostForm onSubmit={handleSubmit}>
         <div>
           <div>
-            <S.PostLabel for="postTitle">오늘의 혼쿡</S.PostLabel>
+            <S.PostLabel for="postTitle">Today HonCook</S.PostLabel>
             <S.PostInput
               text="text"
               name="postTitle"
@@ -101,7 +163,7 @@ const PostForm = () => {
           </div>
 
           <div>
-            <S.PostLabel for="postBody">CooK'Story</S.PostLabel>
+            <S.PostLabel for="postBody">CooK Story</S.PostLabel>
             <S.PostTextarea
               text="text"
               name="postBody"
@@ -113,7 +175,7 @@ const PostForm = () => {
           </div>
 
           <div>
-            <S.PostLabel for="postIngredient">오늘의 재료</S.PostLabel>
+            <S.PostLabel for="postIngredient">CooK Ingredient</S.PostLabel>
             <S.PostTextarea
               text="text"
               name="postIngredient"
@@ -125,7 +187,7 @@ const PostForm = () => {
           </div>
 
           <div>
-            <S.PostLabel for="postRecipe">레시피</S.PostLabel>
+            <S.PostLabel for="postRecipe">Cook recipe</S.PostLabel>
             <S.PostTextarea
               text="text"
               name="postRecipe"
@@ -135,12 +197,14 @@ const PostForm = () => {
               }}
             />
           </div>
+          <S.PostLabel for="postImg">Cook Image</S.PostLabel>
+          <div>
+            <FileForm photoURL={photoURL} handleUpload={handleUpload} handleFileSelect={handleFileSelect} />
+          </div>
+          {openModal ? <PreviewModal photoURL={photoURL} setOpenModal={setOpenModal} setPhotoURL={setPhotoURL} selectedFile={selectedFile} /> : null}
+          {console.log(openModal)}
         </div>
 
-        <div style={{ backgroundColor: "green", height: "200px" }}>
-          <input type="file" onChange={handleFileSelect} />
-          <button onClick={handleUpload}>업로드</button>
-        </div>
         <S.PostBtnCtn>
           <S.PostBtn>등록하기</S.PostBtn>
           {/* window.history.back()은 뒤로가는 메서드(window.history : 윈도우 히스토리 객체) */}
@@ -157,7 +221,6 @@ const PostForm = () => {
     </>
   );
 };
-
 export default PostForm;
 
 const S = {
@@ -165,7 +228,7 @@ const S = {
     background-color: #ffbf9b;
     color: #4d4d4d;
     width: 500px;
-    height: 700px;
+    height: 750px;
     margin: auto;
     padding: 50px;
     border-radius: 20px;
@@ -227,5 +290,89 @@ const S = {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+  `,
+  ImgInput: styled.input`
+    position: absolute;
+    width: 0;
+    height: 0;
+    padding: 0;
+    border: 0;
+  `,
+  FileBox: styled.div`
+    display: flex;
+    margin-top: 5px;
+  `,
+  FileLabel: styled.label`
+    display: flex;
+    height: 40px;
+    padding: 0 10px;
+    vertical-align: middle;
+    border-radius: 10px;
+    width: 78%;
+    color: #999999;
+    background-color: white;
+    margin-bottom: 30px;
+    align-items: center;
+  `,
+  ImgBtn: styled.button`
+    color: white;
+    background-color: #b46060;
+    border-color: transparent;
+    margin-left: 10px;
+    width: 80px;
+    height: 40px;
+    border-radius: 10px;
+  `,
+  ImgPreview: styled.img`
+    width: 400px;
+    height: 375px;
+    margin: 0 auto;
+    border-radius: 10px;
+  `,
+  ModalDiv: styled.div`
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.6);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  `,
+  Modal: styled.div`
+    width: 400px;
+    height: 450px;
+    margin: 0 auto;
+    border-radius: 0.5rem;
+    background-color: #fff;
+    animation: modal-show 0.3s;
+    overflow: hidden;
+    padding: 20px;
+  `,
+  PreviewImgDiv: styled.div`
+    height: 400px;
+  `,
+  PreviewBtnDiv: styled.div`
+    display: flex;
+    justify-content: space-around;
+  `,
+  PreviewBtn: styled.div`
+    color: white;
+    background-color: #b46060;
+    border-color: transparent;
+    width: 100px;
+    height: 40px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  `,
+  PreviewBtnTxt: styled.p`
+    font-size: 20px;
+    font-weight: 500;
   `,
 };

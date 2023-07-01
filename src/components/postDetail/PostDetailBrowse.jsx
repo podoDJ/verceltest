@@ -5,6 +5,7 @@ import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import { styled } from "styled-components";
 import { deletePosts, updatePostsLike } from "../../redux/modules/postWrite";
+import { BiSolidLike } from "react-icons/bi";
 
 const PostDetailBrowse = ({ post, id }) => {
   console.log(id);
@@ -48,42 +49,53 @@ const PostDetailBrowse = ({ post, id }) => {
     }
   };
   return (
-    <S.PostDetailBox>
-      <div>
-        <span onClick={updateLike}>👍{updatedPostWhoLiked.length || 0}</span>
-      </div>
-      <p>{post.postId}</p>
-      <p>{post.postTitle}</p>
-      <img src={post.photoURL} />
-      <p>{post.postBody}</p>
-      <p>{post.postIngredient}</p>
-      <p>{post.postRecipe}</p>
-      <p>{post.postDate}</p>
-
-      <S.Btn
-        onClick={async () => {
-          if (post.uid !== uid) {
-            alert("회원님이 등록하신 글이 아닙니다.");
-            return;
-          } else if (post.uid === uid) {
-            if (window.confirm("정말로 삭제하시겠습니까?")) {
-              //문서아이디=필드아이디
-              const postRef = doc(db, "posts", post.postId);
-              await deleteDoc(postRef);
-              dispatch(deletePosts(post.postId));
-              navigate("/post");
-            } else {
-              alert("삭제를 취소하였습니다.");
-            }
-          }
-        }}
-      >
-        삭제하기
+    <>
+      <S.Btn marginTop="10px" onClick={() => navigate("/post")}>
+        POST로 이동
       </S.Btn>
-      <Link to={`/postupdate/${post.postId}`}>
-        <S.Btn>수정하기</S.Btn>
-      </Link>
-    </S.PostDetailBox>
+      <S.PostDetailBox>
+        {/* 삼항연산자로 uid가 false(undefined)일 경우 updateLike 함수 실행, 아닐 경우 alert창 띄우는 익명함수 실행. ()=> 이부분이 포인트 */}
+        <S.PostDetailLike onClick={uid ? updateLike : () => alert("로그인 후 이용 바랍니다.")}>
+          <BiSolidLike size={25} color={updatedPostWhoLiked.includes(uid) ? "#B46060" : "#D3D3D3"} />
+          <span>{updatedPostWhoLiked.length || 0}</span>
+        </S.PostDetailLike>
+
+        <p>{post.postId}</p>
+        <p>{post.postTitle}</p>
+        <S.PostImg src={post.photoURL} photoURL={post.photoURL} />
+        <p>{post.postBody}</p>
+        <p>{post.postIngredient}</p>
+        <p>{post.postRecipe}</p>
+        <p>{post.postDate}</p>
+        <p>{post.uid}</p>
+
+        <S.PostBtnCtn uid={uid} postuid={post.uid}>
+          <S.Btn
+            onClick={async () => {
+              if (post.uid !== uid) {
+                alert("회원님이 등록하신 글이 아닙니다.");
+                return;
+              } else if (post.uid === uid) {
+                if (window.confirm("정말로 삭제하시겠습니까?")) {
+                  //문서아이디=필드아이디
+                  const postRef = doc(db, "posts", post.postId);
+                  await deleteDoc(postRef);
+                  dispatch(deletePosts(post.postId));
+                  navigate("/post");
+                } else {
+                  alert("삭제를 취소하였습니다.");
+                }
+              }
+            }}
+          >
+            삭제하기
+          </S.Btn>
+          <Link to={`/postupdate/${post.postId}`}>
+            <S.Btn>수정하기</S.Btn>
+          </Link>
+        </S.PostBtnCtn>
+      </S.PostDetailBox>
+    </>
   );
 };
 
@@ -95,7 +107,9 @@ const S = {
     margin: 10px;
     padding: 10px;
   `,
-
+  PostBtnCtn: styled.div`
+    display: ${(props) => (props.uid === props.postuid ? "flex" : "none")};
+  `,
   Btn: styled.button`
     width: 200px;
     height: 40px;
@@ -103,7 +117,19 @@ const S = {
     background-color: #b46060;
     border-color: transparent;
     border-radius: 10px;
-    margin-top: 30px;
+    margin-top: ${(props) => (props.marginTop ? props.marginTop : "30px")};
     cursor: pointer;
+  `,
+  PostImg: styled.img`
+    display: ${(props) => (props.photoURL ? "flex" : "none")};
+  `,
+  PostDetailLike: styled.div`
+    width: 5%;
+    float: right;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 7px;
+    font-size: 25px;
   `,
 };
