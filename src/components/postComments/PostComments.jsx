@@ -5,9 +5,11 @@ import { addDoc, collection, deleteDoc, doc, getDocs, query, setDoc } from "fire
 import { db } from "../../firebase";
 import { Await, Link } from "react-router-dom";
 import { styled } from "styled-components";
+import CommentChange from "./CommentChange";
 
 const PostComments = ({ post, id }) => {
   const uid = useSelector((state) => state.logReducer.user.uid);
+  console.log(uid);
   const comments = useSelector((state) => {
     return state.comment;
   });
@@ -15,6 +17,13 @@ const PostComments = ({ post, id }) => {
   const dispatch = useDispatch();
   const [title, setTitle] = useState("");
   const [comment, setComment] = useState("");
+  const [isModal, setIsModal] = useState(false);
+  const openModal = () => {
+    setIsModal(true);
+  };
+  const closeModal = () => {
+    setIsModal(false);
+  };
   // 함수의 리턴값 const abc  = (a)=> return a+1  abc(1) const b = abc(1512341)
   useEffect(() => {
     const fetchData = async () => {
@@ -42,7 +51,7 @@ const PostComments = ({ post, id }) => {
           const collectionRef = collection(db, "comments");
           const docRef = await addDoc(collectionRef, { title, comment });
           const commentDocRef = doc(db, "comments", docRef.id);
-          await setDoc(commentDocRef, { commentId: docRef.id, postId: id, userId: id }, { merge: true });
+          await setDoc(commentDocRef, { commentId: docRef.id, postId: id, userId: uid }, { merge: true });
 
           dispatch({
             type: ADD_COMMENT,
@@ -88,10 +97,16 @@ const PostComments = ({ post, id }) => {
               <Stspan key={comment.commentId}>
                 <p>{comment.title}</p>
                 <p>{comment.comment}</p>
-                {isOpen && (
-                  <Link to={`/post/commentup/${comment.commentId}`}>
-                    <button>수정</button>
-                  </Link>
+                {isOpen && <button onClick={openModal}>수정</button>}
+                {isModal && (
+                  // <Link to={`/post/commentup/${comment.commentId}`}>
+                  //   <button>수정</button>
+                  // </Link>
+                  <StModalBox>
+                    <StModalContents>
+                      <CommentChange closeModal={closeModal} />
+                    </StModalContents>
+                  </StModalBox>
                 )}
 
                 {isOpen && (
@@ -124,25 +139,25 @@ const Stspan = styled.div`
   border: 1px solid black;
 `;
 
-// const StModalBox = styled.div`
-//   position: fixed;
-//   top: 0;
-//   left: 0;
-//   width: 100%;
-//   height: 100%;
-//   background-color: rgba(0, 0, 0, 0.5);
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-// `;
+const StModalBox = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
-// const StModalContents = styled.div`
-//   background-color: #fff;
-//   padding: 20px;
-//   width: 70%;
-//   height: 50%;
-//   border-radius: 12px;
-// `;
+const StModalContents = styled.div`
+  background-color: #fff;
+  padding: 20px;
+  width: 70%;
+  height: 50%;
+  border-radius: 12px;
+`;
 // const StButton = styled.button`
 //   border: none;
 //   cursor: pointer;

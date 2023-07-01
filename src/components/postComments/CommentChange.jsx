@@ -6,7 +6,7 @@ import { db } from "../../firebase";
 import { doc, updateDoc } from "@firebase/firestore";
 import { UPDATE_COMMENT } from "../../redux/modules/comment";
 
-const CommentChange = ({ commentId }) => {
+const CommentChange = ({ commentId, closeModal }) => {
   const navigate = useNavigate();
   const [uptitle, setUpTitle] = useState();
   const [upComment, setUpComment] = useState();
@@ -56,6 +56,7 @@ const CommentChange = ({ commentId }) => {
         />
 
         <button>수정</button>
+        <button onClick={closeModal}>닫기</button>
       </form>
     </div>
   );
