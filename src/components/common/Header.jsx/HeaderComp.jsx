@@ -158,7 +158,7 @@ export const UserHeaderComp = () => {
           id="PROFILE"
           onClick={(event) => {
             addItem(event);
-            logOutFunc;
+            logOutFunc();
           }}
         >
           Log Out
