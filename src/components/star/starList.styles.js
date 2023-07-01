@@ -43,11 +43,7 @@ export const S = {
     border: none;
     /* margin-left: 180px; */
     background-color: var(--color-white);
-    color: ${({ isLiked }) => (isLiked ? "#B46060" : "#D3D3D3")};
-
-    &:hover {
-      color: #b46060;
-    }
+    color: #b46060;
   `,
 
   LikeCut: styled.p`
