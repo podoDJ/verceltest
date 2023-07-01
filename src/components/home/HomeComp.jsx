@@ -2,6 +2,7 @@ import { styled } from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { sortLikeMembers } from "../../redux/modules/logReducer";
 import { useNavigate } from "react-router-dom";
+import { BiSolidLike } from "react-icons/bi";
 
 const HomeComp = () => {
   const dispatch = useDispatch();
@@ -9,6 +10,7 @@ const HomeComp = () => {
   dispatch(sortLikeMembers());
   const posts = useSelector((state) => state.posts);
   const starList = useSelector((state) => state.logReducer.members);
+  console.log("starList", starList);
   const popSortPosts = posts.sort((a, b) => b.postWhoLiked.length - a.postWhoLiked.length);
   console.log(popSortPosts);
 
@@ -20,10 +22,12 @@ const HomeComp = () => {
           {popSortPosts.slice(0, 5).map((item) => {
             return (
               <S.Card key={item.id} onClick={() => navigate(`/post/${item.postId}`)}>
-                <S.Like>❤️ {item.postWhoLiked?.length || 0}</S.Like>
+                <S.Like>
+                  <BiSolidLike size={25} style={{ color: "#b46060" }} /> {item.postWhoLiked?.length || 0}
+                </S.Like>
                 <S.Food src={item.photoURL} />
                 <S.Name>{item.postTitle}</S.Name>
-                <S.Cmt>작성자</S.Cmt>
+                <S.Cmt>{item.displayName ? item.displayName : "익명의 작성자"}</S.Cmt>
               </S.Card>
             );
           })}
@@ -35,10 +39,12 @@ const HomeComp = () => {
           {starList.slice(0, 5).map((item) => {
             return (
               <S.Card key={item.id}>
-                <S.Like>❤️ {item.likes}</S.Like>
+                <S.Like>
+                  <BiSolidLike size={25} style={{ color: "#b46060" }} /> {item.likes || 0}
+                </S.Like>
                 <S.Img src={item.photoURL} />
                 <S.Name>{item.displayName}</S.Name>
-                <S.Cmt>{item.profileCmt}</S.Cmt>
+                <S.Cmt>{item.intro}</S.Cmt>
               </S.Card>
             );
           })}

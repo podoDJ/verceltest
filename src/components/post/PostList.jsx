@@ -18,7 +18,7 @@ const PostList = () => {
   return (
     <>
       <S.Title>All post</S.Title>
-      <S.PostWriteBox onClick={uid? () => navigate("/postcreate") : () => alert("로그인 후 이용 바랍니다.")}>
+      <S.PostWriteBox onClick={uid ? () => navigate("/postcreate") : () => alert("로그인 후 이용 바랍니다.")}>
         <S.PostWriteBoxCnt>✏️</S.PostWriteBoxCnt>
         <S.PostWriteBoxCnt>오늘 어떤 음식을 해먹었나요?</S.PostWriteBoxCnt>
       </S.PostWriteBox>
@@ -29,17 +29,19 @@ const PostList = () => {
           return (
             <S.PostingBox onClick={() => navigate(`/post/${post.postId}`)} key={post.postId}>
               {/* <p>글 아이디: {post.postId}</p> */}
-              <S.PostingFoodPhoto src={post.photoURL ? post.photoURL : "https://velog.velcdn.com/images/darkfairy7/post/f0d9a0ca-ad26-4a4c-b1b3-756dfb4fb3d0/banner-rtan.png" } />
+              <S.PostingFoodPhoto src={post.photoURL ? post.photoURL : "https://velog.velcdn.com/images/darkfairy7/post/f0d9a0ca-ad26-4a4c-b1b3-756dfb4fb3d0/banner-rtan.png"} />
               <S.PostingTitle>{post.postTitle}</S.PostingTitle>
 
               {/* <S.PostingBody>{post.display}</S.PostingBody> */}
               <S.PostingBody>작성자</S.PostingBody>
-              <S.PostingLike>
-                <BiSolidLike size={25}/>
-                {post.postWhoLiked?.length || 0}
-                </S.PostingLike>
               {/* <p>uid: {post.uid}</p> */}
-              <p> {post.postDate.slice(0, 11)}</p>
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <p style={{ marginRight: "20px" }}> {post.postDate.slice(0, 11)}</p>
+                <S.PostingLike>
+                  {" "}
+                  <BiSolidLike size={20} style={{ color: "#b46060" }} /> {post.postWhoLiked?.length || 0}
+                </S.PostingLike>
+              </div>
             </S.PostingBox>
           );
         })}
@@ -118,11 +120,8 @@ const S = {
     padding-bottom: 10px;
   `,
   PostingLike: styled.div`
-    float: right;
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
-    gap: 5px;
-    font-size: 20px;
+    justify-content: center;
   `,
 };
