@@ -60,8 +60,8 @@ const FileForm = ({ handleUpload, handleFileSelect, photoURL }) => {
 
 const PostForm = () => {
   //uid는 여기서 가져옵니다.
-  const uid = useSelector((state) => state.logReducer.user.uid);
-  console.log("uid =>", uid);
+  const user = useSelector((state) => state.logReducer.user);
+  console.log("user =>", user);
 
   // const postLike = 0
   const postWhoLiked = [];
@@ -113,7 +113,7 @@ const PostForm = () => {
     if (photoURL) {
       // 이전에 사용했던 방법: const newPost = { postId: shortid.generate(), postTitle, postBody };
       const collectionRef = collection(db, "posts");
-      const docRef = await addDoc(collectionRef, { postTitle, postBody, uid, postWhoLiked, postDate, photoURL });
+      const docRef = await addDoc(collectionRef, { postTitle, postBody, uid: user.uid, displayName: user.displayName, postWhoLiked, postDate, photoURL });
 
       // 도큐먼트 아이디가 바로 필드에 반영되도록 하는 코드
       const postDocRef = doc(db, "posts", docRef.id);
@@ -132,7 +132,8 @@ const PostForm = () => {
           postBody,
           postIngredient,
           postRecipe,
-          uid,
+          uid: user.uid,
+          displayName: user.displayName,
           // postLike,
           postWhoLiked,
           postDate,
@@ -313,6 +314,7 @@ const S = {
     background-color: white;
     margin-bottom: 30px;
     align-items: center;
+    cursor: pointer;
   `,
   ImgBtn: styled.button`
     color: white;
@@ -322,6 +324,7 @@ const S = {
     width: 80px;
     height: 40px;
     border-radius: 10px;
+    cursor: pointer;
   `,
   ImgPreview: styled.img`
     width: 400px;
