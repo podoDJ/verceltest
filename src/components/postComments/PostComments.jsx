@@ -9,7 +9,7 @@ import CommentChange from "./CommentChange";
 
 const PostComments = ({ post, id }) => {
   const uid = useSelector((state) => state.logReducer.user.uid);
-  console.log(uid);
+
   const comments = useSelector((state) => {
     return state.comment;
   });
@@ -87,23 +87,40 @@ const PostComments = ({ post, id }) => {
 
             return (
               <Stlist key={comment.commentId}>
-                <StCommentList>
-                  <p>{comment.title}</p>
-                  <p>{comment.comment}</p>
-                </StCommentList>
+                <StCommentBox>
+                  <StCommentList>
+                    <StComment>{comment.comment}</StComment>
+                    {isOpen && <Stbutton onClick={openModal}>수정</Stbutton>}
+                    {isOpen && (
+                      <Stbutton
+                        onClick={async () => {
+                          const commentRef = doc(db, "comments", comment.commentId);
+                          await deleteDoc(commentRef);
 
-                {isOpen && <Stbutton onClick={openModal}>수정</Stbutton>}
+                          dispatch({
+                            type: REMOVE_COMMENT,
+                            payload: comment.commentId,
+                          });
+                        }}
+                      >
+                        삭제
+                      </Stbutton>
+                    )}
+                  </StCommentList>
+                </StCommentBox>
+
+                {/* {isOpen && <Stbutton onClick={openModal}>수정</Stbutton>} */}
                 {isModal && (
                   // <Link to={`/post/commentup/${comment.commentId}`}>
                   //   <button>수정</button>
                   // </Link>
                   <StModalBox>
                     <StModalContents>
-                      <CommentChange closeModal={closeModal} />
+                      <CommentChange closeModal={closeModal} commentId={comment.commentId} />
                     </StModalContents>
                   </StModalBox>
                 )}
-
+                {/* 
                 {isOpen && (
                   <Stbutton
                     onClick={async () => {
@@ -117,8 +134,8 @@ const PostComments = ({ post, id }) => {
                     }}
                   >
                     삭제
-                  </Stbutton>
-                )}
+                  </Stbutton> */}
+                {/* )} */}
               </Stlist>
             );
           })}
@@ -144,7 +161,7 @@ const StModalBox = styled.div`
 const StModalContents = styled.div`
   background-color: #fff;
   padding: 20px;
-  width: 17%;
+  width: 15%;
   height: 10%;
   border-radius: 12px;
 `;
@@ -163,6 +180,8 @@ const StCommentList = styled.div`
   margin-top: 10px;
   width: 60%;
   height: 25px;
+  overflow: auto;
+  height: 100px;
 `;
 const Stbutton = styled.button`
   width: 45px;
@@ -181,4 +200,12 @@ const Stlist = styled.div`
 const StTitle = styled.div`
   margin-left: 40%;
   margin-top: 25px;
+`;
+const StCommentBox = styled.div`
+  overflow: auto;
+  height: 100px;
+`;
+const StComment = styled.p`
+  width: 50%;
+  height: 20px;
 `;
