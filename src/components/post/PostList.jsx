@@ -34,14 +34,13 @@ const PostList = () => {
 
               {/* <S.PostingBody>{post.display}</S.PostingBody> */}
               <S.PostingBody>작성자</S.PostingBody>
-              <S.PostingLike>
-                <BiSolidLike size={25} />
-                {post.postWhoLiked?.length || 0}
-              </S.PostingLike>
               {/* <p>uid: {post.uid}</p> */}
               <div style={{ display: "flex", justifyContent: "center" }}>
                 <p style={{ marginRight: "20px" }}> {post.postDate.slice(0, 11)}</p>
-                <S.PostingLike> 👍🏻 {post.postWhoLiked?.length || 0}</S.PostingLike>
+                <S.PostingLike>
+                  {" "}
+                  <BiSolidLike size={20} style={{ color: "#b46060" }} /> {post.postWhoLiked?.length || 0}
+                </S.PostingLike>
               </div>
             </S.PostingBox>
           );
@@ -123,8 +122,6 @@ const S = {
   PostingLike: styled.div`
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
-    gap: 5px;
-    font-size: 20px;
+    justify-content: center;
   `,
 };

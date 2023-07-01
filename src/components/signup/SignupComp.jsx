@@ -4,7 +4,7 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import { ERR_CODE } from "../../constant";
-import { addDoc, collection, doc, setDoc } from "@firebase/firestore";
+import { addDoc, collection, doc, getCountFromServer, getDocs, limit, orderBy, query, setDoc } from "@firebase/firestore";
 
 const SignupComp = () => {
   const [name, setName] = useState("");
@@ -22,6 +22,20 @@ const SignupComp = () => {
       await updateProfile(auth.currentUser, { displayName: name });
       console.log("가입된 유저 정보", userCredential.user);
 
+      let addId;
+      const userValidCount = (await getCountFromServer(collection(db, "members"))).data().count;
+
+      if (!userValidCount) {
+        addId = 1;
+      } else {
+        const q = query(collection(db, "members"), orderBy("id", "desc"), limit(1));
+        const docSnap = await getDocs(q);
+
+        docSnap.forEach((x) => {
+          addId = x.data().id + 1;
+        });
+      }
+
       const collectionRef = collection(db, "members");
       await setDoc(doc(collectionRef, userCredential.user.uid), {
         displayName: name,
@@ -30,6 +44,7 @@ const SignupComp = () => {
         photoURL: "https://i.pinimg.com/originals/99/f3/06/99f3068e425e6b9f56d683b0859ee942.jpg",
         isLiked: false,
         likes: 0,
+        id: addId,
       });
 
       alert("회원가입 완료");
