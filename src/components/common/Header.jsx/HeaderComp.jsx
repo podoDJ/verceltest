@@ -48,7 +48,7 @@ export const UserHeaderComp = () => {
       </S.HeaderMenuDiv>
       <S.HeaderMenuDiv>
         <S.HeaderMenu onClick={logOutFunc}>Log Out</S.HeaderMenu>
-        <S.Img src={user.photoURL ? user.photoURL : "https://yozm.wishket.com/static/img/default_avatar.png"} />
+        <S.Img src={user.photoURL ? user.photoURL : "https://i.pinimg.com/originals/99/f3/06/99f3068e425e6b9f56d683b0859ee942.jpg"} />
       </S.HeaderMenuDiv>
     </S.Header>
   );

@@ -46,7 +46,7 @@ const PostComments = ({ post, id }) => {
           const collectionRef = collection(db, "comments");
           const docRef = await addDoc(collectionRef, { title, comment });
           const commentDocRef = doc(db, "comments", docRef.id);
-          await setDoc(commentDocRef, { commentId: docRef.id, postId: id }, { merge: true });
+          await setDoc(commentDocRef, { commentId: docRef.id, postId: id, userId: id }, { merge: true });
 
           dispatch({
             type: ADD_COMMENT,

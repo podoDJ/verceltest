@@ -8,13 +8,13 @@ import { getStorage } from "firebase/storage";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
-export const firebaseConfig = {
-  apiKey: "AIzaSyABEEFNfhHBYQ9cxiunZi-1IQCq_ah0hws",
-  authDomain: "honcook-2f959.firebaseapp.com",
-  projectId: "honcook-2f959",
-  storageBucket: "honcook-2f959.appspot.com",
-  messagingSenderId: "575135069780",
-  appId: "1:575135069780:web:a8a6f2f776856106bf5fc1",
+const firebaseConfig = {
+  apiKey: "AIzaSyBbAoEw79xaqB67xMYqrSfsyIVsuNELQ7Q",
+  authDomain: "honcooknewhome.firebaseapp.com",
+  projectId: "honcooknewhome",
+  storageBucket: "honcooknewhome.appspot.com",
+  messagingSenderId: "951230277951",
+  appId: "1:951230277951:web:001aef3c37671353bdcb8a",
 };
 
 // Initialize Firebase
