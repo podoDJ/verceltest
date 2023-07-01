@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -14,7 +14,6 @@ const CommentChange = ({ commentId }) => {
   const comments = useSelector((state) => state.comment);
   const comment = comments.find((comment) => comment.commentId === id);
 
-  console.log(comment);
   const dispatch = useDispatch();
 
   return (
@@ -26,19 +25,19 @@ const CommentChange = ({ commentId }) => {
             alert("내용을 추가해주세요");
             return false;
           }
-          const commentRef = doc(db, "comments", commentId);
+
+          const commentRef = doc(db, "comments", comment.commentId);
 
           await updateDoc(commentRef, { ...comment, title: uptitle, comment: upComment });
-
           dispatch({
             type: UPDATE_COMMENT,
             payload: {
-              commentId: id,
               title: uptitle,
               comment: upComment,
+              postId: id,
+              commentId,
             },
           });
-          navigate(`/post/${comments.postId}`);
         }}
       >
         <input

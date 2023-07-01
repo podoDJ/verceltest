@@ -3,18 +3,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { ADD_COMMENT, REMOVE_COMMENT, baseComment } from "../../redux/modules/comment";
 import { addDoc, collection, deleteDoc, doc, getDocs, query, setDoc } from "firebase/firestore";
 import { db } from "../../firebase";
-import { Link } from "react-router-dom";
+import { Await, Link } from "react-router-dom";
 import { styled } from "styled-components";
-import CommentChange from "./CommentChange";
 
 const PostComments = ({ post, id }) => {
   const uid = useSelector((state) => state.logReducer.user.uid);
-  console.log("uid =>", uid);
-
+  console.log("uid=>", uid);
   const comments = useSelector((state) => {
     return state.comment;
   });
-  console.log("commentsssss", comments);
 
   const dispatch = useDispatch();
   //console.log(comments);
@@ -34,11 +31,6 @@ const PostComments = ({ post, id }) => {
     };
     fetchData();
   }, [dispatch]);
-  const [isModal, setIsModal] = useState(false);
-
-  const openModal = () => {
-    setIsModal(true);
-  };
 
   return (
     <div>
@@ -50,19 +42,20 @@ const PostComments = ({ post, id }) => {
             alert("내용을 추가해주세요");
             return false;
           }
+
           const collectionRef = collection(db, "comments");
           const docRef = await addDoc(collectionRef, { title, comment });
-          console.log(docRef.id);
           const commentDocRef = doc(db, "comments", docRef.id);
-          await setDoc(commentDocRef, { commentId: docRef.id, postId: post.id, userId: uid }, { merge: true });
+          await setDoc(commentDocRef, { commentId: docRef.id, postId: id }, { merge: true });
+
           dispatch({
             type: ADD_COMMENT,
             payload: {
+              postId: post.id,
               userId: uid,
               commentId: docRef.id,
               title,
               comment,
-              postId: post.id,
             },
           });
         }}
@@ -88,40 +81,27 @@ const PostComments = ({ post, id }) => {
       </form>
 
       <div>
-        {console.log("comments", comments)}
         {comments
-          .sort((a, b) => a - b)
           .filter((item) => {
             return item.postId === id;
           })
           .map((comment) => {
             const isOpen = comment.userId === uid;
-            console.log("comment55555", comment.userId);
-            console.log("uid55555", uid);
 
             return (
               <Stspan key={comment.commentId}>
                 <p>{comment.title}</p>
                 <p>{comment.comment}</p>
                 {isOpen && (
-                  <button onClick={openModal}>수정</button>
-                  // <Link to={`/post/commentup/${comment.commentId}`}>
-                  //   <button>수정</button>
-                  // </Link>
+                  <Link to={`/post/commentup/${comment.commentId}`}>
+                    <button>수정</button>
+                  </Link>
                 )}
 
-                {isModal && (
-                  <StModalBox>
-                    <StModalContents>
-                      <CommentChange commentId={comment.commentId} />
-                    </StModalContents>
-                  </StModalBox>
-                )}
                 {isOpen && (
                   <button
                     onClick={async () => {
                       const commentRef = doc(db, "comments", comment.commentId);
-                      console.log("commentRef=>", commentRef);
                       await deleteDoc(commentRef);
 
                       dispatch({
@@ -148,31 +128,31 @@ const Stspan = styled.div`
   border: 1px solid black;
 `;
 
-const StModalBox = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
+// const StModalBox = styled.div`
+//   position: fixed;
+//   top: 0;
+//   left: 0;
+//   width: 100%;
+//   height: 100%;
+//   background-color: rgba(0, 0, 0, 0.5);
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+// `;
 
-const StModalContents = styled.div`
-  background-color: #fff;
-  padding: 20px;
-  width: 70%;
-  height: 50%;
-  border-radius: 12px;
-`;
-const StButton = styled.button`
-  border: none;
-  cursor: pointer;
-  border-radius: 8px;
-  background-color: rgb(85, 239, 196);
-  color: rgb(0, 0, 0);
-  height: 40px;
-  width: 100px;
-`;
+// const StModalContents = styled.div`
+//   background-color: #fff;
+//   padding: 20px;
+//   width: 70%;
+//   height: 50%;
+//   border-radius: 12px;
+// `;
+// const StButton = styled.button`
+//   border: none;
+//   cursor: pointer;
+//   border-radius: 8px;
+//   background-color: rgb(85, 239, 196);
+//   color: rgb(0, 0, 0);
+//   height: 40px;
+//   width: 100px;
+// `;
