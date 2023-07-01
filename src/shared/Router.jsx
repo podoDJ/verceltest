@@ -108,7 +108,7 @@ const Router = () => {
             <Route path="/post" element={<Post />} />
             <Route path="/postcreate" element={<PostCreate />} />
             <Route path="/postupdate/:id" element={<PostUpdate />} />
-            <Route path="/star/members/:id" element={<StarDetail />} />
+            <Route path="/star/members/:id/guestbook" element={<StarDetail />} />
             <Route path="/star" element={<Star />} />
             <Route path="/about" element={<About />} />
             <Route path="/post/commentup/:id" element={<PostCommentUpdata />} />

@@ -35,7 +35,7 @@ const SignupComp = () => {
           addId = x.data().memberId + 1;
         });
       }
-      //============================================
+
       const collectionRef = collection(db, "members");
       await setDoc(doc(collectionRef, userCredential.user.uid), {
         displayName: name,
