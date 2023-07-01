@@ -16,8 +16,8 @@ export const HeaderComp = () => {
         <S.HeaderMenu onClick={() => navigate("/star")}>MEMBER</S.HeaderMenu>
       </S.HeaderMenuDiv>
       <S.HeaderMenuDiv>
-        <S.HeaderMenu onClick={() => navigate("/login")}>Log In</S.HeaderMenu>
-        <S.HeaderMenu onClick={() => navigate("/signup")}>Sign Up</S.HeaderMenu>
+        <S.HeaderSubMenu onClick={() => navigate("/login")}>Log In</S.HeaderSubMenu>
+        <S.HeaderSubMenu onClick={() => navigate("/signup")}>Sign Up</S.HeaderSubMenu>
       </S.HeaderMenuDiv>
     </S.Header>
   );
@@ -53,7 +53,7 @@ export const UserHeaderComp = () => {
         {/* 마이페이지 경로 수정 - 제이 */}
       </S.HeaderMenuDiv>
       <S.HeaderMenuDiv>
-        <S.HeaderMenu onClick={logOutFunc}>Log Out</S.HeaderMenu>
+        <S.HeaderSubMenu onClick={logOutFunc}>Log Out</S.HeaderSubMenu>
         <S.Img src={currentUser[0]?.photoURL ? currentUser[0].photoURL : "https://i.pinimg.com/originals/99/f3/06/99f3068e425e6b9f56d683b0859ee942.jpg"} onClick={() => navigate("/mypage")} />
       </S.HeaderMenuDiv>
     </S.Header>
@@ -78,6 +78,24 @@ const S = {
     margin: 0 15px;
   `,
   HeaderMenu: styled.span`
+    font-size: 25px;
+    font-weight: 600;
+    /* margin: 0 15px; */
+    cursor: pointer;
+    /*동준변경시도*/
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    &:hover {
+      box-shadow: inset 0px -13px 5px -6px #f9d7c5;
+      transition-duration: 100ms;
+    }
+    &:active {
+      box-shadow: inset 0px -13px 5px -6px #f9d7c5;
+    }
+  `,
+  HeaderSubMenu: styled.span`
     font-size: 25px;
     font-weight: 600;
     /* margin: 0 15px; */
