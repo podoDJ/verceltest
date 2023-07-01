@@ -11,7 +11,6 @@ const Profile = () => {
   // console.log("1", starList);
 
   const user = starList.find((user) => {
-    console.log("1", id, user);
     return user.memberId == id;
   });
 

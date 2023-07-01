@@ -10,9 +10,7 @@ const HomeComp = () => {
   dispatch(sortLikeMembers());
   const posts = useSelector((state) => state.posts);
   const starList = useSelector((state) => state.logReducer.members);
-  console.log("starList", starList);
   const popSortPosts = posts.sort((a, b) => b.postWhoLiked.length - a.postWhoLiked.length);
-  console.log(popSortPosts);
 
   return (
     <div style={{ marginBottom: "50px" }}>

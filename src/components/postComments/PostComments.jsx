@@ -8,22 +8,18 @@ import { styled } from "styled-components";
 
 const PostComments = ({ post, id }) => {
   const uid = useSelector((state) => state.logReducer.user.uid);
-  console.log("uid=>", uid);
   const comments = useSelector((state) => {
     return state.comment;
   });
 
   const dispatch = useDispatch();
-  //console.log(comments);
   const [title, setTitle] = useState("");
   const [comment, setComment] = useState("");
   // 함수의 리턴값 const abc  = (a)=> return a+1  abc(1) const b = abc(1512341)
   useEffect(() => {
     const fetchData = async () => {
       const q = query(collection(db, "comments"));
-      console.log("q", q);
       const querySnapshot = await getDocs(q);
-      console.log("query", querySnapshot);
       const abc = querySnapshot.docs.map((doc) => {
         return { id: doc.id, ...doc.data() };
       });
