@@ -17,7 +17,7 @@ const PostList = () => {
 
   return (
     <>
-      <S.Title>All post</S.Title>
+      <S.Title>All Post</S.Title>
       <S.PostWriteBox onClick={uid ? () => navigate("/postcreate") : () => alert("로그인 후 이용 바랍니다.")}>
         <S.PostWriteBoxCnt>✏️</S.PostWriteBoxCnt>
         <S.PostWriteBoxCnt>오늘 어떤 음식을 해먹었나요?</S.PostWriteBoxCnt>
