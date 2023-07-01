@@ -68,7 +68,7 @@ export const P = {
     margin: 10px;
   `,
 
-  ContentsTitle: styled.p`
+  ContentsTitle: styled.span`
     cursor: pointer;
   `,
 
