@@ -1,56 +1,58 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { collection, doc, getDocs, query, updateDoc } from "firebase/firestore";
-import { auth, db, storage } from "../../firebase";
+import { useSelector } from "react-redux";
+import { doc, updateDoc } from "firebase/firestore";
+import { db, storage } from "../../firebase";
 import { P } from "./ProfileStyle";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { updateProfile } from "firebase/auth";
 
 const Profile = () => {
-  // const defaultProfileImage = "https://i.pinimg.com/originals/99/f3/06/99f3068e425e6b9f56d683b0859ee942.jpg";
-  const uid = useSelector((state) => state.logReducer.user.uid);
-  const userProfile = useSelector((state) => state.logReducer.user);
-  const dispatch = useDispatch();
+  const getProfile = useSelector((state) => state.profile);
+  const getMyPosts = useSelector((state) => state.myPosts);
+
+  console.log(getMyPosts);
+
+  const { uid } = getProfile;
 
   const [selectedFile, setSelectedFile] = useState(null);
-  const [photoURL, setPhotoURL] = useState(() => {
-    const storedPhotoURL = localStorage.getItem("photoURL");
-    const defaultProfileImage = userProfile.photoURL;
-    return storedPhotoURL || userProfile.photoURL || defaultProfileImage;
-  });
-  const [displayName, setDisplayName] = useState(userProfile.displayName || "");
-  const [profileCmt, setProfileCmt] = useState(userProfile.profileCmt || "");
+  const [currentPhotoURL, setCurrentPhotoURL] = useState(null);
+  const [currentDisplayName, setCurrentDisplayName] = useState(null);
+  const [currentProfileCmt, setCurrentProfileCmt] = useState(null);
+
+  useEffect(() => {
+    setCurrentPhotoURL(getProfile.photoURL);
+  }, [getProfile.photoURL]);
+
+  useEffect(() => {
+    setCurrentDisplayName(getProfile.displayName);
+  }, [getProfile.displayName]);
+
+  useEffect(() => {
+    setCurrentProfileCmt(getProfile.profileCmt);
+  }, [getProfile.profileCmt]);
 
   // useRef를 이용하여 input태그에 접근
   const imageFileInput = useRef();
+
   // 이미지 업로드 버튼 클릭 시 이미지 파일 인풋 태그에 클릭 이벤트 걸기
   const onClickImageFile = () => {
     imageFileInput.current.click();
   };
 
   const nameChangeHandler = (e) => {
-    setDisplayName(e.target.value);
-  };
-
-  const changeName = async (e) => {
-    e.preventDefault();
-    await updateProfile(auth.currentUser, { displayName: displayName });
-    const userDocRef = doc(db, "members", userProfile.memberid);
-    await updateDoc(userDocRef, { displayName: displayName });
-    alert("닉네임 변경 완료");
-    console.log(userDocRef);
+    setCurrentDisplayName(e.target.value);
   };
 
   const profileCmtChangeHandler = (e) => {
-    setProfileCmt(e.target.value);
+    setCurrentProfileCmt(e.target.value);
   };
 
-  const changeProfileCmt = async (e) => {
+  const updateProfile = async (e) => {
     e.preventDefault();
-    await updateProfile(auth.currentUser, { profileCmt: profileCmt });
-    const userDocRef = doc(db, "members", userProfile.uid);
-    await updateDoc(userDocRef, { profileCmt: profileCmt });
-    alert("소개글 변경 완료");
+
+    const userDocRef = doc(db, "members", uid);
+    await updateDoc(userDocRef, { profileCmt: currentProfileCmt, displayName: currentDisplayName });
+
+    alert("프로필 정보 변경 완료");
   };
 
   const changedPhoto = async (e) => {
@@ -58,37 +60,30 @@ const Profile = () => {
     setSelectedFile(file);
 
     try {
-      const URL = `${userProfile.uid}/${file.name}`;
+      const URL = `${uid}/${file.name}`;
       const storageRef = ref(storage, URL);
       await uploadBytes(storageRef, file);
-      const photoURL = await getDownloadURL(storageRef);
+      const resultPhotoURL = await getDownloadURL(storageRef);
 
-      setPhotoURL(photoURL);
-      localStorage.setItem("photoURL", photoURL);
-      await updateProfile(auth.currentUser, { photoURL: photoURL });
+      const userDocRef = doc(db, "members", uid);
+      await updateDoc(userDocRef, { photoURL: resultPhotoURL });
       alert("프로필 사진 변경 완료");
+
+      setCurrentPhotoURL(resultPhotoURL);
     } catch (error) {
       console.log(error);
       alert("프로필 사진 변경 실패", error);
     }
   };
 
-  useEffect(() => {
-    // 컴포넌트가 마운트될 때 로컬 스토리지에서 포토URL 값을 가져와 초기화
-    const storedPhotoURL = localStorage.getItem("photoURL");
-    if (storedPhotoURL) {
-      setPhotoURL(storedPhotoURL);
-    }
-  }, []);
-
   return (
     <>
       <div>
-        <div key={userProfile.uid}>
+        <div key={uid}>
           <P.ProfileContainer>
             <P.ProfileImageWrap>
               <P.ProfileImageBox>
-                <P.ProfileImage src={photoURL} alt="profile" />
+                <P.ProfileImage src={currentPhotoURL} alt="profile" />
               </P.ProfileImageBox>
               <P.ImageUploadBox>
                 <P.ImageInput type="file" ref={imageFileInput} onChange={changedPhoto} />
@@ -99,19 +94,14 @@ const Profile = () => {
             </P.ProfileImageWrap>
             <P.ProfileBody>
               <p>EMAIL</p>
-              <P.MemberInput type="email" placeholder={userProfile.email} disabled={true} />
+              <P.MemberInput type="email" placeholder={getProfile.email} disabled={true} />
 
               <p>NAME</p>
-              <P.MemberInput type="text" value={displayName} onChange={nameChangeHandler} />
+              <P.MemberInput type="text" value={currentDisplayName} onChange={nameChangeHandler} />
               {/* <p>좋아요 수 : {profile.likes}</p> */}
-              {/* <P.Btns type="submit" btn="nameBtn" onClick={changeName}>
-                변경
-              </P.Btns> */}
-
-              <p>INTRO {userProfile.profileCmt}</p>
-
-              <P.MemberInput value={profileCmt} onChange={profileCmtChangeHandler} />
-              <P.Btns onClick={changeProfileCmt} btn="introBtn">
+              <p>COMMENT</p>
+              <P.MemberInput value={getProfile.profileCmt} onChange={profileCmtChangeHandler} />
+              <P.Btns onClick={updateProfile} btn="introBtn">
                 프로필 정보 변경
               </P.Btns>
             </P.ProfileBody>
