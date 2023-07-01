@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { auth, db, storage } from "../../firebase";
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { addPosts } from "../../redux/modules/postWrite";
@@ -146,9 +146,6 @@ const PostForm = () => {
   };
   return (
     <>
-      <div>
-        <Link to={"/post"}>전체게시글보기</Link>
-      </div>
       <S.PostForm onSubmit={handleSubmit}>
         <div>
           <div>
