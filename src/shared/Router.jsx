@@ -27,8 +27,8 @@ import { showPosts, sortLikePosts } from "../redux/modules/postWrite";
 import PostCommentUpdata from "../pages/PostCommentUpdata";
 
 // 제이 추가
-import { userProfile } from "../redux/modules/Profile";
-import { myPosts } from "../redux/modules/myPosts";
+import { userProfile } from "../redux/modules/profileReducer";
+import { myPosts } from "../redux/modules/myPostReducer";
 
 const Router = () => {
   const dispatch = useDispatch();

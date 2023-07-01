@@ -5,16 +5,16 @@ import logReducer from "../modules/logReducer";
 import posts from "../modules/postWrite";
 import thunk from "redux-thunk";
 import comment from "../modules/comment";
-import profileReducer from "../modules/profileReducer";
-import myPostsReducer from "../modules/myPostReducer";
+import profile from "../modules/profileReducer";
+import myPosts from "../modules/myPostReducer";
 
 const rootReducer = combineReducers({
   tempReducer,
   logReducer,
   posts,
   comment,
-  profileReducer,
-  myPostsReducer,
+  profile,
+  myPosts,
 });
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
