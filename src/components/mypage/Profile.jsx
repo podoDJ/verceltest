@@ -47,7 +47,7 @@ const Profile = () => {
     setCurrentProfileCmt(e.target.value);
   };
 
-  const profileUpdateHamdler = (e) => {
+  const profileUpdateHandler = (e) => {
     e.preventDefault();
   };
 
@@ -100,7 +100,7 @@ const Profile = () => {
               </P.ImageUploadBox>
             </P.ProfileImageWrap>
 
-            <form onSubmit={profileUpdateHamdler}>
+            <form onSubmit={profileUpdateHandler}>
               <P.ProfileBody>
                 <p>EMAIL</p>
                 <P.MemberInput type="email" placeholder={getProfile.email} disabled={true} />
@@ -125,7 +125,7 @@ const Profile = () => {
               {getMyPosts.map((info) => {
                 return (
                   <S.PostingBox onClick={() => Navigate(`/post/${info.postId}`)} key={info.postId}>
-                    <S.PostingFoodPhoto src={info.photoURL ? info.photoURL : "https://velog.velcdn.com/images/darkfairy7/post/f0d9a0ca-ad26-4a4c-b1b3-756dfb4fb3d0/banner-rtan.png"} />
+                    <S.PostingFoodPhoto src={info.photoURL} />
                     <S.PostingTitle>{info.postTitle}</S.PostingTitle>
                     <S.PostingBody>작성자</S.PostingBody>
                     <S.PostingDateLikeBox>
