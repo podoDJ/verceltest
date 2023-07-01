@@ -6,7 +6,6 @@ import { doc, updateDoc } from "@firebase/firestore";
 import { db } from "../../firebase";
 import { updatePosts } from "../../redux/modules/postWrite";
 
-
 const PostDetailUpdate = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -16,11 +15,9 @@ const PostDetailUpdate = () => {
   const [updatedPostRecipe, setUpdatedPostRecipe] = useState("");
 
   const { id } = useParams();
-  console.log("id ==> ",id)
   const posts = useSelector((state) => state.posts);
-  const post = posts.find((post) => post.postId === id)
-  console.log("post가 =>>", id);
-  
+  const post = posts.find((post) => post.postId === id);
+
   useEffect(() => {
     if (!post) {
       navigate("/post");
@@ -28,23 +25,21 @@ const PostDetailUpdate = () => {
   }, [post, navigate]);
 
   const PostingUpdate = async (event) => {
-      event.preventDefault();
-      const postRef = doc(db, "posts", post.postId);
-      await updateDoc(postRef, { ...post, postTitle: updatePostTitle, postBody: updatePostBody });
-      console.log("postRef", postRef);
-      dispatch(
-        updatePosts({
-          postId: id,
-          postTitle: updatePostTitle,
-          postBody: updatePostBody,
-          postIngredient: updatedPostIngredient,
-          postRecipe: updatedPostRecipe,
-        })
-      );
-  
-    navigate(`/post/${id}`); 
+    event.preventDefault();
+    const postRef = doc(db, "posts", post.postId);
+    await updateDoc(postRef, { ...post, postTitle: updatePostTitle, postBody: updatePostBody });
+    dispatch(
+      updatePosts({
+        postId: id,
+        postTitle: updatePostTitle,
+        postBody: updatePostBody,
+        postIngredient: updatedPostIngredient,
+        postRecipe: updatedPostRecipe,
+      })
+    );
+
+    navigate(`/post/${id}`);
   };
-  console.log("id2 ==> ",id)
   return (
     <>
       <S.UpdatePostForm onSubmit={PostingUpdate}>
