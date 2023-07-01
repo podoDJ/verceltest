@@ -54,6 +54,8 @@ const Profile = () => {
   const updateProfile = async (e) => {
     e.preventDefault();
 
+    if (!currentDisplayName.value) return alert("닉네임을 입력해주세요");
+
     const userDocRef = doc(db, "members", uid);
     await updateDoc(userDocRef, { profileCmt: currentProfileCmt, displayName: currentDisplayName });
 
@@ -104,10 +106,10 @@ const Profile = () => {
                 <P.MemberInput type="email" placeholder={getProfile.email} disabled={true} />
 
                 <p>NAME</p>
-                <P.MemberInput type="text" value={currentDisplayName} onChange={nameChangeHandler} />
+                <P.MemberInput type="text" maxLength={10} value={currentDisplayName} onChange={nameChangeHandler} />
                 {/* <p>좋아요 수 : {profile.likes}</p> */}
                 <p>COMMENT</p>
-                <P.MemberInput value={currentProfileCmt} onChange={profileCmtChangeHandler} />
+                <P.MemberInput maxLength={20} value={currentProfileCmt} onChange={profileCmtChangeHandler} />
                 <P.Btns type="submit" onClick={updateProfile} btn="profileBtn">
                   프로필 정보 변경
                 </P.Btns>
