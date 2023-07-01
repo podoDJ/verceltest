@@ -35,7 +35,7 @@ export const UserHeaderComp = () => {
   const user = useSelector((state) => {
     return state.logReducer.user;
   });
-  console.log("sssss", user);
+
   return (
     <S.Header>
       <S.HeaderMenuDiv>

@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ADD_COMMENT, REMOVE_COMMENT, baseComment } from "../../redux/modules/comment";
-import { addDoc, collection, deleteDoc, doc, getDocs, query, setDoc, where } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, query, setDoc } from "firebase/firestore";
 import { db } from "../../firebase";
-import { Link } from "react-router-dom";
+import { Await, Link } from "react-router-dom";
+import { styled } from "styled-components";
 
 const PostComments = ({ post, id }) => {
   const uid = useSelector((state) => state.logReducer.user.uid);
-  console.log("uid =>", uid);
-
+  console.log("uid=>", uid);
   const comments = useSelector((state) => {
     return state.comment;
   });
-  console.log("commentsssss", comments);
 
   const dispatch = useDispatch();
   //console.log(comments);
@@ -39,19 +38,24 @@ const PostComments = ({ post, id }) => {
       <form
         onSubmit={async (e) => {
           e.preventDefault();
+          if (!title || !comment) {
+            alert("내용을 추가해주세요");
+            return false;
+          }
+
           const collectionRef = collection(db, "comments");
           const docRef = await addDoc(collectionRef, { title, comment });
-          console.log(docRef.id);
           const commentDocRef = doc(db, "comments", docRef.id);
-          await setDoc(commentDocRef, { commentId: docRef.id, postId: post.id, userId: uid }, { merge: true });
+          await setDoc(commentDocRef, { commentId: docRef.id, postId: id, userId: id }, { merge: true });
+
           dispatch({
             type: ADD_COMMENT,
             payload: {
-              uid: uid,
+              postId: post.id,
+              userId: uid,
               commentId: docRef.id,
               title,
               comment,
-              postId: post.id,
             },
           });
         }}
@@ -72,21 +76,20 @@ const PostComments = ({ post, id }) => {
             setComment(e.target.value);
           }}
         />
+
         <button>작성</button>
       </form>
 
       <div>
-        {console.log("comments", comments)}
         {comments
           .filter((item) => {
             return item.postId === id;
           })
           .map((comment) => {
             const isOpen = comment.userId === uid;
-            console.log(isOpen);
+
             return (
-              <div key={comment.commentId}>
-                <p>{comment.commentId}</p>
+              <Stspan key={comment.commentId}>
                 <p>{comment.title}</p>
                 <p>{comment.comment}</p>
                 {isOpen && (
@@ -94,11 +97,11 @@ const PostComments = ({ post, id }) => {
                     <button>수정</button>
                   </Link>
                 )}
+
                 {isOpen && (
                   <button
                     onClick={async () => {
                       const commentRef = doc(db, "comments", comment.commentId);
-                      console.log("commentRef=>", commentRef);
                       await deleteDoc(commentRef);
 
                       dispatch({
@@ -110,7 +113,7 @@ const PostComments = ({ post, id }) => {
                     삭제
                   </button>
                 )}
-              </div>
+              </Stspan>
             );
           })}
       </div>
@@ -119,3 +122,37 @@ const PostComments = ({ post, id }) => {
 };
 
 export default PostComments;
+
+const Stspan = styled.div`
+  display: flex;
+  border: 1px solid black;
+`;
+
+// const StModalBox = styled.div`
+//   position: fixed;
+//   top: 0;
+//   left: 0;
+//   width: 100%;
+//   height: 100%;
+//   background-color: rgba(0, 0, 0, 0.5);
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+// `;
+
+// const StModalContents = styled.div`
+//   background-color: #fff;
+//   padding: 20px;
+//   width: 70%;
+//   height: 50%;
+//   border-radius: 12px;
+// `;
+// const StButton = styled.button`
+//   border: none;
+//   cursor: pointer;
+//   border-radius: 8px;
+//   background-color: rgb(85, 239, 196);
+//   color: rgb(0, 0, 0);
+//   height: 40px;
+//   width: 100px;
+// `;
