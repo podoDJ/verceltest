@@ -8,7 +8,6 @@ const Home = () => {
   console.log("currentUid =>", currentUid);
   return (
     <>
-      <Link to={"/about"}>about으로 가기</Link>
       <HomeComp />
     </>
   );
