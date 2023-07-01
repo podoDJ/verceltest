@@ -101,7 +101,7 @@ const Profile = () => {
               {/* <p>좋아요 수 : {profile.likes}</p> */}
               <p>COMMENT</p>
               <P.MemberInput value={getProfile.profileCmt} onChange={profileCmtChangeHandler} />
-              <P.Btns onClick={updateProfile} btn="introBtn">
+              <P.Btns onClick={updateProfile} btn="profileBtn">
                 프로필 정보 변경
               </P.Btns>
             </P.ProfileBody>
