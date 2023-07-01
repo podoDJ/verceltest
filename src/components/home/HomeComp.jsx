@@ -44,7 +44,7 @@ const HomeComp = () => {
                 </S.Like>
                 <S.Img src={item.photoURL} />
                 <S.Name>{item.displayName}</S.Name>
-                <S.Cmt>{item.intro}</S.Cmt>
+                <S.Cmt>{item.profileCmt}</S.Cmt>
               </S.Card>
             );
           })}

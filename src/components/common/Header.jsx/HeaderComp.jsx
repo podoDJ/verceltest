@@ -48,7 +48,7 @@ export const UserHeaderComp = () => {
       </S.HeaderMenuDiv>
       <S.HeaderMenuDiv>
         <S.HeaderMenu onClick={logOutFunc}>Log Out</S.HeaderMenu>
-        <S.Img src={user.photoURL ? user.photoURL : "https://i.pinimg.com/originals/99/f3/06/99f3068e425e6b9f56d683b0859ee942.jpg"} />
+        <S.Img src={user.photoURL ? user.photoURL : "https://i.pinimg.com/originals/99/f3/06/99f3068e425e6b9f56d683b0859ee942.jpg"} onClick={() => navigate("/mypage")} />
       </S.HeaderMenuDiv>
     </S.Header>
   );
@@ -83,11 +83,11 @@ const S = {
     margin: 0;
     padding: 0 15px;
     &:hover {
-      box-shadow: inset 0px -13px 5px -6px #F9D7C5;
+      box-shadow: inset 0px -13px 5px -6px #f9d7c5;
       transition-duration: 100ms;
     }
     &:active {
-      box-shadow: inset 0px -13px 5px -6px #F9D7C5;
+      box-shadow: inset 0px -13px 5px -6px #f9d7c5;
     }
   `,
   Img: styled.img`
@@ -96,5 +96,6 @@ const S = {
     height: 50px;
     border-radius: 100%;
     margin-left: 10px;
+    cursor: pointer;
   `,
 };
