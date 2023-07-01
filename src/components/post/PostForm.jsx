@@ -50,7 +50,7 @@ const FileForm = ({ handleUpload, handleFileSelect, photoURL }) => {
     <S.FileBox>
       <S.FileLabel for="inputFile">
         <span style={{ marginRight: "10px" }}>📎</span>
-        <span>{photoURL ? `${photoURL.slice(0, 95)} ...` : "파일 선택"}</span>
+        <span>{photoURL ? `${photoURL.slice(0, 45)} ...` : "파일 선택"}</span>
       </S.FileLabel>
       <S.ImgInput type="file" id="inputFile" onChange={handleFileSelect} />
       <S.ImgBtn onClick={handleUpload}>업로드</S.ImgBtn>
@@ -199,7 +199,7 @@ const PostForm = () => {
           <div>
             <FileForm photoURL={photoURL} handleUpload={handleUpload} handleFileSelect={handleFileSelect} />
           </div>
-          {openModal ? <PreviewModal photoURL={photoURL} setOpenModal={setOpenModal} setPhotoURL={setPhotoURL} selectedFile={selectedFile} /> : null}
+          
           {console.log(openModal)}
         </div>
 
@@ -215,6 +215,7 @@ const PostForm = () => {
             취소
           </S.PostBtn>
         </S.PostBtnCtn>
+        {openModal ? <PreviewModal photoURL={photoURL} setOpenModal={setOpenModal} setPhotoURL={setPhotoURL} selectedFile={selectedFile} /> : null}
       </S.PostForm>
     </>
   );
