@@ -8,7 +8,7 @@ import { UPDATE_COMMENT } from "../../redux/modules/comment";
 
 const CommentChange = ({ commentId, closeModal }) => {
   const navigate = useNavigate();
-  const [uptitle, setUpTitle] = useState();
+
   const [upComment, setUpComment] = useState();
   const { id } = useParams();
   const comments = useSelector((state) => state.comment);
@@ -21,18 +21,17 @@ const CommentChange = ({ commentId, closeModal }) => {
       <form
         onSubmit={async (e) => {
           e.preventDefault();
-          if (!uptitle || !upComment) {
+          if (!upComment) {
             alert("내용을 추가해주세요");
             return false;
           }
 
           const commentRef = doc(db, "comments", comment.commentId);
 
-          await updateDoc(commentRef, { ...comment, title: uptitle, comment: upComment });
+          await updateDoc(commentRef, { ...comment, comment: upComment });
           dispatch({
             type: UPDATE_COMMENT,
             payload: {
-              title: uptitle,
               comment: upComment,
               postId: id,
               commentId,
@@ -40,13 +39,6 @@ const CommentChange = ({ commentId, closeModal }) => {
           });
         }}
       >
-        <input
-          type="text"
-          value={uptitle || ""}
-          onChange={(e) => {
-            setUpTitle(e.target.value);
-          }}
-        />
         <br />
         <input
           type="text"
