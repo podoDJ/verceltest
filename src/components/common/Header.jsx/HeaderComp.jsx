@@ -4,6 +4,7 @@ import { styled } from "styled-components";
 import { auth } from "../../../firebase";
 import { signOut } from "firebase/auth";
 import { useSelector } from "react-redux";
+import honcook from "../../../assets/images/honcook.png";
 
 export const HeaderComp = () => {
   const navigate = useNavigate();
@@ -11,7 +12,9 @@ export const HeaderComp = () => {
   return (
     <S.Header>
       <S.HeaderMenuDiv>
-        <S.HeaderMenu onClick={() => navigate("/")}>로고</S.HeaderMenu>
+        <S.HeaderMenu onClick={() => navigate("/")}>
+          <S.Logo src={honcook} alt="logo" />
+        </S.HeaderMenu>
         <S.HeaderMenu onClick={() => navigate("/post")}>POST</S.HeaderMenu>
         <S.HeaderMenu onClick={() => navigate("/star")}>MEMBER</S.HeaderMenu>
       </S.HeaderMenuDiv>
@@ -46,7 +49,9 @@ export const UserHeaderComp = () => {
   return (
     <S.Header>
       <S.HeaderMenuDiv>
-        <S.HeaderMenu onClick={() => navigate("/")}>로고</S.HeaderMenu>
+        <S.HeaderMenu onClick={() => navigate("/")}>
+          <S.Logo src={honcook} alt="logo" />
+        </S.HeaderMenu>
         <S.HeaderMenu onClick={() => navigate("/post")}>POST</S.HeaderMenu>
         <S.HeaderMenu onClick={() => navigate("/star")}>MEMBER</S.HeaderMenu>
         <S.HeaderMenu onClick={() => navigate("/mypage")}>PROFILE</S.HeaderMenu>
@@ -114,6 +119,11 @@ const S = {
       box-shadow: inset 0px -13px 5px -6px #f9d7c5;
     }
   `,
+
+  Logo: styled.img`
+    width: 200px;
+  `,
+
   Img: styled.img`
     background-color: white;
     width: 50px;
