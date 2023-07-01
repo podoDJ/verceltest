@@ -15,7 +15,7 @@ const PostComments = ({ post, id }) => {
   });
 
   const dispatch = useDispatch();
-  const [title, setTitle] = useState("");
+
   const [comment, setComment] = useState("");
   const [isModal, setIsModal] = useState(false);
   const openModal = () => {
@@ -39,17 +39,17 @@ const PostComments = ({ post, id }) => {
 
   return (
     <div>
-      <h3>댓글</h3>
+      <StTitle>댓글</StTitle>
       <form
         onSubmit={async (e) => {
           e.preventDefault();
-          if (!title || !comment) {
+          if (!comment) {
             alert("내용을 추가해주세요");
             return false;
           }
 
           const collectionRef = collection(db, "comments");
-          const docRef = await addDoc(collectionRef, { title, comment });
+          const docRef = await addDoc(collectionRef, { comment });
           const commentDocRef = doc(db, "comments", docRef.id);
           await setDoc(commentDocRef, { commentId: docRef.id, postId: id, userId: uid }, { merge: true });
 
@@ -59,21 +59,13 @@ const PostComments = ({ post, id }) => {
               postId: post.id,
               userId: uid,
               commentId: docRef.id,
-              title,
+
               comment,
             },
           });
         }}
       >
-        <input
-          type="text"
-          placeholder="제목을적어주세요"
-          value={title}
-          onChange={(e) => {
-            setTitle(e.target.value);
-          }}
-        />
-        <input
+        <StinputText
           type="text"
           placeholder="내용을적어주세요"
           value={comment}
@@ -82,7 +74,7 @@ const PostComments = ({ post, id }) => {
           }}
         />
 
-        <button>작성</button>
+        <Stbutton>작성</Stbutton>
       </form>
 
       <div>
@@ -94,10 +86,13 @@ const PostComments = ({ post, id }) => {
             const isOpen = comment.userId === uid;
 
             return (
-              <Stspan key={comment.commentId}>
-                <p>{comment.title}</p>
-                <p>{comment.comment}</p>
-                {isOpen && <button onClick={openModal}>수정</button>}
+              <Stlist key={comment.commentId}>
+                <StCommentList>
+                  <p>{comment.title}</p>
+                  <p>{comment.comment}</p>
+                </StCommentList>
+
+                {isOpen && <Stbutton onClick={openModal}>수정</Stbutton>}
                 {isModal && (
                   // <Link to={`/post/commentup/${comment.commentId}`}>
                   //   <button>수정</button>
@@ -110,7 +105,7 @@ const PostComments = ({ post, id }) => {
                 )}
 
                 {isOpen && (
-                  <button
+                  <Stbutton
                     onClick={async () => {
                       const commentRef = doc(db, "comments", comment.commentId);
                       await deleteDoc(commentRef);
@@ -122,9 +117,9 @@ const PostComments = ({ post, id }) => {
                     }}
                   >
                     삭제
-                  </button>
+                  </Stbutton>
                 )}
-              </Stspan>
+              </Stlist>
             );
           })}
       </div>
@@ -133,11 +128,6 @@ const PostComments = ({ post, id }) => {
 };
 
 export default PostComments;
-
-const Stspan = styled.div`
-  display: flex;
-  border: 1px solid black;
-`;
 
 const StModalBox = styled.div`
   position: fixed;
@@ -154,16 +144,41 @@ const StModalBox = styled.div`
 const StModalContents = styled.div`
   background-color: #fff;
   padding: 20px;
-  width: 70%;
-  height: 50%;
+  width: 17%;
+  height: 10%;
   border-radius: 12px;
 `;
-// const StButton = styled.button`
-//   border: none;
-//   cursor: pointer;
-//   border-radius: 8px;
-//   background-color: rgb(85, 239, 196);
-//   color: rgb(0, 0, 0);
-//   height: 40px;
-//   width: 100px;
-// `;
+const StinputText = styled.input`
+  width: 35%;
+  height: 25px;
+  margin-left: 10%;
+  margin-top: 20px;
+  border-radius: 10px;
+  border: 1px solid rgba(77, 77, 77, 0.5);
+`;
+const StCommentList = styled.div`
+  background-color: white;
+  border-radius: 12px;
+  border: 1px solid rgba(77, 77, 77, 0.5);
+  margin-top: 10px;
+  width: 60%;
+  height: 25px;
+`;
+const Stbutton = styled.button`
+  width: 45px;
+  height: 28px;
+  border: none;
+  border-radius: 5px;
+  color: var(--color-white);
+  background: var(--color-accent);
+  cursor: pointer;
+  margin-left: 10px;
+`;
+const Stlist = styled.div`
+  margin-left: 10%;
+  width: 60%;
+`;
+const StTitle = styled.div`
+  margin-left: 40%;
+  margin-top: 25px;
+`;

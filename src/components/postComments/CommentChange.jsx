@@ -47,6 +47,7 @@ const CommentChange = ({ commentId, closeModal }) => {
             setUpTitle(e.target.value);
           }}
         />
+        <br />
         <input
           type="text"
           value={upComment || ""}
@@ -54,7 +55,7 @@ const CommentChange = ({ commentId, closeModal }) => {
             setUpComment(e.target.value);
           }}
         />
-
+        <br />
         <button>수정</button>
         <button onClick={closeModal}>닫기</button>
       </form>
