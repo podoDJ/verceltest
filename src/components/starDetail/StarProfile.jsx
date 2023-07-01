@@ -10,8 +10,10 @@ const Profile = () => {
   const starList = useSelector((state) => state.logReducer.members);
   // console.log("1", starList);
 
-  const user = starList.find((user) => user.memberId === id);
-  console.log("1", user.memberId);
+  const user = starList.find((user) => {
+    console.log("1", id, user);
+    return user.memberId == id;
+  });
 
   useEffect(() => {
     dispatch(showMembers(starList));
