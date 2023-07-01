@@ -4,7 +4,7 @@ import { styled } from "styled-components";
 import { auth } from "../../../firebase";
 import { signOut } from "firebase/auth";
 import { useSelector } from "react-redux";
-import honcook from "../../../assets/honcook.png";
+import honcook from "../../../assets/images/honcook.png";
 
 export const HeaderComp = () => {
   const navigate = useNavigate();
