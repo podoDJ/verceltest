@@ -47,7 +47,7 @@ export const UserHeaderComp = () => {
       </S.HeaderMenuDiv>
       <S.HeaderMenuDiv>
         <S.HeaderMenu onClick={logOutFunc}>Log Out</S.HeaderMenu>
-        <S.Img src={user.photoURL ? user.photoURL : "https://yozm.wishket.com/static/img/default_avatar.png"} />
+        <S.Img src={user.photoURL ? user.photoURL : "https://i.pinimg.com/originals/99/f3/06/99f3068e425e6b9f56d683b0859ee942.jpg"} />
       </S.HeaderMenuDiv>
     </S.Header>
   );
@@ -66,13 +66,28 @@ const S = {
   HeaderMenuDiv: styled.div`
     display: flex;
     align-items: center;
-    margin: 0 10px;
+    /* margin: 0 10px; */
+    /*동준변경시도*/
+    margin: 0 15px;
   `,
   HeaderMenu: styled.span`
     font-size: 25px;
     font-weight: 600;
-    margin: 0 15px;
+    /* margin: 0 15px; */
     cursor: pointer;
+    /*동준변경시도*/
+    height: 100%;
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0 15px;
+    &:hover {
+      box-shadow: inset 0px -13px 5px -6px #F9D7C5;
+      transition-duration: 100ms;
+    }
+    &:active {
+      box-shadow: inset 0px -13px 5px -6px #F9D7C5;
+    }
   `,
   Img: styled.img`
     background-color: white;
