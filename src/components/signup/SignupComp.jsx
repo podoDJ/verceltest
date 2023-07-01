@@ -19,7 +19,7 @@ const SignupComp = () => {
   const signupFunc = async () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      // await updateProfile(auth.currentUser, { displayName: name });
+      await updateProfile(auth.currentUser, { displayName: name });
       console.log("가입된 유저 정보", userCredential.user);
 
       const collectionRef = collection(db, "members");
@@ -27,8 +27,9 @@ const SignupComp = () => {
         displayName: name,
         email: userCredential.user.email,
         intro: "",
-        whoLikedMe: [],
         photoURL: "https://i.pinimg.com/originals/99/f3/06/99f3068e425e6b9f56d683b0859ee942.jpg",
+        isLiked: false,
+        likes: 0,
       });
 
       alert("회원가입 완료");
