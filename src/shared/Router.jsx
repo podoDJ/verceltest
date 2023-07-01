@@ -80,7 +80,7 @@ const Router = () => {
 
     const fetchMemberData = async () => {
       // q = 요청 객체
-      const q = query(collection(db, "starList"));
+      const q = query(collection(db, "members"));
       const querySnapshot = await getDocs(q);
       const initialStarList = [];
       querySnapshot.forEach((doc) => {
