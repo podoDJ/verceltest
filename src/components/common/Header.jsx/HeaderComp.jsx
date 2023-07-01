@@ -35,8 +35,13 @@ export const UserHeaderComp = () => {
   const user = useSelector((state) => {
     return state.logReducer.user;
   });
-  console.log("이동준user =>", user)
-  console.log("이동준user.photoURL =>", user.photoURL)
+  const members = useSelector((state) => {
+    return state.logReducer.members;
+  });
+
+  const currentUser = members.filter((item) => {
+    return item.id == auth.currentUser.uid;
+  });
 
   return (
     <S.Header>
@@ -49,7 +54,7 @@ export const UserHeaderComp = () => {
       </S.HeaderMenuDiv>
       <S.HeaderMenuDiv>
         <S.HeaderMenu onClick={logOutFunc}>Log Out</S.HeaderMenu>
-        <S.Img src={user.photoURL ? user.photoURL : "https://i.pinimg.com/originals/99/f3/06/99f3068e425e6b9f56d683b0859ee942.jpg"} onClick={() => navigate("/mypage")} />
+        <S.Img src={currentUser[0].photoURL ? currentUser[0].photoURL : "https://i.pinimg.com/originals/99/f3/06/99f3068e425e6b9f56d683b0859ee942.jpg"} onClick={() => navigate("/mypage")} />
       </S.HeaderMenuDiv>
     </S.Header>
   );

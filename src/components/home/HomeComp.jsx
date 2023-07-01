@@ -23,7 +23,7 @@ const HomeComp = () => {
             return (
               <S.Card key={item.id} onClick={() => navigate(`/post/${item.postId}`)}>
                 <S.Like>
-                  <BiSolidLike size={25} style={{ color: "#b46060" }} /> {item.postWhoLiked?.length || 0}
+                  <BiSolidLike size={25} style={{ color: "#b46060" }} /> <span style={{ color: "#4d4d4d" }}>{item.postWhoLiked?.length || 0}</span>
                 </S.Like>
                 <S.Food src={item.photoURL} />
                 <S.Name>{item.postTitle}</S.Name>
@@ -38,9 +38,9 @@ const HomeComp = () => {
         <S.CardContainer>
           {starList.slice(0, 5).map((item) => {
             return (
-              <S.Card key={item.id}>
+              <S.Card key={item.id} onClick={() => navigate(`/star/members/${item.memberId}/guestbook `)}>
                 <S.Like>
-                  <BiSolidLike size={25} style={{ color: "#b46060" }} /> {item.likes || 0}
+                  <BiSolidLike size={25} style={{ color: "#b46060" }} /> <span style={{ color: "#4d4d4d" }}>{item.likes || 0}</span>
                 </S.Like>
                 <S.Img src={item.photoURL} />
                 <S.Name>{item.displayName}</S.Name>
