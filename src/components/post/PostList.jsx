@@ -8,7 +8,6 @@ const PostList = () => {
   const posts = useSelector((state) => state.posts);
   const uid = useSelector((state) => state.logReducer.user.uid);
   const navigate = useNavigate();
-  // console.log(typeof posts[0].postDate);
 
   const sortByDate = (a, b) => {
     return new Date(a.postDate).getTime() - new Date(b.postDate).getTime();

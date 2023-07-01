@@ -61,7 +61,6 @@ const FileForm = ({ handleUpload, handleFileSelect, photoURL }) => {
 const PostForm = () => {
   //uid는 여기서 가져옵니다.
   const user = useSelector((state) => state.logReducer.user);
-  console.log("user =>", user);
 
   // const postLike = 0
   const postWhoLiked = [];
@@ -102,7 +101,6 @@ const PostForm = () => {
       const imgURL = await getDownloadURL(imageRef);
       setPhotoURL(imgURL);
       setOpenModal(true);
-      console.log(photoURL);
     } else alert("이미지가 선택되지 않았습니다.");
   };
 
@@ -199,8 +197,8 @@ const PostForm = () => {
           <div>
             <FileForm photoURL={photoURL} handleUpload={handleUpload} handleFileSelect={handleFileSelect} />
           </div>
-          
-          {console.log(openModal)}
+          {openModal ? <PreviewModal photoURL={photoURL} setOpenModal={setOpenModal} setPhotoURL={setPhotoURL} selectedFile={selectedFile} /> : null}
+
         </div>
 
         <S.PostBtnCtn>
@@ -228,7 +226,7 @@ const S = {
     color: #4d4d4d;
     width: 500px;
     height: 750px;
-    margin: auto;
+    margin: 10px auto;
     padding: 50px;
     border-radius: 20px;
     flex-direction: column;
