@@ -8,8 +8,10 @@ const Profile = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const starList = useSelector((state) => state.logReducer.members);
+  // console.log("1", starList);
 
-  const user = starList.find((user) => user.uid === id);
+  const user = starList.find((user) => user.memberId === id);
+  console.log("1", user.memberId);
 
   useEffect(() => {
     dispatch(showMembers(starList));
@@ -24,12 +26,10 @@ const Profile = () => {
           </P.ProfileImageBox>
         </P.ProfileImageWrap>
         <P.ProfileBody>
-          <p>id : {user.uid}</p>
+          <p>id : {user.memberId}</p>
           <p>EMAIL : {user.email}</p>
           <P.NameBox>
             <p>NAME : {user.displayName}</p>
-
-            {/* <p>좋아요 수 : {user.likes}</p> */}
           </P.NameBox>
           <div>
             <p>INTRO : {user.profileCmt}</p>
