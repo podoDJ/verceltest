@@ -41,4 +41,16 @@ export const P = {
     flex-direction: row;
     align-items: center;
   `,
+
+  Textarea: styled.input`
+    box-sizing: border-box;
+    width: 500px;
+    height: 100px;
+
+    background-color: var(--color-bg);
+    border: 1px solid lightgray;
+    border-radius: 3px;
+
+    padding: 15px;
+  `,
 };

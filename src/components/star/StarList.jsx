@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { collection, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { collection, getDocs, query, updateDoc, where, doc } from "firebase/firestore";
 import { S } from "../star/starList.styles";
 import { BiSolidLike } from "react-icons/bi";
 import { db } from "../../firebase";
@@ -19,23 +19,35 @@ export default function StarList() {
     dispatch(showMembers(starList));
   }, []);
 
-  const updateLikeHandler = async (uid, likes, isLiked) => {
+  const updateLikeHandler = async (memberId) => {
     // 해당 uid와 일치하는 starList 컬렉션의 문서를 쿼리
     // where()함수 : 쿼리에 필터를 추가하기 위해 사용
-    const q = query(collection(db, "starList"), where("uid", "==", uid));
-    const starListRef = await getDocs(q);
-    console.log("11111111", starListRef.docs[0].ref);
 
-    // 좋아요 수와 isLiked 상태를 업데이트
-    await updateDoc(starListRef.docs[0].ref, {
-      likes: isLiked ? likes - 1 : likes + 1,
-      isLiked: !isLiked,
+    let target = {};
+
+    const q = query(collection(db, "members"), where("memberId", "==", memberId));
+    const docSnap = await getDocs(q);
+    docSnap.forEach(async (x) => {
+      target.id = x.id;
+      target.likes = x.data().likes;
+      // target.isLiked = x.data().isLiked;
     });
 
-    // newStarList를 업데이트하여 Redux 상태에 반영
-    const newStarList = starList.map((prevStar) => (prevStar.uid === uid ? { ...prevStar, likes: isLiked ? prevStar.likes - 1 : prevStar.likes + 1, isLiked: !prevStar.isLiked } : prevStar));
+    await updateDoc(doc(db, "members", target.id), { likes: target.likes + 1, isLiked: true });
+
+    const newStarList = starList.map((x) => (x.memberId === memberId ? { ...x, likes: x.likes + 1 } : x));
     dispatch(showMembers(newStarList));
   };
+
+  // // 좋아요 수를 1 증가시킴
+  // await updateDoc(q, {
+  //   likes: likes + 1,
+  // });
+
+  // console.log("1", starListRef.docs[0].ref);
+  // newStarList를 업데이트하여 Redux 상태에 반영
+
+  // };
 
   return (
     <>
@@ -43,19 +55,16 @@ export default function StarList() {
       <S.Container>
         {starList.map((star) => {
           return (
-            <S.Profile key={star.uid} onClick={() => navigate(`/star/members/${star.uid} `)}>
+            <S.Profile key={star.memberId} onClick={() => navigate(`/star/members/${star.memberId}/guestbook `)}>
               <S.LikesWrapper>
                 <S.LikeBtn
                   onClick={(e) => {
                     // 프로필 클릭 이벤트 전파 방지
                     e.stopPropagation();
-                    if (star.uid) {
-                      updateLikeHandler(star.uid, star.likes, star.isLiked);
-                    }
+                    updateLikeHandler(star.memberId);
                   }}
-                  isLiked={star.isLiked}
-                  // uid가 없는 경우 버튼 비활성화
-                  disabled={!star.uid}
+                  // star.isLiked이 true일 때만 liked prop을 전달
+                  isLiked={star.isLiked ? true : undefined}
                 >
                   <BiSolidLike size={25} />
                 </S.LikeBtn>
