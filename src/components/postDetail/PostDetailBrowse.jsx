@@ -8,7 +8,6 @@ import { deletePosts, updatePostsLike } from "../../redux/modules/postWrite";
 import { BiSolidLike } from "react-icons/bi";
 
 const PostDetailBrowse = ({ post, id }) => {
-  console.log(id);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const uid = useSelector((state) => state.logReducer.user.uid);
