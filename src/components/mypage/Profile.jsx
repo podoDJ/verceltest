@@ -2,14 +2,15 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { doc, updateDoc } from "firebase/firestore";
 import { db, storage } from "../../firebase";
-import { P } from "./ProfileStyle";
+import { P, S } from "./ProfileStyle";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { BiSolidLike } from "react-icons/bi";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const getProfile = useSelector((state) => state.profile);
   const getMyPosts = useSelector((state) => state.myPosts);
-
-  console.log(getMyPosts);
+  const Navigate = useNavigate();
 
   const { uid } = getProfile;
 
@@ -44,6 +45,10 @@ const Profile = () => {
 
   const profileCmtChangeHandler = (e) => {
     setCurrentProfileCmt(e.target.value);
+  };
+
+  const profileUpdateHamdler = (e) => {
+    e.preventDefault();
   };
 
   const updateProfile = async (e) => {
@@ -92,25 +97,46 @@ const Profile = () => {
                 </P.Btns>
               </P.ImageUploadBox>
             </P.ProfileImageWrap>
-            <P.ProfileBody>
-              <p>EMAIL</p>
-              <P.MemberInput type="email" placeholder={getProfile.email} disabled={true} />
 
-              <p>NAME</p>
-              <P.MemberInput type="text" value={currentDisplayName} onChange={nameChangeHandler} />
-              {/* <p>좋아요 수 : {profile.likes}</p> */}
-              <p>COMMENT</p>
-              <P.MemberInput value={currentProfileCmt} onChange={profileCmtChangeHandler} />
-              <P.Btns onClick={updateProfile} btn="profileBtn">
-                프로필 정보 변경
-              </P.Btns>
-            </P.ProfileBody>
+            <form onSubmit={profileUpdateHamdler}>
+              <P.ProfileBody>
+                <p>EMAIL</p>
+                <P.MemberInput type="email" placeholder={getProfile.email} disabled={true} />
+
+                <p>NAME</p>
+                <P.MemberInput type="text" value={currentDisplayName} onChange={nameChangeHandler} />
+                {/* <p>좋아요 수 : {profile.likes}</p> */}
+                <p>COMMENT</p>
+                <P.MemberInput value={currentProfileCmt} onChange={profileCmtChangeHandler} />
+                <P.Btns type="submit" onClick={updateProfile} btn="profileBtn">
+                  프로필 정보 변경
+                </P.Btns>
+              </P.ProfileBody>
+            </form>
           </P.ProfileContainer>
           <P.Contents>
             <P.ContentsTitle>내가 쓴 글</P.ContentsTitle>
             <P.ContentsTitle>방명록</P.ContentsTitle>
           </P.Contents>
-          <P.contentsBody>게시글 연결은 어느세월에,,,</P.contentsBody>
+          <P.contentsBody>
+            <S.PostingBoxCtn>
+              {getMyPosts.map((info) => {
+                return (
+                  <S.PostingBox onClick={() => Navigate(`/post/${info.postId}`)} key={info.postId}>
+                    <S.PostingFoodPhoto src={info.photoURL ? info.photoURL : "https://velog.velcdn.com/images/darkfairy7/post/f0d9a0ca-ad26-4a4c-b1b3-756dfb4fb3d0/banner-rtan.png"} />
+                    <S.PostingTitle>{info.postTitle}</S.PostingTitle>
+                    <S.PostingBody>작성자</S.PostingBody>
+                    <S.PostingDateLikeBox>
+                      <p style={{ marginRight: "20px" }}> {info.postDate.slice(0, 11)}</p>
+                      <S.PostingLike>
+                        <BiSolidLike size={20} style={{ color: "#b46060", marginRight: "5px" }} /> <span style={{ marginRight: "3px" }}>{info.postWhoLiked?.length || 0}</span>
+                      </S.PostingLike>
+                    </S.PostingDateLikeBox>
+                  </S.PostingBox>
+                );
+              })}
+            </S.PostingBoxCtn>
+          </P.contentsBody>
         </div>
       </div>
     </>
