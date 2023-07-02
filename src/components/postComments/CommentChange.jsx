@@ -5,15 +5,15 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { db } from "../../firebase";
 import { doc, updateDoc } from "@firebase/firestore";
 import { UPDATE_COMMENT } from "../../redux/modules/comment";
-import { styled } from "styled-components";
 
-const CommentChange = ({ commentId, closeModal }) => {
+const CommentChange = ({ commentId }) => {
   const navigate = useNavigate();
-  const { id } = useParams;
+  const [uptitle, setUpTitle] = useState();
   const [upComment, setUpComment] = useState();
-
+  const { id } = useParams();
   const comments = useSelector((state) => state.comment);
-  const comment = comments.find((comment) => comment.commentId === commentId);
+  const comment = comments.find((comment) => comment.commentId === id);
+
   const dispatch = useDispatch();
 
   return (
@@ -21,17 +21,18 @@ const CommentChange = ({ commentId, closeModal }) => {
       <form
         onSubmit={async (e) => {
           e.preventDefault();
-          if (!upComment) {
+          if (!uptitle || !upComment) {
             alert("내용을 추가해주세요");
             return false;
           }
-          closeModal(false);
 
           const commentRef = doc(db, "comments", comment.commentId);
-          await updateDoc(commentRef, { ...comment, comment: upComment });
+
+          await updateDoc(commentRef, { ...comment, title: uptitle, comment: upComment });
           dispatch({
             type: UPDATE_COMMENT,
             payload: {
+              title: uptitle,
               comment: upComment,
               postId: id,
               commentId,
@@ -39,33 +40,25 @@ const CommentChange = ({ commentId, closeModal }) => {
           });
         }}
       >
-        <br />
-        <StUpInput
+        <input
+          type="text"
+          value={uptitle || ""}
+          onChange={(e) => {
+            setUpTitle(e.target.value);
+          }}
+        />
+        <input
           type="text"
           value={upComment || ""}
           onChange={(e) => {
             setUpComment(e.target.value);
           }}
         />
-        <br />
+
         <button>수정</button>
-        <button onClick={closeModal}>닫기</button>
       </form>
     </div>
   );
 };
 
 export default CommentChange;
-
-// const StxButton = styled.button`
-//   display: flex;
-//   bottom: 100px;
-//   right: -250px;
-//   position: relative;
-// `;
-const StUpInput = styled.input`
-  display: flex;
-  position: relative;
-  width: 80%;
-  height: 30px;
-`;
