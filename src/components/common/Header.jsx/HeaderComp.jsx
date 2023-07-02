@@ -157,7 +157,7 @@ export const UserHeaderComp = () => {
       </S.HeaderMenuDiv>
       <S.HeaderMenuDiv>
         <S.HeaderSubMenu
-          id="PROFILE"
+          id="LOG OUT"
           onClick={(event) => {
             addItem(event);
             logOutFunc();
