@@ -55,7 +55,7 @@ export const P = {
   `,
   MemberTextarea: styled.textarea`
     width: 296px;
-    height: 70px;
+    height: 40px;
     padding: 10px;
     border: 0.03rem solid gray;
     border-radius: 5px;

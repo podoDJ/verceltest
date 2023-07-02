@@ -123,7 +123,7 @@ const Profile = () => {
                 <P.MemberInput type="text" maxLength={10} value={currentDisplayName} onChange={nameChangeHandler} />
                 {/* <p>좋아요 수 : {profile.likes}</p> */}
                 <p>COMMENT</p>
-                <P.MemberTextarea maxLength={80} value={currentProfileCmt} onChange={profileCmtChangeHandler} />
+                <P.MemberTextarea maxLength={30} value={currentProfileCmt} onChange={profileCmtChangeHandler} />
                 <P.Btns type="submit" onClick={updateProfile} btn="profileBtn">
                   프로필 정보 변경
                 </P.Btns>
