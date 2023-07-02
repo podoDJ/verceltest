@@ -224,4 +224,7 @@ const S = {
     margin-left: 10px;
     cursor: pointer;
   `,
+  Logo: styled.img`
+  width: 200px;
+`,
 };
