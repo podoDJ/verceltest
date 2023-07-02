@@ -4,7 +4,7 @@ import { styled } from "styled-components";
 import { auth } from "../../../firebase";
 import { signOut } from "firebase/auth";
 import { useSelector } from "react-redux";
-const logoUrl = "https://ifh.cc/g/mz6kOW.png"
+const logoUrl = "/assets/images/honcook.png"
 export const HeaderComp = () => {
   const navigate = useNavigate();
 
