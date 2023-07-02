@@ -28,7 +28,7 @@ export const HeaderComp = () => {
             navigate("/");
           }}
         >
-          <S.Logo src={honcook} alt="logo" />
+          <S.Logo src="/assets/images/honcook.png" alt="logo" />
         </S.HeaderMenu>
         <S.HeaderMenu
           id="POST"
@@ -111,7 +111,7 @@ export const UserHeaderComp = () => {
             navigate("/");
           }}
         >
-          <S.Logo src={honcook} alt="logo" />
+          <S.Logo src="/assets/images/honcook.png" alt="logo" />
         </S.HeaderMenu>
         <S.HeaderMenu
           id="POST"
@@ -185,16 +185,13 @@ const S = {
   HeaderMenuDiv: styled.div`
     display: flex;
     align-items: center;
-    /* margin: 0 10px; */
-    /*동준변경시도*/
     margin: 0 15px;
   `,
   HeaderMenu: styled.span`
     font-size: 25px;
     font-weight: 600;
-    /* margin: 0 15px; */
+
     cursor: pointer;
-    /*동준변경시도*/
     height: 100%;
     display: flex;
     align-items: center;
@@ -208,9 +205,7 @@ const S = {
   HeaderSubMenu: styled.span`
     font-size: 25px;
     font-weight: 600;
-    /* margin: 0 15px; */
     cursor: pointer;
-    /*동준변경시도*/
     height: 100%;
     display: flex;
     align-items: center;
