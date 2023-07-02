@@ -1,16 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { updateProfile } from "../../redux/modules/profileReducer";
 import { doc, updateDoc } from "firebase/firestore";
 import { db, storage } from "../../firebase";
 import { P, S } from "./ProfileStyle";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { BiSolidLike } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
+import { userProfile } from "../../redux/modules/profileReducer";
 
 const Profile = () => {
   const getProfile = useSelector((state) => state.profile);
   const getMyPosts = useSelector((state) => state.myPosts);
   const Navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const { uid } = getProfile;
 
@@ -54,14 +57,18 @@ const Profile = () => {
   const updateProfile = async (e) => {
     e.preventDefault();
 
-    if (!currentDisplayName.value) return alert("닉네임을 입력해주세요");
+    // if (!currentDisplayName.value) return alert("닉네임을 입력해주세요");
 
     const userDocRef = doc(db, "members", uid);
     await updateDoc(userDocRef, { profileCmt: currentProfileCmt, displayName: currentDisplayName });
 
     alert("프로필 정보 변경 완료");
+
+    const updateProfileData = { ...getProfile, profileCmt: currentProfileCmt, displayName: currentDisplayName };
+    dispatch(userProfile(updateProfileData));
   };
 
+  // const updatedProfile = { ...getProfile, displayName: currentDisplayName, profileCmt: currentProfileCmt };
   const changedPhoto = async (e) => {
     const file = e.target.files[0];
     setSelectedFile(file);
@@ -71,12 +78,13 @@ const Profile = () => {
       const storageRef = ref(storage, URL);
       await uploadBytes(storageRef, file);
       const resultPhotoURL = await getDownloadURL(storageRef);
-
+      setCurrentPhotoURL(resultPhotoURL);
       const userDocRef = doc(db, "members", uid);
       await updateDoc(userDocRef, { photoURL: resultPhotoURL });
       alert("프로필 사진 변경 완료");
 
-      setCurrentPhotoURL(resultPhotoURL);
+      const updateProfileData = { ...getProfile, photoURL: resultPhotoURL };
+      dispatch(userProfile(updateProfileData));
     } catch (error) {
       console.log(error);
       alert("프로필 사진 변경 실패", error);

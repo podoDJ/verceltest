@@ -61,10 +61,13 @@ export const P = {
     color: var(--color-text);
   `,
 
-  ContentsTitle: styled.h2`
+  ContentsTitle: styled.button`
     cursor: pointer;
     margin-left: 15px;
     margin-bottom: 5px;
+    border: none;
+    background-color: transparent;
+    font-size: 15px;
   `,
 
   contentsBody: styled.div`

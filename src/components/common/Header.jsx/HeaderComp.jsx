@@ -29,19 +29,14 @@ export const UserHeaderComp = () => {
   const logOutFunc = async () => {
     await signOut(auth);
     window.location.reload();
-    // 로컬스토리지 코드 삭제(제이)
   };
 
   const user = useSelector((state) => {
     return state.logReducer.user;
   });
-  const members = useSelector((state) => {
-    return state.logReducer.members;
-  });
 
-  const currentUser = members.filter((item) => {
-    return item.id == auth.currentUser.uid;
-  });
+  // 제이 추가
+  const getProfile = useSelector((state) => state.profile);
 
   return (
     <S.Header>
@@ -54,7 +49,7 @@ export const UserHeaderComp = () => {
       </S.HeaderMenuDiv>
       <S.HeaderMenuDiv>
         <S.HeaderSubMenu onClick={logOutFunc}>Log Out</S.HeaderSubMenu>
-        <S.Img src={currentUser[0]?.photoURL ? currentUser[0].photoURL : "https://i.pinimg.com/originals/99/f3/06/99f3068e425e6b9f56d683b0859ee942.jpg"} onClick={() => navigate("/mypage")} />
+        <S.Img src={getProfile.photoURL} onClick={() => navigate("/mypage")} />
       </S.HeaderMenuDiv>
     </S.Header>
   );
