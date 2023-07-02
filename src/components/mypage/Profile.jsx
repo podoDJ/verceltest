@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { updateProfile } from "../../redux/modules/profileReducer";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc, query, docs, collection, where, getDoc, getDocs } from "firebase/firestore";
 import { db, storage } from "../../firebase";
 import { P, S } from "./ProfileStyle";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -57,7 +57,13 @@ const Profile = () => {
   const updateProfile = async (e) => {
     e.preventDefault();
 
-    // if (!currentDisplayName.value) return alert("닉네임을 입력해주세요");
+    if (!currentDisplayName) return alert("닉네임을 입력해주세요");
+
+    const q = query(collection(db, "members"), where("displayName", "==", currentDisplayName), where("email", "!=", getProfile.email));
+    const result = await getDocs(q);
+    const findData = result.docs[0]?.data();
+
+    if (findData) return alert("이미 사용중인 닉네임 입니다.");
 
     const userDocRef = doc(db, "members", uid);
     await updateDoc(userDocRef, { profileCmt: currentProfileCmt, displayName: currentDisplayName });
