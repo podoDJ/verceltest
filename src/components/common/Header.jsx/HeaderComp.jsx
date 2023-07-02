@@ -27,8 +27,8 @@ export const HeaderComp = () => {
             addItem(event);
             navigate("/");
           }}
-        >로고
-          {/* <S.Logo src="/assets/images/honcook.png" alt="logo" /> */}
+        >
+          <S.Logo src="/assets/images/honcook.png" alt="logo" />
         </S.HeaderMenu>
         <S.HeaderMenu
           id="POST"
@@ -110,8 +110,8 @@ export const UserHeaderComp = () => {
             addItem(event);
             navigate("/");
           }}
-        >로고
-          {/* <S.Logo src="/assets/images/honcook.png" alt="logo" /> */}
+        >
+          <S.Logo src="/assets/images/honcook.png" alt="logo" />
         </S.HeaderMenu>
         <S.HeaderMenu
           id="POST"
