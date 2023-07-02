@@ -196,9 +196,9 @@ const S = {
     display: flex;
     align-items: center;
     padding: 0 15px;
-    box-shadow: ${(props) => (props.propid === props.clickedNow ? "inset 0px -13px 10px -10px #f9d7c5" : "none")};
+    box-shadow: ${(props) => (props.propid === props.clickedNow ? "inset 0px -13px 10px -6px #f9d7c5" : "none")};
     &:hover {
-      box-shadow: inset 0px -13px 5px -6px #f9d7c5;
+      box-shadow: inset 0px -13px 10px -6px #f9d7c5;
       transition-duration: 200ms;
     }
   `,

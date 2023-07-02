@@ -142,6 +142,41 @@ const PostForm = () => {
       navigate(`/post/${docRef.id}`);
     } else if (!photoURL) alert("이미지가 업로드 되지 않았습니다.\n이미지 선택 후 업로드 버튼을 클릭해주세요!");
   };
+
+  const MAX_TITLE_LENGTH = 20
+  const titleLimit = (event) => {
+    event.target.value.length <= MAX_TITLE_LENGTH ? setPostTitle(event.target.value) : alert(`글자수 제한 ${MAX_TITLE_LENGTH}자 입니다.`);
+  };
+
+  const MAX_LENGTH = 80;
+  const inputLimit = (event) => {
+    const inputName = event.target.name
+    const inputValue = event.target.value
+
+    const limitAlert = (inputValue, setInputValue) => {
+      if (inputValue.length <= MAX_LENGTH) {
+        setInputValue(inputValue);
+      } else {
+        alert(`제글자수 제한 ${MAX_LENGTH}자 입니다.`)
+      }
+    }
+
+    switch (inputName) {
+      case "postBody":
+      limitAlert(inputValue, setPostBody);
+      break;
+      case "postIngredient":
+      limitAlert(inputValue, setPostIngredient);
+      break;
+      case "postRecipe":
+      limitAlert(inputValue, setPostRecipe);
+      break;
+      default: return;
+    }
+  }
+
+
+
   return (
     <>
       <S.PostForm onSubmit={handleSubmit}>
@@ -153,6 +188,7 @@ const PostForm = () => {
               name="postTitle"
               value={postTitle}
               onChange={(event) => {
+                titleLimit(event);
                 setPostTitle(event.target.value);
               }}
             />
@@ -165,6 +201,7 @@ const PostForm = () => {
               name="postBody"
               value={postBody}
               onChange={(event) => {
+                inputLimit(event)
                 setPostBody(event.target.value);
               }}
             />
@@ -177,6 +214,7 @@ const PostForm = () => {
               name="postIngredient"
               value={postIngredient}
               onChange={(event) => {
+                inputLimit(event)
                 setPostIngredient(event.target.value);
               }}
             />
@@ -189,6 +227,7 @@ const PostForm = () => {
               name="postRecipe"
               value={postRecipe}
               onChange={(event) => {
+                inputLimit(event)
                 setPostRecipe(event.target.value);
               }}
             />
@@ -198,7 +237,6 @@ const PostForm = () => {
             <FileForm photoURL={photoURL} handleUpload={handleUpload} handleFileSelect={handleFileSelect} />
           </div>
           {openModal ? <PreviewModal photoURL={photoURL} setOpenModal={setOpenModal} setPhotoURL={setPhotoURL} selectedFile={selectedFile} /> : null}
-
         </div>
 
         <S.PostBtnCtn>
